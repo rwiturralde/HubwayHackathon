@@ -7,13 +7,17 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import org.apache.log4j.Logger;
+
 
 public class Main {
 	
+	static final Logger _logger = Logger.getLogger(Main.class);
+	
 	public static void main(String[] args) {
 		
-		System.out.println("Hello world!");
-		System.out.println("Hello world again!");
+		_logger.info("Hello world!");
+		_logger.info("Hello world again!");
 		
 		try {
 			MongoClient mongo = new MongoClient("localhost");
@@ -28,14 +32,13 @@ public class Main {
 			coll.insert(doc);
 
 			DBObject myDoc = coll.findOne();
-			System.out.println(myDoc);
+			_logger.info(myDoc);
 					
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			_logger.error(e);
 		}
 		
-		System.out.println("Exiting main...");
+		_logger.info("Exiting main...");
 	}
 
 }
