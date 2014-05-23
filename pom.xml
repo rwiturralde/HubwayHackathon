@@ -16,4 +16,11 @@
       </plugin>
     </plugins>
   </build>
+  <dependencies>
+  	<dependency>
+  		<groupId>org.mongodb</groupId>
+  		<artifactId>mongo-java-driver</artifactId>
+  		<version>(1.0,)</version>
+  	</dependency>
+  </dependencies>
 </project>
