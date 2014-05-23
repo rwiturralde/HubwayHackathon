@@ -1,7 +1,6 @@
 package com.gala.core;
 
 import java.net.UnknownHostException;
-import java.util.List;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -26,7 +25,7 @@ public class Main {
 			    .append("type", "database")
 			    .append("count", 1)
 			    .append("info", new BasicDBObject("x", 203).append("y", 102));
-					coll.insert(doc);
+			coll.insert(doc);
 
 			DBObject myDoc = coll.findOne();
 			System.out.println(myDoc);
