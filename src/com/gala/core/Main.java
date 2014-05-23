@@ -7,7 +7,9 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+
 import org.apache.log4j.Logger;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 
 public class Main {
@@ -17,7 +19,10 @@ public class Main {
 	public static void main(String[] args) {
 		
 		_logger.info("Hello world!");
-		_logger.info("Hello world again!");
+		
+		ClassPathXmlApplicationContext appContext = new ClassPathXmlApplicationContext("appContext.xml");
+		HubwayUser user = appContext.getBean("springTestUser", HubwayUser.class);
+		_logger.info(String.format("Test user info id: {} age: {}", user.getUserId(), user.getAge()));
 		
 		try {
 			MongoClient mongo = new MongoClient("localhost");
