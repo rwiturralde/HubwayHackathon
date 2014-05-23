@@ -24,7 +24,7 @@ public class Main {
 		
 		ClassPathXmlApplicationContext appContext = new ClassPathXmlApplicationContext("appContext.xml");
 		HubwayUser user = appContext.getBean("springTestUser", HubwayUser.class);
-		_logger.info(String.format("Test user info id: {} age: {}", user.getUserId(), user.getAge()));
+		_logger.info("Test user info id: " + user.getUserId() + " age: " + user.getAge());
 		
 		try {
 			MongoClient mongo = new MongoClient(new MongoClientURI("mongodb://defaultUser:defaultUser@ds033459.mongolab.com:33459/hubwayhackathon"));
