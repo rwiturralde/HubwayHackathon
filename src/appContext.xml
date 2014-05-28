@@ -10,4 +10,26 @@
     	<property name="age" value="25" />
     </bean>
 
+	<bean id="mongoClient" class="com.mongodb.MongoClient">
+		<constructor-arg index="0" ref="mongoServer" />
+		<constructor-arg index="1" >
+			<list>
+				<ref bean="mongoCredential" />
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<bean id="mongoServer" class="com.mongodb.ServerAddress">
+		<constructor-arg index="0" value="ds033459.mongolab.com" />
+		<constructor-arg index="1" value="33459" />
+	</bean>
+
+	<bean id="mongoCredential" class="com.mongodb.MongoCredential" factory-method="createMongoCRCredential">
+		<constructor-arg index="0" value="defaultUser" />
+		<constructor-arg index="1" value="hubwayhackathon" />
+		<constructor-arg index="2" value="defaultUser" /> 
+	</bean>
+	
+	
+
 </beans>

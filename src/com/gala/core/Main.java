@@ -1,19 +1,12 @@
 package com.gala.core;
 
-import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
-import com.mongodb.MongoCredential;
-import com.mongodb.MongoServerSelectionException;
-import com.mongodb.ServerAddress;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -32,13 +25,7 @@ public class Main {
 		_logger.info("Test user info id: " + user.getUserId() + " age: " + user.getAge());
 		
 		try {
-			//MongoClient mongo = new MongoClient(new MongoClientURI("mongodb://defaultUser:defaultUser@ds033459.mongolab.com:33459/hubwayhackathon"));
-			
-			ServerAddress server = new ServerAddress("ds033459.mongolab.com", 33459);
-			List<MongoCredential> creds = new ArrayList<MongoCredential>();
-			creds.add(MongoCredential.createMongoCRCredential("defaultUser", "hubwayhackathon", "defaultUser".toCharArray()));
-			
-			MongoClient mongo = new MongoClient(server, creds);
+			MongoClient mongo = (MongoClient) appContext.getBean("mongoClient");
 			
 			DB db = mongo.getDB("hubwayhackathon");
 			
@@ -54,8 +41,10 @@ public class Main {
 			DBObject myDoc = coll.findOne();
 			_logger.info(myDoc);
 					
-		} catch (UnknownHostException e) {
+		} catch (Exception e) {
 			_logger.error(e);
+		} finally {
+			appContext.close();
 		}
 		
 		_logger.info("Exiting main...");
