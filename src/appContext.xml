@@ -4,12 +4,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans 
 	   					   http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="springTestUser"
-          class="com.gala.core.HubwayUser">
-        <property name="userId" value="JohnDoe" />
-    	<property name="age" value="25" />
-    </bean>
-
 	<bean id="mongoClient" class="com.mongodb.MongoClient">
 		<constructor-arg index="0" ref="mongoServer" />
 		<constructor-arg index="1" >
@@ -30,7 +24,7 @@
 		<constructor-arg index="2" value="defaultUser" /> 
 	</bean>
 	
-	<bean id="dataWriter" class="com.gala.dataLoader.MongoDbWriter" factory-method="createMongoCRCredential">
+	<bean id="dataWriter" class="com.gala.dataLoader.MongoDbWriter" init-method="init">
 		<constructor-arg index="0" value="mongoClient" />
 		<constructor-arg index="1" value="hubwayhackathon" />
 		<constructor-arg index="2" >
@@ -39,6 +33,10 @@
 				<ref bean="stations" />
 			</list>
 		</constructor-arg>
+	</bean>
+	
+	<bean id="dataLoader" class="com.gala.dataLoader.BaseDataLoader">
+		<constructor-arg index="0" value="dataWriter" />
 	</bean>
 
 </beans>

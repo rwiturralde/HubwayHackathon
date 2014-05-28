@@ -29,7 +29,7 @@ public class MongoDbWriter implements IDataWriter<String, Object>{
 		_isInitialized = false;
 	}
 	
-	public void init(){
+	public boolean init(){
 		
 		try {
 			_db = _client.getDB(_dbName);
@@ -41,7 +41,9 @@ public class MongoDbWriter implements IDataWriter<String, Object>{
 			_isInitialized = true;
 		} catch (Exception e) {
 			_logger.error("Exception thrown while initializing MongoDbWriter: " + e);
+			return false;
 		}
+		return true;
 	}
 	
 	public boolean isInitialized(){
