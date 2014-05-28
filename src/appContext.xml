@@ -30,6 +30,9 @@
 		<constructor-arg index="2" value="defaultUser" /> 
 	</bean>
 	
-	
+	<bean id="orchestrator" class="com.gala.core.HubwayOrchestrator" init-method="init">
+		<constructor-arg index="0" ref="" />
+		<constructor-arg index="1" ref="" />
+	</bean>
 
 </beans>
