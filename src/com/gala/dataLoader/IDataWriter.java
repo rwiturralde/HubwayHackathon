@@ -1,5 +1,9 @@
 package com.gala.dataLoader;
 
-public interface IDataWriter {
+import java.util.HashMap;
+
+public interface IDataWriter<K,V> {
 	
+	boolean isInitialized();
+	boolean writeEntry(HashMap<K,V> dataEntry_);
 }
