@@ -36,7 +36,8 @@ public class HubwayOrchestrator {
 
 
 	public void init() {
-		if (_dataLoader.loadData()) {
+		//if (_dataLoader.loadData()) {
+		if(true) {
 			_logger.info("Data load successful.  Launching UI");
 			_uiPresenter.run();
 		} else {
