@@ -36,7 +36,9 @@
 		</constructor-arg>
 	</bean>
 	
-	<bean id="commandLineUI" class="com.gala.ui.CommandLineUI" />
+	<bean id="commandLineUI" class="com.gala.ui.CommandLineUI" >
+		<constructor-arg index="0" ref="forecastIO" />
+	</bean>
 
 	<bean id="dataWriter" class="com.gala.dataLoader.MongoDbWriter" init-method="init">
 		<constructor-arg index="0" value="mongoClient" />
@@ -50,7 +52,7 @@
 	</bean>
 	
 	<bean id="dataLoader" class="com.gala.dataLoader.BaseDataLoader">
-		<constructor-arg index="0" value="dataWriter" />
+		<constructor-arg index="0" ref="dataWriter" />
 	</bean>
 	
 	<bean id="hubwayCsvDataReader" class="com.gala.dataLoader.SimpleCsvDataReader" destroy-method="cleanup">
@@ -83,6 +85,9 @@
 	<bean id="hubwayDateFormat" class="java.text.SimpleDateFormat.SimpleDateFormat">
 		<constructor-arg index="0" value="yyyy-MM-dd kk:mm:ss" />
 	</bean>
+		
 	
-	
+	<bean id="forecastIO" class="dme.forecastiolib.ForecastIO">
+		<constructor-arg index="0" value="2e4135288e84ee81b4bb8418d67d6710" /> <!-- API KEY -->
+	</bean>
 </beans>

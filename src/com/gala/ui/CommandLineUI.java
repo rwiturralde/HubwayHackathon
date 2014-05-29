@@ -1,5 +1,7 @@
 package com.gala.ui;
 
+import dme.forecastiolib.ForecastIO;
+
 /**
  * Command-line based Hubway UI.  Allows the user to choose various parameters of their starting
  * location.  We then display the results of the logic engine based on that input. 
@@ -9,6 +11,16 @@ package com.gala.ui;
  */
 public class CommandLineUI implements IHubwayUI {
 
+	protected ForecastIO _forecastIO;
+	
+	protected CommandLineUI() {
+		
+	}
+	
+	public CommandLineUI(ForecastIO forecastIO_) {
+		_forecastIO = forecastIO_;
+	}
+	
 	public void launch() {
 		printStartupMessage();
 	}
@@ -18,6 +30,7 @@ public class CommandLineUI implements IHubwayUI {
 	 */
 	public HubwayRequestParameters getUserParameters() {
 		HubwayRequestParameters userParams = null;
+		
 		return userParams;
 	}
 
