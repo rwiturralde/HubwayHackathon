@@ -16,9 +16,9 @@ public class CommandLineUI implements IHubwayUI {
 	/**
 	 * 
 	 */
-	public Object getUserParameters() {
-		// TODO Auto-generated method stub
-		return null;
+	public HubwayRequestParameters getUserParameters() {
+		HubwayRequestParameters userParams = null;
+		return userParams;
 	}
 
 	public void displayResults(Object results_) {
@@ -27,7 +27,14 @@ public class CommandLineUI implements IHubwayUI {
 	}
 
 	protected void printStartupMessage() {
-		
+		System.out.println("*************************************************");
+		System.out.println("*                                               *");
+		System.out.println("*             Hubway Trip Predictor             *");
+		System.out.println("*                                               *");
+		System.out.println("*************************************************");
+		System.out.println("");
+		System.out.println("");
+		System.out.println("");
 	}
 	
 }

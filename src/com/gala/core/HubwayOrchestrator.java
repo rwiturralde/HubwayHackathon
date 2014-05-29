@@ -1,6 +1,10 @@
 package com.gala.core;
 
+import org.apache.log4j.Logger;
+
+import com.gala.dataLoader.IDataLoader;
 import com.gala.ui.HubwayDataPresenter;
+import com.gala.ui.IHubwayDataPresenter;
 
 /**
  * @author Roberto
@@ -8,8 +12,9 @@ import com.gala.ui.HubwayDataPresenter;
  */
 public class HubwayOrchestrator {
 
-	protected Object _dataLoader;
-	protected HubwayDataPresenter _uiPresenter;
+	protected final Logger _logger = Logger.getLogger(HubwayOrchestrator.class);
+	protected IDataLoader _dataLoader;
+	protected IHubwayDataPresenter _uiPresenter;
 	
 	/**
 	 * Hidden public constructor.  
@@ -24,14 +29,19 @@ public class HubwayOrchestrator {
 	 * @param dataLoader_ Object responsible for populating data required for analysis
 	 * @param userInterface_ User interface collecting input from user to drive engine
 	 */
-	public HubwayOrchestrator(Object dataLoader_, HubwayDataPresenter uiPresenter_) {
+	public HubwayOrchestrator(IDataLoader dataLoader_, IHubwayDataPresenter uiPresenter_) {
 		_dataLoader = dataLoader_;
 		_uiPresenter = uiPresenter_;
 	}
 
-	public void init() {
-		// Tell loader to load data
 
-		_uiPresenter.run();
+	public void init() {
+		//if (_dataLoader.loadData()) {
+		if (true) {
+			_logger.info("Data load successful.  Launching UI");
+			_uiPresenter.run();
+		} else {
+			_logger.info("Data load failed.  Returning.");
+		}
 	}
 }

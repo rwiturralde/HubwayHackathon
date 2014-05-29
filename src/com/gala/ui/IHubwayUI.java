@@ -7,10 +7,10 @@ package com.gala.ui;
  *
  */
 public interface IHubwayUI {
-
+	
 	void launch();
 	
-	Object getUserParameters();
+	HubwayRequestParameters getUserParameters();
 	
 	void displayResults(Object results_);
 }
