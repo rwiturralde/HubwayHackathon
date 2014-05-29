@@ -24,6 +24,22 @@
 		<constructor-arg index="2" value="defaultUser" /> 
 	</bean>
 	
+	<bean id="orchestrator" class="com.gala.core.HubwayOrchestrator" init-method="init">
+		<constructor-arg index="0" > <!-- TEMPORARY - IDataLoader -->
+			<null />
+		</constructor-arg>
+		<constructor-arg index="1" ref="uiPresenter" />
+	</bean>
+
+	<bean id="uiPresenter" class="com.gala.ui.HubwayDataPresenter">
+		<constructor-arg index="0" ref="commandLineUI" /> 
+		<constructor-arg index="1" > <!-- TEMPORARY - LogicEngine -->
+			<null />
+		</constructor-arg>
+	</bean>
+	
+	<bean id="commandLineUI" class="com.gala.ui.CommandLineUI" />
+
 	<bean id="dataWriter" class="com.gala.dataLoader.MongoDbWriter" init-method="init">
 		<constructor-arg index="0" value="mongoClient" />
 		<constructor-arg index="1" value="hubwayhackathon" />
