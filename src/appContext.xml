@@ -52,13 +52,13 @@
 	</bean>
 	
 	<bean id="tripsReaderProcessorPair" class="java.util.AbstractMap.SimpleEntry">
-		<constructor-arg index="0" value="hubwayCsvDataReader" />
-		<constructor-arg index="1" value="hubwayMongoDbPostProcessor" />
+		<constructor-arg index="0" ref="hubwayCsvDataReader" />
+		<constructor-arg index="1" ref="hubwayMongoDbPostProcessor" />
 	</bean>
 	
 	<bean id="stationsReaderProcessorPair" class="java.util.AbstractMap.SimpleEntry">
-		<constructor-arg index="0" value="hubwayCsvDataReader" />
-		<constructor-arg index="1" value="hubwayMongoDbPostProcessor" />
+		<constructor-arg index="0" ref="hubwayCsvDataReader" />
+		<constructor-arg index="1" ref="hubwayMongoDbPostProcessor" />
 	</bean>
 	
 	<bean id="dataLoader" class="com.gala.dataLoader.BaseDataLoader">
