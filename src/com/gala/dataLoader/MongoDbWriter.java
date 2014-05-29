@@ -34,6 +34,7 @@ public class MongoDbWriter implements IDataWriter<String, Object>{
 		_dbName = dbName_;
 		_collectionNames = collNames_;
 		_isInitialized = false;
+		_collections = new HashMap<String, DBCollection>();
 	}
 	
 	/* (non-Javadoc)
