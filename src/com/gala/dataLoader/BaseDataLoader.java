@@ -6,6 +6,13 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+/**
+ * Loader for all data required for this application.
+ * @author Heather
+ *
+ * @param <K>
+ * @param <V>
+ */
 public class BaseDataLoader<K,V> implements IDataLoader{
 
 	static final Logger _logger = Logger.getLogger(BaseDataLoader.class);
@@ -17,6 +24,9 @@ public class BaseDataLoader<K,V> implements IDataLoader{
 		_writer = writer_;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.gala.dataLoader.IDataLoader#loadData()
+	 */
 	public boolean loadData() {
 		
 		if (!_writer.isInitialized()) {
@@ -32,7 +42,7 @@ public class BaseDataLoader<K,V> implements IDataLoader{
 
 		for (SimpleEntry<IDataReader<K,V>, IDataPostProcessor<K,V>> pair : _readPostPairs){
 			while ((nextReaderEntry = pair.getKey().getNextDataEntry()) != null) {
-				nextCollectionEntry = _postProcessor.postProcessDataEntry(nextReaderEntry);
+				nextCollectionEntry = pair.getValue().postProcessDataEntry(nextReaderEntry);
 				
 				for (String coll : nextCollectionEntry.keySet()){
 					_writer.writeEntry(nextCollectionEntry.get(coll), coll);

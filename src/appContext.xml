@@ -67,7 +67,6 @@
 			</list>
 		</constructor-arg>
 		<constructor-arg index="1" ref="dataWriter" />
-		<constructor-arg index="0" ref="dataWriter" />
 	</bean>
 	
 	<bean id="hubwayCsvDataReader" class="com.gala.dataLoader.SimpleCsvDataReader" destroy-method="cleanup">
