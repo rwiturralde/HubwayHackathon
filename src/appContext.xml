@@ -66,8 +66,7 @@
 		<constructor-arg index="1" value="_id" />
 		<constructor-arg index="2">
 			<list>
-				<ref bean="trips" />
-				<ref bean="stations" />
+				<value>trips</value>
 			</list>
 		</constructor-arg>
 		<constructor-arg index="3" ref="hubwayDateFormat" />

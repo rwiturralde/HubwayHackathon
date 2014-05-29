@@ -3,6 +3,7 @@ package com.gala.dataLoader;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -31,7 +32,7 @@ public class HubwayMongoDbPostProcessor implements IDataPostProcessor <String, O
 	private String dateIdToSpan;
 	private String dayOfWeekSpanName;
 	private String timeOfDaySpanName;
-	private Map<Entry<Integer, Integer>, TimeOfDay> timeOfDaySpans;
+	private List<Entry<Entry<Integer, Integer>, TimeOfDay>> timeOfDaySpans;
 		
 	public HubwayMongoDbPostProcessor(String id, String mongoId, List<String> destinationNames, DateFormat hubwayDateFormat, String dateIdToSpan, String dayOfWeekSpanName, String timeOfDaySpanName){
 		this.id = id;
@@ -73,22 +74,36 @@ public class HubwayMongoDbPostProcessor implements IDataPostProcessor <String, O
 			}
 			
 			if (dateToSpan != null){
-				addDayOfWeekSpan(map, dateToSpan);
-				addTimeOfDaySpan(map, dateToSpan);
+				Calendar calendarDateToSpan = Calendar.getInstance();
+				calendarDateToSpan.setTime(dateToSpan);
+				addDayOfWeekSpan(map, calendarDateToSpan);
+				addTimeOfDaySpan(map, calendarDateToSpan);
 			}
 		} else {
 			//log error
 		}
 		
-		return map;
+		//return map;
+		return null;
+	}
+	
+	private void addDayOfWeekSpan(Map<String, Object> map, Calendar dateToSpan){
 		
 	}
 	
-	private void addDayOfWeekSpan(Map<String, Object> map, Date dateToSpan){
-		
-	}
 	
-	private void addTimeOfDaySpan(Map<String, Object> map, Date dateToSpan){
+	// Assumes timeOfDaySpans are ordered from earliest to latest
+	private void addTimeOfDaySpan(Map<String, Object> map, Calendar dateToSpan){
+		
+		int dateToSpanHour = dateToSpan.get(Calendar.HOUR_OF_DAY);
+		int dateToSpanMinutes = dateToSpan.get(Calendar.MINUTE);
+		
+		for (Entry<Entry<Integer, Integer>, TimeOfDay> timeOfDaySpan : timeOfDaySpans){
+			if (dateToSpanHour >= timeOfDaySpan.getKey().getKey() && dateToSpanMinutes >= timeOfDaySpan.getKey().getValue()){
+				
+			}
+		}
+		
 		
 	}
 
