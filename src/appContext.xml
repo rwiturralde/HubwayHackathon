@@ -19,9 +19,9 @@
 	</bean>
 
 	<bean id="mongoCredential" class="com.mongodb.MongoCredential" factory-method="createMongoCRCredential">
-		<constructor-arg index="0" value="defaultUser" />
-		<constructor-arg index="1" value="hubwayhackathon" />
-		<constructor-arg index="2" value="defaultUser" /> 
+		<constructor-arg index="0" value="defaultUser" /> <!-- User ID -->
+		<constructor-arg index="1" value="hubwayhackathon" /> <!-- Database -->
+		<constructor-arg index="2" value="defaultUser" /> <!--  Password -->
 	</bean>
 	
 	<bean id="orchestrator" class="com.gala.core.HubwayOrchestrator" init-method="init">
