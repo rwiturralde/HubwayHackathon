@@ -32,5 +32,12 @@
   		<artifactId>spring-context</artifactId>
   		<version>(1.0,)</version>
   	</dependency>
+  	<dependency>
+      <groupId>forecast.io</groupId>  
+       <artifactId>forecastio-lib-java</artifactId>  
+       <version>1.0</version> 
+       <scope>system</scope>
+       <systemPath>${project.basedir}/src/resources/jars/Forecast.io/forecastio-lib-java.jar</systemPath>
+	</dependency>
   </dependencies>
 </project>
