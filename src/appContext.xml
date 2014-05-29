@@ -25,9 +25,7 @@
 	</bean>
 	
 	<bean id="orchestrator" class="com.gala.core.HubwayOrchestrator" init-method="init">
-		<constructor-arg index="0" > <!-- TEMPORARY - IDataLoader -->
-			<null />
-		</constructor-arg>
+		<constructor-arg index="0" ref="dataLoader" /> 
 		<constructor-arg index="1" ref="uiPresenter" />
 	</bean>
 
@@ -45,8 +43,8 @@
 		<constructor-arg index="1" value="hubwayhackathon" />
 		<constructor-arg index="2" >
 			<list>
-				<ref bean="trips" />
-				<ref bean="stations" />
+				<value>trips</value>
+				<value>stations</value>
 			</list>
 		</constructor-arg>
 	</bean>
