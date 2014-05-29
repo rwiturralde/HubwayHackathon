@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -27,16 +28,17 @@ public class HubwayMongoDbPostProcessor implements IDataPostProcessor <String, O
 	static final Logger _logger = Logger.getLogger(HubwayMongoDbPostProcessor.class);
 	private String id; 
 	private String mongoId;
-	private List<String> destinationNames;
+	private String destinationName;
 	private DateFormat hubwayDateFormat;
 	private String dateIdToSpan;
 	private String dayOfWeekSpanName;
 	private String timeOfDaySpanName;
 	private List<Entry<Entry<Integer, Integer>, TimeOfDay>> timeOfDaySpans;
 		
-	public HubwayMongoDbPostProcessor(String id, String mongoId, List<String> destinationNames, DateFormat hubwayDateFormat, String dateIdToSpan, String dayOfWeekSpanName, String timeOfDaySpanName){
+	public HubwayMongoDbPostProcessor(String id, String mongoId, String destinationName, DateFormat hubwayDateFormat, String dateIdToSpan, String dayOfWeekSpanName, String timeOfDaySpanName){
 		this.id = id;
 		this.mongoId = mongoId;
+		this.destinationName = destinationName;
 		this.hubwayDateFormat = hubwayDateFormat; 
 		this.dateIdToSpan = dateIdToSpan;
 		this.dayOfWeekSpanName = dayOfWeekSpanName;
@@ -76,19 +78,22 @@ public class HubwayMongoDbPostProcessor implements IDataPostProcessor <String, O
 			if (dateToSpan != null){
 				Calendar calendarDateToSpan = Calendar.getInstance();
 				calendarDateToSpan.setTime(dateToSpan);
-				addDayOfWeekSpan(map, calendarDateToSpan);
-				addTimeOfDaySpan(map, calendarDateToSpan);
+//				addDayOfWeekSpan(map, calendarDateToSpan);
+//				addTimeOfDaySpan(map, calendarDateToSpan);
 			}
 		} else {
 			//log error
 		}
 		
-		//return map;
-		return null;
+		Map<String, Map<String, Object>> returnMap = new HashMap<String, Map<String,Object>>();
+		returnMap.put(destinationName, map);
+			
+		return returnMap;
+		
 	}
 	
 	private void addDayOfWeekSpan(Map<String, Object> map, Calendar dateToSpan){
-		
+		dateToSpan.get(Calendar.DAY_OF_WEEK);
 	}
 	
 	
@@ -100,12 +105,8 @@ public class HubwayMongoDbPostProcessor implements IDataPostProcessor <String, O
 		
 		for (Entry<Entry<Integer, Integer>, TimeOfDay> timeOfDaySpan : timeOfDaySpans){
 			if (dateToSpanHour >= timeOfDaySpan.getKey().getKey() && dateToSpanMinutes >= timeOfDaySpan.getKey().getValue()){
-				
+				map.put(timeOfDaySpanName, timeOfDaySpan.getValue().name());
 			}
-		}
-		
-		
+		}		
 	}
-
-
 }
