@@ -2,6 +2,7 @@ package com.gala.dataLoader;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
@@ -50,7 +51,7 @@ public class MongoDbWriter implements IDataWriter<String, Object>{
 		return _isInitialized;
 	}
 	
-	public boolean writeEntry(final HashMap<String,Object> dataEntry_, final String collName_){
+	public boolean writeEntry(final Map<String,Object> dataEntry_, final String collName_){
 		
 		if (dataEntry_ != null) {
 			try {
@@ -70,7 +71,7 @@ public class MongoDbWriter implements IDataWriter<String, Object>{
 		return true;
 	}
 	
-	protected BasicDBObject convertEntryToDbObject(HashMap<String,Object> dataEntry_){
+	protected BasicDBObject convertEntryToDbObject(Map<String,Object> dataEntry_){
 		BasicDBObject dbObj = new BasicDBObject();
 		
 		for (Entry<String, Object> pair : dataEntry_.entrySet()) {
