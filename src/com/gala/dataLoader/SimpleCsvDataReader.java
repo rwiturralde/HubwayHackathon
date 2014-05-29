@@ -11,8 +11,14 @@ import org.apache.log4j.Logger;
 
 import com.gala.core.Main;
 
+
 /**
- * Simple implementation of IDataReader to 
+ * @author Nathan
+ * 
+ * Simple implementation of IDataReader to read data from a 
+ * CSV file one line at a time and format it into a map of 
+ * <String, Object> for data store insertion.
+ *
  */
 public class SimpleCsvDataReader implements IDataReader<String, Object> {
 

@@ -66,10 +66,16 @@
 	<bean id="hubwayMongoDbPostProcessor" class="com.gala.dataLoader.HubwayMongoDbPostProcessor">
 		<constructor-arg index="0" value="id" />
 		<constructor-arg index="1" value="_id" />
-		<constructor-arg index="2" ref="hubwayDateFormat" />
-		<constructor-arg index="3" value="start_date" />
-		<constructor-arg index="4" value="spannedStartDay" />
-		<constructor-arg index="5" value="spannedStartTime" />
+		<constructor-arg index="2">
+			<list>
+				<ref bean="trips" />
+				<ref bean="stations" />
+			</list>
+		</constructor-arg>
+		<constructor-arg index="3" ref="hubwayDateFormat" />
+		<constructor-arg index="4" value="start_date" />
+		<constructor-arg index="5" value="spannedStartDay" />
+		<constructor-arg index="6" value="spannedStartTime" />
 	</bean>
 	
 	<bean id="hubwayDateFormat" class="java.text.SimpleDateFormat.SimpleDateFormat">
