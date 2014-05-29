@@ -94,11 +94,7 @@
 		<constructor-arg index="7" value="spannedStartTime" />
 	</bean>
 	
-	<bean id="hubwayDateFormat" class="java.text.SimpleDateFormat.SimpleDateFormat">
-		<constructor-arg index="0" value="yyyy-MM-dd kk:mm:ss" />
-	</bean>
-	
-	<bean id="hubwayDateFormat" class="java.text.SimpleDateFormat.SimpleDateFormat">
+	<bean id="hubwayDateFormat" class="java.text.SimpleDateFormat">
 		<constructor-arg index="0" value="yyyy-MM-dd kk:mm:ss" />
 	</bean>
 
