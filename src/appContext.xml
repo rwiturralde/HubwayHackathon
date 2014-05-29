@@ -51,8 +51,24 @@
 		</constructor-arg>
 	</bean>
 	
+	<bean id="tripsReaderProcessorPair" class="java.util.AbstractMap.SimpleEntry">
+		<constructor-arg index="0" value="mongoClient" />
+		<constructor-arg index="1" value="mongoClient" />
+	</bean>
+	
+	<bean id="stationsReaderProcessorPair" class="java.util.AbstractMap.SimpleEntry">
+		<constructor-arg index="0" value="mongoClient" />
+		<constructor-arg index="1" value="mongoClient" />
+	</bean>
+	
 	<bean id="dataLoader" class="com.gala.dataLoader.BaseDataLoader">
-		<constructor-arg index="0" ref="dataWriter" />
+		<constructor-arg index="0" >
+			<list>
+				<ref bean="tripsReaderProcessorPair" />
+				<ref bean="stationsReaderProcessorPair" />
+			</list>
+		</constructor-arg>
+		<constructor-arg index="1" ref="dataWriter" />
 	</bean>
 	
 	<bean id="hubwayCsvDataReader" class="com.gala.dataLoader.SimpleCsvDataReader" destroy-method="cleanup">
@@ -78,14 +94,10 @@
 		<constructor-arg index="7" value="spannedStartTime" />
 	</bean>
 	
-	<bean id="hubwayDateFormat" class="java.text.SimpleDateFormat.SimpleDateFormat">
+	<bean id="hubwayDateFormat" class="java.text.SimpleDateFormat">
 		<constructor-arg index="0" value="yyyy-MM-dd kk:mm:ss" />
 	</bean>
-	
-	<bean id="hubwayDateFormat" class="java.text.SimpleDateFormat.SimpleDateFormat">
-		<constructor-arg index="0" value="yyyy-MM-dd kk:mm:ss" />
-	</bean>
-	
+
 	<bean id="forecastIO" class="dme.forecastiolib.ForecastIO">
 		<constructor-arg index="0" value="2e4135288e84ee81b4bb8418d67d6710" /> <!-- API KEY -->
 	</bean>
