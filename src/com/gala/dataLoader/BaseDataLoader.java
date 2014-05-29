@@ -1,13 +1,19 @@
 package com.gala.dataLoader;
 
+import java.util.AbstractMap.SimpleEntry;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 
-public class BaseDataLoader implements IDataLoader{
+public class BaseDataLoader<K,V> implements IDataLoader{
 
 	static final Logger _logger = Logger.getLogger(BaseDataLoader.class);
-	protected IDataWriter _writer;
+	protected IDataWriter<K,V> _writer;
+	protected List<SimpleEntry<IDataReader<K,V>, IDataPostProcessor<K,V>>> _readPostPairs;
 	
-	public BaseDataLoader(final IDataWriter writer_){
+	public BaseDataLoader(final List<SimpleEntry<IDataReader<K,V>, IDataPostProcessor<K,V>>> pairs_, final IDataWriter<K,V> writer_){
+		_readPostPairs = pairs_;
 		_writer = writer_;
 	}
 	
@@ -18,6 +24,19 @@ public class BaseDataLoader implements IDataLoader{
 			if (!_writer.init()) {
 				_logger.error("Attempt to initialize writer has failed. Data cannot be loaded.");
 				return false;
+			}
+		}
+		
+		Map<K,V> nextReaderEntry;
+		Map<String,Map<K,V>> nextCollectionEntry;
+
+		for (SimpleEntry<IDataReader<K,V>, IDataPostProcessor<K,V>> pair : _readPostPairs){
+			while ((nextReaderEntry = pair.getKey().getNextDataEntry()) != null) {
+				nextCollectionEntry = _postProcessor.postProcessDataEntry(nextReaderEntry);
+				
+				for (String coll : nextCollectionEntry.keySet()){
+					_writer.writeEntry(nextCollectionEntry.get(coll), coll);
+				}
 			}
 		}
 		

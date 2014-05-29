@@ -49,8 +49,24 @@
 		</constructor-arg>
 	</bean>
 	
+	<bean id="tripsReaderProcessorPair" class="java.util.AbstractMap.SimpleEntry">
+		<constructor-arg index="0" value="mongoClient" />
+		<constructor-arg index="1" value="mongoClient" />
+	</bean>
+	
+	<bean id="stationsReaderProcessorPair" class="java.util.AbstractMap.SimpleEntry">
+		<constructor-arg index="0" value="mongoClient" />
+		<constructor-arg index="1" value="mongoClient" />
+	</bean>
+	
 	<bean id="dataLoader" class="com.gala.dataLoader.BaseDataLoader">
-		<constructor-arg index="0" value="dataWriter" />
+		<constructor-arg index="0" >
+			<list>
+				<ref bean="tripsReaderProcessorPair" />
+				<ref bean="stationsReaderProcessorPair" />
+			</list>
+		</constructor-arg>
+		<constructor-arg index="1" ref="dataWriter" />
 	</bean>
 
 </beans>
