@@ -93,6 +93,24 @@ public class MongoDbWriter implements IDataWriter<String, Object>{
 		return true;
 	}
 	
+	public boolean batchWrite(final List<Map<String,Object>> dataEntries_, final String collName_){
+		
+		try {
+			BasicDBObject[] dbEntries = convertEntriesToDbObjectArr(dataEntries_);
+			DBCollection coll = _collections.get(collName_);
+			if (coll == null) {
+				_logger.warn("Collection not found: " + collName_);
+				return false;
+			}
+			coll.insert(dbEntries);
+		} catch (Exception e) {
+			_logger.warn("Exception thrown while writing entry to database: " + e);
+			return false;
+		}
+		
+		return true;
+	}
+	
 	/**
 	 * Converts a given entry into an object that can be written to the db
 	 * @param dataEntry_ entry to convert
@@ -108,4 +126,11 @@ public class MongoDbWriter implements IDataWriter<String, Object>{
 		return dbObj;
 	}
 	
+	protected BasicDBObject[] convertEntriesToDbObjectArr(final List<Map<String,Object>> dataEntries_){
+		BasicDBObject[] objArr = new BasicDBObject[dataEntries_.size()];
+		for (int i=0;i<dataEntries_.size();i++){
+			objArr[i] = convertEntryToDbObject(dataEntries_.get(i));
+		}
+		return objArr;
+	}
 }

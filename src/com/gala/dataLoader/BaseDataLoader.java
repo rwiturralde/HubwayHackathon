@@ -1,7 +1,10 @@
 package com.gala.dataLoader;
 
+import java.sql.BatchUpdateException;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,13 +23,16 @@ public class BaseDataLoader<K,V> implements IDataLoader{
 	protected IDataWriter<K,V> _writer;
 	protected List<SimpleEntry<IDataReader<K,V>, IDataPostProcessor<K,V>>> _readPostPairs;
 	protected List<String> _collectionsToLoad;
+	protected int _batchWriteSize;
 	
 	public BaseDataLoader(final List<SimpleEntry<IDataReader<K,V>, IDataPostProcessor<K,V>>> pairs_, 
 						final IDataWriter<K,V> writer_,
-						final List<String> collToLoad_){
+						final List<String> collToLoad_,
+						final int batchSize_){
 		_readPostPairs = pairs_;
 		_writer = writer_;
 		_collectionsToLoad = collToLoad_;
+		_batchWriteSize = batchSize_;
 	}
 	
 	/* (non-Javadoc)
@@ -46,21 +52,68 @@ public class BaseDataLoader<K,V> implements IDataLoader{
 		
 		Map<K,V> nextReaderEntry;
 		Map<String,Map<K,V>> nextCollectionEntry;
-
+		Map<String,List<Map<K,V>>> dataToWrite = new HashMap<String,List<Map<K,V>>>();
+		boolean timeToWrite = false;
+		List<String> collectionsWritten = new ArrayList<String>();
+		
 		_logger.info(String.format("BEGINNING DATA LOAD : %s", new java.util.Date()));
 		for (SimpleEntry<IDataReader<K,V>, IDataPostProcessor<K,V>> pair : _readPostPairs){
 			int counter = 0;
+			dataToWrite.clear();
 			while ((nextReaderEntry = pair.getKey().getNextDataEntry()) != null) {
 				nextCollectionEntry = pair.getValue().postProcessDataEntry(nextReaderEntry);
 				
+				// Merge data
 				for (String coll : nextCollectionEntry.keySet()){
 					if (_collectionsToLoad.contains(coll)){
-						_writer.writeEntry(nextCollectionEntry.get(coll), coll);
+						if (!dataToWrite.containsKey(coll)){
+							dataToWrite.put(coll, new ArrayList<Map<K,V>>());
+						}
+						
+						List<Map<K,V>> collList = dataToWrite.get(coll);
+						collList.add(nextCollectionEntry.get(coll));
+						dataToWrite.put(coll, collList);
+						
+						if (collList.size() >= _batchWriteSize){
+							timeToWrite = true;
+						}					
+						counter++;
 					}
 				}
-				counter++;
-				if (counter%100 == 0){
-					_logger.info(String.format("Loaded %s entries.", counter));
+				
+				// Write data
+				if (timeToWrite){
+					boolean success = false;
+					for (String coll : dataToWrite.keySet()){					
+						success = _writer.batchWrite(dataToWrite.get(coll), coll);
+						if (success){
+							collectionsWritten.add(coll);
+						}
+					}
+					
+					for(int i=0;i<collectionsWritten.size();i++){
+						_logger.info(String.format("Loaded %s entries into %s. Clearing internal list.", counter, collectionsWritten.get(i)));
+						dataToWrite.remove(collectionsWritten.get(i));
+					}
+					
+					collectionsWritten.clear();					
+					timeToWrite = false;
+				}
+								
+//				counter++;
+//				if (counter%100 == 0){
+//					_logger.info(String.format("Loaded %s entries.", counter));
+//				}
+			}
+			
+			if (!dataToWrite.isEmpty()){
+				for (String coll : dataToWrite.keySet()){					
+					boolean success = _writer.batchWrite(dataToWrite.get(coll), coll);
+					if (success){
+						_logger.info(String.format("Loaded %s entries into %s.", counter, coll));
+					} else {
+						_logger.warn(String.format("Failed to load %s entries into %s.", dataToWrite.get(coll).size(), coll));
+					}
 				}
 			}
 		}
