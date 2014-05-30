@@ -76,7 +76,7 @@ public class MongoDbPostProcessorHubwayTrips extends MongoDbPostProcessorBase {
 		TimeOfDay timeOfDay = TimeOfDay.getTimeOfDay(dateToSpan.get(Calendar.HOUR_OF_DAY), dateToSpan.get(Calendar.MINUTE));
 		
 		if (timeOfDay != null){
-			map.put(timeOfDaySpanName, timeOfDay);
+			map.put(timeOfDaySpanName, timeOfDay.name());
 		} else{
 			_logger.warn(String.format("Unable to retrieve TimeOfDay enum from time %s:%s. No Day of week will be added.", dateToSpan.get(Calendar.HOUR_OF_DAY), dateToSpan.get(Calendar.MINUTE)));
 		}

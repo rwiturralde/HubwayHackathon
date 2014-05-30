@@ -73,7 +73,7 @@ public class SimpleDelimitedDataReader implements IDataReader<String, Object> {
 			
 			// Check that it lines up with the headers
 			if (delimitedHeaders.length != dataEntryValues.length){
-				_logger.error(String.format("Delimited Headers length do not match the delimited entry length. %s will assume that they are in the correct order and populate the map until the shorter array is exhausted.", this.getClass()));
+				_logger.debug(String.format("Delimited Headers length do not match the delimited entry length. %s will assume that they are in the correct order and populate the map until the shorter array is exhausted.", this.getClass()));
 			}
 			
 			// Initialize return map 
