@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans 
-	   					   http://www.springframework.org/schema/beans/spring-beans.xsd">
+	   					   http://www.springframework.org/schema/beans/spring-beans.xsd
+	   					   http://www.springframework.org/schema/util 
+	   					   http://www.springframework.org/schema/util/spring-util.xsd">
 
 	<bean id="mongoClient" class="com.mongodb.MongoClient">
 		<constructor-arg index="0" ref="mongoServer" />
@@ -43,12 +46,8 @@
 	<bean id="dataWriter" class="com.gala.dataLoader.MongoDbWriter" init-method="init">
 		<constructor-arg index="0" ref="mongoClient" />
 		<constructor-arg index="1" value="hubwayhackathon" />
-		<constructor-arg index="2" >
-			<list>
-				<value>trips</value>
-				<value>stations</value>
-			</list>
-		</constructor-arg>
+		<constructor-arg index="2" ref="allCollections" />
+		<constructor-arg index="3" ref="collectionsToClear" />
 	</bean>
 	
 	<bean id="tripsReaderProcessorPair" class="java.util.AbstractMap.SimpleEntry">
@@ -68,7 +67,23 @@
 			</list>
 		</constructor-arg>
 		<constructor-arg index="1" ref="dataWriter" />
+		<constructor-arg index="2" ref="collectionsToLoad" />
 	</bean>
+	
+	<util:list id="allCollections" value-type="java.lang.String">
+    	<value>trips</value>
+    	<value>stations</value>
+	</util:list>
+	
+	<util:list id="collectionsToClear" value-type="java.lang.String">
+    	<value>trips</value>
+    	<value>stations</value>
+	</util:list>
+	
+	<util:list id="collectionsToLoad" value-type="java.lang.String">
+    	<!-- value>trips</value>
+    	<value>stations</value-->
+	</util:list>
 	
 	<bean id="hubwayTripsCsvDataReader" class="com.gala.dataLoader.SimpleCsvDataReader" destroy-method="cleanup">
 		<constructor-arg index="0" value="resources/hubwaydata_10_12_to_11_13.csv" />
