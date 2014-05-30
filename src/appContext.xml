@@ -74,17 +74,13 @@
 	
 	<util:list id="allCollections" value-type="java.lang.String">
     	<value>stations</value>
-    	<value>trips</value>    	
+    	<value>trips</value>   	
 	</util:list>
 	
 	<util:list id="collectionsToClear" value-type="java.lang.String">
-    	<value>trips</value>
-    	<value>stations</value>
 	</util:list>
 	
 	<util:list id="collectionsToLoad" value-type="java.lang.String">
-    	<value>stations</value>
-    	<value>trips</value>
 	</util:list>
 	
 	<bean id="hubwayTripsCsvDataReader" class="com.gala.dataLoader.SimpleZipDelimitedDataReader" destroy-method="cleanup">
@@ -119,6 +115,12 @@
 		<constructor-arg index="0" value="id" />
 		<constructor-arg index="1" value="_id" />
 		<constructor-arg index="2" value="stations" />
+	</bean>
+	
+	<bean id="hubwayStationsMongoDbPostProcessor" class="com.gala.dataLoader.MongoDbPostProcessorBase">
+		<constructor-arg index="0" value="id" />
+		<constructor-arg index="1" value="_id" />
+		<constructor-arg index="2" value="historicalWeather" />
 	</bean>
 	
 	<bean id="hubwayDateFormat" class="java.text.SimpleDateFormat">
