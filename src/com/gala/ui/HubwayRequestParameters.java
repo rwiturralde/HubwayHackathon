@@ -9,16 +9,50 @@ public class HubwayRequestParameters {
 	protected TimeOfDay _timeOfDay;
 	protected int _startStationId;
 	
-	protected HubwayRequestParameters() {
-		
-	}
-	
 	public HubwayRequestParameters(Day day_, TimeOfDay timeOfDay_, int startStationId_) {
 		_day = day_;
 		_timeOfDay = timeOfDay_;
 		_startStationId = startStationId_;
 	}
 	
+	
+	
+	public Day getDay() {
+		return _day;
+	}
+
+
+
+	public void setDay(Day day_) {
+		this._day = day_;
+	}
+
+
+
+	public TimeOfDay getTimeOfDay() {
+		return _timeOfDay;
+	}
+
+
+
+	public void setTimeOfDay(TimeOfDay timeOfDay_) {
+		this._timeOfDay = timeOfDay_;
+	}
+
+
+
+	public int getStartStationId() {
+		return _startStationId;
+	}
+
+
+
+	public void setStartStationId(int startStationId_) {
+		this._startStationId = startStationId_;
+	}
+
+
+
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
