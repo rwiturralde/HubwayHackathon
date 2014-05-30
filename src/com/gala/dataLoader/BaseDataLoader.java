@@ -1,6 +1,7 @@
 package com.gala.dataLoader;
 
 import java.util.AbstractMap.SimpleEntry;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -46,7 +47,9 @@ public class BaseDataLoader<K,V> implements IDataLoader{
 		Map<K,V> nextReaderEntry;
 		Map<String,Map<K,V>> nextCollectionEntry;
 
+		_logger.info(String.format("BEGINNING DATA LOAD : %s", new java.util.Date()));
 		for (SimpleEntry<IDataReader<K,V>, IDataPostProcessor<K,V>> pair : _readPostPairs){
+			int counter = 0;
 			while ((nextReaderEntry = pair.getKey().getNextDataEntry()) != null) {
 				nextCollectionEntry = pair.getValue().postProcessDataEntry(nextReaderEntry);
 				
@@ -55,8 +58,13 @@ public class BaseDataLoader<K,V> implements IDataLoader{
 						_writer.writeEntry(nextCollectionEntry.get(coll), coll);
 					}
 				}
+				counter++;
+				if (counter%100 == 0){
+					_logger.info(String.format("Loaded %s entries.", counter));
+				}
 			}
 		}
+		_logger.info(String.format("DATA LOAD COMPLETE: %s", new java.util.Date()));
 		
 		return true;
 	}
