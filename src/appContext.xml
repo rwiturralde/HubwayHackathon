@@ -41,7 +41,7 @@
 	</bean>
 
 	<bean id="dataWriter" class="com.gala.dataLoader.MongoDbWriter" init-method="init">
-		<constructor-arg index="0" value="mongoClient" />
+		<constructor-arg index="0" ref="mongoClient" />
 		<constructor-arg index="1" value="hubwayhackathon" />
 		<constructor-arg index="2" >
 			<list>
