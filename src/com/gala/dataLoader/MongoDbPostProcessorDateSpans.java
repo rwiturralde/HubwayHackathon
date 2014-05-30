@@ -11,15 +11,15 @@ import org.apache.log4j.Logger;
 import com.gala.core.Day;
 import com.gala.core.TimeOfDay;
 
-public class MongoDbPostProcessorHubwayTrips extends MongoDbPostProcessorBase {
+public class MongoDbPostProcessorDateSpans extends MongoDbPostProcessorBase {
 
-	private static final Logger 	_logger = Logger.getLogger(MongoDbPostProcessorHubwayTrips.class);
+	private static final Logger 	_logger = Logger.getLogger(MongoDbPostProcessorDateSpans.class);
 	protected DateFormat 	hubwayDateFormat;
 	protected String 		dateIdToSpan;
 	protected String 		dayOfWeekSpanName;
 	protected String 		timeOfDaySpanName;
 	
-	public MongoDbPostProcessorHubwayTrips(String id, String mongoId,
+	public MongoDbPostProcessorDateSpans(String id, String mongoId,
 			String destinationName, DateFormat hubwayDateFormat,
 			String dateIdToSpan, String dayOfWeekSpanName,
 			String timeOfDaySpanName) {
