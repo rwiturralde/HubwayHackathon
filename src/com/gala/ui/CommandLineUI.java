@@ -73,7 +73,7 @@ public class CommandLineUI implements IHubwayUI {
 				System.out.println(day.ordinal() + " : " + day);
 			}
 			
-			System.out.print("User selection: ");
+			System.out.print("Enter selection: ");
 			dayOrdinalString = scanner_.nextLine();
 			
 			// Quit if user requested
