@@ -1,9 +1,9 @@
 package com.gala.core;
 
 public enum TimeOfDay {
-	MORNING (0, 0, "Morning"),
+	EVENING (16, 0, "Evening"),	
 	AFTERNOON (11, 0, "Afternoon"),
-	EVENING (16, 0, "Evening");
+	MORNING (0, 0, "Morning");
 	
 	protected int _startHour;
 	protected int _startMinute;

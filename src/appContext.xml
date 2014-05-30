@@ -63,6 +63,7 @@
 	<bean id="dataLoader" class="com.gala.dataLoader.BaseDataLoader">
 		<constructor-arg index="0" >
 			<list>
+				<ref bean="stationsReaderProcessorPair" />
 				<ref bean="tripsReaderProcessorPair" />
 			</list>
 		</constructor-arg>
@@ -71,18 +72,18 @@
 	</bean>
 	
 	<util:list id="allCollections" value-type="java.lang.String">
-    	<value>trips</value>
     	<value>stations</value>
+    	<value>trips</value>    	
 	</util:list>
 	
 	<util:list id="collectionsToClear" value-type="java.lang.String">
-    	<value>trips</value>
     	<value>stations</value>
+    	<value>trips</value>    	
 	</util:list>
 	
 	<util:list id="collectionsToLoad" value-type="java.lang.String">
-    	<value>trips</value>
     	<value>stations</value>
+    	<value>trips</value>
 	</util:list>
 	
 	<bean id="hubwayTripsCsvDataReader" class="com.gala.dataLoader.SimpleZipDelimitedDataReader" destroy-method="cleanup">
