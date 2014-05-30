@@ -117,10 +117,14 @@
 		<constructor-arg index="2" value="stations" />
 	</bean>
 	
-	<bean id="hubwayStationsMongoDbPostProcessor" class="com.gala.dataLoader.MongoDbPostProcessorBase">
+	<bean id="hubwayStationsMongoDbPostProcessor" class="com.gala.dataLoader.MongoDbPostProcessorDateSpans">
 		<constructor-arg index="0" value="id" />
 		<constructor-arg index="1" value="_id" />
 		<constructor-arg index="2" value="historicalWeather" />
+		<constructor-arg index="3" ref="hubwayDateFormat" />
+		<constructor-arg index="4" value="start_date" />
+		<constructor-arg index="5" value="spannedStartDay" />
+		<constructor-arg index="6" value="spannedStartTime" />
 	</bean>
 	
 	<bean id="hubwayDateFormat" class="java.text.SimpleDateFormat">

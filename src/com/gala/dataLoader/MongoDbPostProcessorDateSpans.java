@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 import com.gala.core.Day;
 import com.gala.core.TimeOfDay;
 
-public class MongoDbPostProcessorDateSpans extends MongoDbPostProcessorBase {
+public abstract class MongoDbPostProcessorDateSpans extends MongoDbPostProcessorBase {
 
 	private static final Logger 	_logger = Logger.getLogger(MongoDbPostProcessorDateSpans.class);
 	protected DateFormat 	hubwayDateFormat;
@@ -58,6 +58,8 @@ public class MongoDbPostProcessorDateSpans extends MongoDbPostProcessorBase {
 		
 		return wrapMap(map);
 	}
+	
+	abstract protected Calendar getCalendar(Map<String, Object> map);
 	
 	protected void addDayOfWeekSpan(Map<String, Object> map, Calendar dateToSpan){
 		Day dayOfWeek = Day.getDay(dateToSpan.get(Calendar.DAY_OF_WEEK));
