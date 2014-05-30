@@ -12,7 +12,6 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 
-
 /**
  * Class for writing to a mongo db instance.
  * @author Heather
@@ -28,11 +27,14 @@ public class MongoDbWriter implements IDataWriter<String, Object>{
 	protected List<String> 					_collectionNames;
 	protected DB 							_db;	
 	protected HashMap<String, DBCollection> _collections;
+	protected List<String>					_collectionsToClear;
 	
-	public MongoDbWriter(final MongoClient client_, final String dbName_, final List<String> collNames_){
+	public MongoDbWriter(final MongoClient client_, final String dbName_, 
+			final List<String> collNames_, final List<String> collToClear_){
 		_client = client_;
 		_dbName = dbName_;
 		_collectionNames = collNames_;
+		_collectionsToClear = collToClear_;
 		_isInitialized = false;
 		_collections = new HashMap<String, DBCollection>();
 	}
@@ -46,6 +48,9 @@ public class MongoDbWriter implements IDataWriter<String, Object>{
 			_db = _client.getDB(_dbName);
 			
 			for (String collName : _collectionNames){
+				if (_collectionsToClear.contains(collName)){
+					_db.getCollection(collName).drop();
+				}
 				_collections.put(collName, _db.getCollection(collName));
 			}
 			
