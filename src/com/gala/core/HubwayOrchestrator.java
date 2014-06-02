@@ -3,7 +3,6 @@ package com.gala.core;
 import org.apache.log4j.Logger;
 
 import com.gala.dataLoader.IDataLoader;
-import com.gala.ui.HubwayDataPresenter;
 import com.gala.ui.IHubwayDataPresenter;
 
 /**
@@ -36,8 +35,7 @@ public class HubwayOrchestrator {
 
 
 	public void init() {
-		//if (_dataLoader.loadData()) {
-		if (true) {
+		if (_dataLoader.loadData()) {		
 			_logger.info("Data load successful.  Launching UI");
 			_uiPresenter.run();
 		} else {

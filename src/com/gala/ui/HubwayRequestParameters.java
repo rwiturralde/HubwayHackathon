@@ -26,37 +26,25 @@ public class HubwayRequestParameters {
 		_temperature = temperature_;
 	}
 	
-	
-	
 	public Day getDay() {
 		return _day;
 	}
-
-
 
 	public void setDay(Day day_) {
 		this._day = day_;
 	}
 
-
-
 	public TimeOfDay getTimeOfDay() {
 		return _timeOfDay;
 	}
-
-
 
 	public void setTimeOfDay(TimeOfDay timeOfDay_) {
 		this._timeOfDay = timeOfDay_;
 	}
 
-
-
 	public Station getStartStation() {
 		return _startStation;
 	}
-
-
 
 	public void setStartStation(Station startStation_) {
 		this._startStation = startStation_;
@@ -67,11 +55,9 @@ public class HubwayRequestParameters {
 	}
 
 
-
-	public void setTemeprature(Temperature temperature_) {
+	public void setTemperature(Temperature temperature_) {
 		this._temperature = temperature_;
 	}
-
 
 	@Override
 	public String toString() {

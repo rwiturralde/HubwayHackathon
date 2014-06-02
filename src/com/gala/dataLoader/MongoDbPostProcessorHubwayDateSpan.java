@@ -10,13 +10,11 @@ import org.apache.log4j.Logger;
 
 public class MongoDbPostProcessorHubwayDateSpan extends MongoDbPostProcessorDateSpan{
 
-	public MongoDbPostProcessorHubwayDateSpan(String id, String mongoId,
-			String destinationName, String dayOfWeekSpanName,
-			String timeOfDaySpanName, String mongoDateName,
-			DateFormat mongoDateFormat, String dateIdToSpan, 
-			DateFormat hubwayDateFormat) {
-		super(id, mongoId, destinationName, dayOfWeekSpanName, timeOfDaySpanName,
-				mongoDateName, mongoDateFormat);
+	public MongoDbPostProcessorHubwayDateSpan(String dayOfWeekSpanName, 
+			String isWeekdayName, String timeOfDaySpanName, 
+			String mongoDateName, DateFormat mongoDateFormat,
+			String dateIdToSpan, DateFormat hubwayDateFormat) {
+		super(dayOfWeekSpanName, isWeekdayName, timeOfDaySpanName,	mongoDateName, mongoDateFormat);
 		this.dateIdToSpan = dateIdToSpan;
 		this.hubwayDateFormat = hubwayDateFormat;
 	}

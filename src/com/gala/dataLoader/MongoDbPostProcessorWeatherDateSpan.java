@@ -16,17 +16,16 @@ public class MongoDbPostProcessorWeatherDateSpan extends MongoDbPostProcessorDat
 	protected String 		dateId;
 	
 	
-	public MongoDbPostProcessorWeatherDateSpan(String id, String mongoId,
-			String destinationName, String dayOfWeekSpanName,
-			String timeOfDaySpanName, String mongoDateName,
+	public MongoDbPostProcessorWeatherDateSpan(String dayOfWeekSpanName, 
+			String isWeekdayName, String timeOfDaySpanName, String mongoDateName,
 			DateFormat mongoDateFormat, DateFormat weatherDateFormat, 
 			String dateId,	String timeId) {
-		super(id, mongoId, destinationName, dayOfWeekSpanName, timeOfDaySpanName,
-				mongoDateName, mongoDateFormat);
+		super(dayOfWeekSpanName, isWeekdayName, timeOfDaySpanName,	mongoDateName, mongoDateFormat);
 		this.weatherDateFormat = weatherDateFormat;
 		this.dateId = dateId;
 		this.timeId = timeId;		
 	}
+
 
 	protected Calendar getCalendar(Map<String, Object> map) {
 		String date = null;
@@ -51,7 +50,7 @@ public class MongoDbPostProcessorWeatherDateSpan extends MongoDbPostProcessorDat
 		
 		Date dateToSpan = null;
 		try {
-			dateToSpan = weatherDateFormat.parse(String.join("", date, time));
+			dateToSpan = weatherDateFormat.parse(String.format("%s%s", date, time));
 		} catch (ParseException e) {
 			_logger.error(String.format("Error when trying to parse date %s and time %s. %s ", date, time, e));
 			e.printStackTrace();
@@ -66,5 +65,6 @@ public class MongoDbPostProcessorWeatherDateSpan extends MongoDbPostProcessorDat
 			return null;
 		}
 	}
+	
 
 }
