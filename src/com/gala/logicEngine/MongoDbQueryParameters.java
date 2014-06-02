@@ -27,6 +27,22 @@ public class MongoDbQueryParameters {
 		_validDates = dates_;
 	}
 	
+	public int getStartStationId(){
+		return _startStationId;
+	}
+	
+	public TimeOfDay getTimeOfDay(){
+		 return _timeOfDay;
+	}
+	
+	public Temperature getTemperature(){
+		return _temperature;
+	}
+	
+	public List<String> getValidDates(){
+		return _validDates;
+	}
+	
 	public void setStartStationId(int startStationId_){
 		_startStationId = startStationId_;
 	}

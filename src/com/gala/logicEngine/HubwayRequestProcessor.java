@@ -23,16 +23,25 @@ public class HubwayRequestProcessor implements IRequestProcessor{
 		HubwayResults results = new HubwayResults();
 		
 		// Get dates with weather matching temp
-		MongoDbQueryParameters params = new MongoDbQueryParameters();
+		MongoDbQueryParameters params = new MongoDbQueryParameters(parameters_.getStartStation().getId(), 
+				parameters_.getTimeOfDay(), parameters_.getTemperature(), null);
 		List<String> datesMatchingWeather = _dataRetriever.retrieveData(QueryType.WEATHER_DATES, params);
+		_logger.info(String.format("Weather data set size of %s for params - Temp Range: %s Time of Day: %s", 
+				datesMatchingWeather.size(), Temperature.SEVENTIES, parameters_.getTimeOfDay()));
 		
 		// Get station status for those dates in time range
+		params.setValidDates(datesMatchingWeather);
 		List<StationStatus> stationStatusList = _dataRetriever.retrieveData(QueryType.STATION_STATUS_FOR_DATETIME, params);
 		
-		//if ((_dataRetriever.retrieveData()) != null)
-		//	return results;
-		
-		_logger.info("Data could not be retrieved from the database.");
+		if (stationStatusList != null && stationStatusList.size() > 0){
+			_logger.info(String.format("Station Status list size: %s", stationStatusList.size()));
+			double avg = 0.0;
+			for (StationStatus ss : stationStatusList){
+			}
+		} else {
+			_logger.info(String.format("Station Status list empty for parameters - %s", parameters_.getStartStation().getId()));
+		}
+			
 		return null;
 	}
 	

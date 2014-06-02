@@ -33,7 +33,7 @@ public class MongoDbQueryBuilder implements IQueryBuilder{
 	
 	protected MongoDbQueryObject buildStationInfoQuery(final MongoDbQueryParameters params_){
 		BasicDBObject queryObj = new BasicDBObject();
-		queryObj.append("_id", params_);
+		queryObj.append("_id", params_.getStartStationId());
 		return new MongoDbQueryObject(queryObj, new BasicDBObject(), "stations");
 	}
 	
@@ -51,8 +51,8 @@ public class MongoDbQueryBuilder implements IQueryBuilder{
 	 */
 	protected MongoDbQueryObject buildStationStatusQuery(final MongoDbQueryParameters params_){
 		BasicDBObject queryObj = new BasicDBObject();
-		queryObj.append("timeRange", params_);
-		queryObj.append("date", new BasicDBObject("$in", params_));
+		queryObj.append("spannedTime", params_.getTimeOfDay());
+		queryObj.append("date", new BasicDBObject("$in", params_.getValidDates()));
 		return new MongoDbQueryObject(queryObj, new BasicDBObject(), "stationStatus");
 	}
 	
@@ -63,9 +63,10 @@ public class MongoDbQueryBuilder implements IQueryBuilder{
 	 */
 	protected MongoDbQueryObject buildWeatherDatesQuery(final MongoDbQueryParameters params_){
 		BasicDBObject queryObj = new BasicDBObject();
-		queryObj.append("tempRange", params_);
+		queryObj.append("spannedTemperature", params_.getTemperature());
 		BasicDBObject fieldsObj = new BasicDBObject();
-		fieldsObj.append("date", true);
+		fieldsObj.append("formattedDate", true);
+		fieldsObj.append("spannedTime", true);
 		return new MongoDbQueryObject(queryObj, fieldsObj, "historicalWeather");
 	}
 	
