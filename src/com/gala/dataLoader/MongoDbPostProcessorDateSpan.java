@@ -1,9 +1,7 @@
 package com.gala.dataLoader;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -11,53 +9,40 @@ import org.apache.log4j.Logger;
 import com.gala.core.Day;
 import com.gala.core.TimeOfDay;
 
-public class MongoDbPostProcessorDateSpans extends MongoDbPostProcessorBase {
+public abstract class MongoDbPostProcessorDateSpan extends MongoDbPostProcessorBase {
 
-	private static final Logger 	_logger = Logger.getLogger(MongoDbPostProcessorDateSpans.class);
-	protected DateFormat 	hubwayDateFormat;
-	protected String 		dateIdToSpan;
+	private static final Logger 	_logger = Logger.getLogger(MongoDbPostProcessorDateSpan.class);
+
 	protected String 		dayOfWeekSpanName;
 	protected String 		timeOfDaySpanName;
+	protected String 		mongoDateName;
+	protected DateFormat	mongoDateFormat;
 	
-	public MongoDbPostProcessorDateSpans(String id, String mongoId,
-			String destinationName, DateFormat hubwayDateFormat,
-			String dateIdToSpan, String dayOfWeekSpanName,
-			String timeOfDaySpanName) {
+	public MongoDbPostProcessorDateSpan(String id, String mongoId,
+			String destinationName, String dayOfWeekSpanName, 
+			String timeOfDaySpanName, String mongoDateName, 
+			DateFormat mongoDateFormat) {
 		super(id, mongoId, destinationName);
 
-		this.hubwayDateFormat = hubwayDateFormat; 
-		this.dateIdToSpan = dateIdToSpan;
 		this.dayOfWeekSpanName = dayOfWeekSpanName;
 		this.timeOfDaySpanName = timeOfDaySpanName;
+		this.mongoDateName = mongoDateName;
+		this.mongoDateFormat = mongoDateFormat;
 	}
 	
 	public Map<String, Map<String, Object>> postProcessDataEntry(Map<String, Object> map) {
 		
 		updateId(map);
 		
-		Object dateObjToSpan;
-		if ((dateObjToSpan = map.get(dateIdToSpan)) != null){
-			Date dateToSpan = null;
-			try {
-				dateToSpan = hubwayDateFormat.parse(dateObjToSpan.toString());
-			} catch (ParseException e) {
+		Calendar calendarDateToSpan = getCalendar(map);
 
-				_logger.error(String.format("Error when trying to parse date %s. %s ", dateObjToSpan.toString(), e));
-				e.printStackTrace();
-			}
-			
-			if (dateToSpan != null){
-				Calendar calendarDateToSpan = Calendar.getInstance();
-				calendarDateToSpan.setTime(dateToSpan);
-				addDayOfWeekSpan(map, calendarDateToSpan);
-				addTimeOfDaySpan(map, calendarDateToSpan);
-			}
-		} else {
-			_logger.warn(String.format("No value found in entry for %s", dateIdToSpan));
-		}
+		addDayOfWeekSpan(map, calendarDateToSpan);
+		addTimeOfDaySpan(map, calendarDateToSpan);
 		
 		return wrapMap(map);
 	}
+	
+	abstract protected Calendar getCalendar(Map<String, Object> map);
 	
 	protected void addDayOfWeekSpan(Map<String, Object> map, Calendar dateToSpan){
 		Day dayOfWeek = Day.getDay(dateToSpan.get(Calendar.DAY_OF_WEEK));
@@ -66,7 +51,6 @@ public class MongoDbPostProcessorDateSpans extends MongoDbPostProcessorBase {
 		} else{
 			_logger.warn(String.format("Unable to retrieve Day enum from calendar day of week %s. No Day of week will be added.", dateToSpan.get(Calendar.DAY_OF_WEEK)));
 		}
-		
 	}
 	
 	
@@ -79,6 +63,16 @@ public class MongoDbPostProcessorDateSpans extends MongoDbPostProcessorBase {
 			map.put(timeOfDaySpanName, timeOfDay.name());
 		} else{
 			_logger.warn(String.format("Unable to retrieve TimeOfDay enum from time %s:%s. No Day of week will be added.", dateToSpan.get(Calendar.HOUR_OF_DAY), dateToSpan.get(Calendar.MINUTE)));
+		}
+	}
+	
+	// Assumes timeOfDaySpans are ordered from earliest to latest
+	protected void addDate(Map<String, Object> map, Calendar dateToSpan){
+		
+		if (mongoDateName != null && mongoDateFormat != null){
+			map.put(timeOfDaySpanName, mongoDateFormat.format(dateToSpan.getTime()));
+		} else{
+			_logger.warn(String.format("Invalid mongoDateName: %s and/or invalid mongoDateFormat: %s", mongoDateName, mongoDateFormat));
 		}
 	}
 
