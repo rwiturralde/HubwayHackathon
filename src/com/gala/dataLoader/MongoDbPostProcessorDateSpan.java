@@ -14,14 +14,16 @@ public abstract class MongoDbPostProcessorDateSpan implements IDataPostProcessor
 	private static final Logger 	_logger = Logger.getLogger(MongoDbPostProcessorDateSpan.class);
 
 	protected String 		dayOfWeekSpanName;
+	protected String 		isWeekdayName;
 	protected String 		timeOfDaySpanName;
 	protected String 		mongoDateName;
 	protected DateFormat	mongoDateFormat;
 	
-	public MongoDbPostProcessorDateSpan(String dayOfWeekSpanName, 
-			String timeOfDaySpanName, String mongoDateName, 
-			DateFormat mongoDateFormat) {
+	public MongoDbPostProcessorDateSpan(String dayOfWeekSpanName,  
+			String isWeekdayName, String timeOfDaySpanName, 
+			String mongoDateName, DateFormat mongoDateFormat) {
 		this.dayOfWeekSpanName = dayOfWeekSpanName;
+		this.isWeekdayName = isWeekdayName;
 		this.timeOfDaySpanName = timeOfDaySpanName;
 		this.mongoDateName = mongoDateName;
 		this.mongoDateFormat = mongoDateFormat;
@@ -40,8 +42,10 @@ public abstract class MongoDbPostProcessorDateSpan implements IDataPostProcessor
 	
 	protected void addDayOfWeekSpan(Map<String, Object> map, Calendar dateToSpan){
 		Day dayOfWeek = Day.getDay(dateToSpan.get(Calendar.DAY_OF_WEEK));
+		
 		if (dayOfWeek != null){
 			map.put(dayOfWeekSpanName, dayOfWeek.name());
+			map.put(isWeekdayName, dayOfWeek.isWeekday());
 		} else{
 			_logger.warn(String.format("Unable to retrieve Day enum from calendar day of week %s. No Day of week will be added.", dateToSpan.get(Calendar.DAY_OF_WEEK)));
 		}
