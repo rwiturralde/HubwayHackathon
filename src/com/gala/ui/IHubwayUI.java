@@ -10,6 +10,8 @@ public interface IHubwayUI {
 	
 	void launch();
 	
+	void close();
+	
 	HubwayRequestParameters getUserParameters();
 	
 	void displayResults(Object results_);
