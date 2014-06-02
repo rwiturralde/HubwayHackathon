@@ -73,16 +73,10 @@
     	<value>historicalWeather</value>   	
 	</util:list>
 	
-	<util:list id="collectionsToClear" value-type="java.lang.String">
-		<value>stations</value>
-	    <value>stationStatus</value>
-    	<value>historicalWeather</value>  
+	<util:list id="collectionsToClear" value-type="java.lang.String"> 
 	</util:list>
 	
 	<util:list id="collectionsToLoad" value-type="java.lang.String">
-    	<value>stations</value>
-    	<value>stationStatus</value>
-    	<value>historicalWeather</value>  
 	</util:list>
 	
 	<bean id="tripsReaderProcessorPair" class="java.util.AbstractMap.SimpleEntry">
@@ -260,7 +254,7 @@
 		<constructor-arg index="0" value="2e4135288e84ee81b4bb8418d67d6710" /> <!-- API KEY -->
 	</bean>
 	
-	<bean id="dataRetriever" class="com.gala.processor.MongoDbDataRetriever"init-method="init">
+	<bean id="dataRetriever" class="com.gala.logicEngine.MongoDbDataRetriever" init-method="init">
 		<constructor-arg index="0" ref="mongoClient" />
 		<constructor-arg index="1" value="hubwayhackathon" />
 		<constructor-arg index="2" ref="allCollections" />

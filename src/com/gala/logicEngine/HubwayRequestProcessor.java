@@ -1,4 +1,4 @@
-package com.gala.processor;
+package com.gala.logicEngine;
 
 import java.util.Date;
 import java.util.List;

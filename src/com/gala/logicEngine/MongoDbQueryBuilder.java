@@ -1,4 +1,4 @@
-package com.gala.processor;
+package com.gala.logicEngine;
 
 import java.util.Date;
 import java.util.List;
@@ -13,7 +13,7 @@ import com.mongodb.DBObject;
  * @author Heather
  *
  */
-public class MongoDbQueryBuilder {
+public class MongoDbQueryBuilder implements IQueryBuilder{
 
 	protected int _startStationId;
 	protected TimeOfDay _timeOfDay;
@@ -50,7 +50,7 @@ public class MongoDbQueryBuilder {
 		_temperature = temperature_;
 	}
 	
-	public DBObject[] buildQuery(final QueryType query_){
+	public Object[] buildQuery(final QueryType query_){
 		
 		switch(query_) {
 			case STATION_INFO:
@@ -67,21 +67,23 @@ public class MongoDbQueryBuilder {
 		
 	}
 	
-	protected DBObject[] buildStationInfoQuery(){
-		BasicDBObject[] queryObjArr = new BasicDBObject[1];
+	protected Object[] buildStationInfoQuery(){
+		Object[] queryObjArr = new BasicDBObject[2];
+		queryObjArr[0] = "stations";
 		BasicDBObject queryObj = new BasicDBObject();
 		queryObj.append("_id", _startStationId);
-		queryObjArr[0] = queryObj;
+		queryObjArr[1] = queryObj;
 		return queryObjArr;
 	}
 	
-	protected DBObject[] buildStationNamesQuery(){
-		BasicDBObject[] queryObjArr = new BasicDBObject[2];
+	protected Object[] buildStationNamesQuery(){
+		Object[] queryObjArr = new BasicDBObject[3];
+		queryObjArr[0] = "stations";
 		BasicDBObject queryObj = new BasicDBObject();
-		queryObjArr[0] = queryObj;
+		queryObjArr[1] = queryObj;
 		BasicDBObject fieldsObj = new BasicDBObject();
 		fieldsObj.append("station", true);
-		queryObjArr[1] = fieldsObj;
+		queryObjArr[2] = fieldsObj;
 		return queryObjArr;
 	}
 	
@@ -90,12 +92,13 @@ public class MongoDbQueryBuilder {
 	 * for the dates and time range provided.
 	 * @return
 	 */
-	protected DBObject[] buildStationStatusQuery(){
-		BasicDBObject[] queryObjArr = new BasicDBObject[1];
+	protected Object[] buildStationStatusQuery(){
+		Object[] queryObjArr = new BasicDBObject[2];
+		queryObjArr[0] = "stationStatus";
 		BasicDBObject queryObj = new BasicDBObject();
 		queryObj.append("timeRange", _timeOfDay);
 		queryObj.append("date", new BasicDBObject("$in", _validDates));
-		queryObjArr[0] = queryObj;
+		queryObjArr[1] = queryObj;
 		return queryObjArr;
 	}
 	
@@ -104,14 +107,15 @@ public class MongoDbQueryBuilder {
 	 * dates that had weather matching the temperature range given
 	 * @return
 	 */
-	protected DBObject[] buildWeatherDatesQuery(){
-		BasicDBObject[] queryObjArr = new BasicDBObject[2];
+	protected Object[] buildWeatherDatesQuery(){
+		Object[] queryObjArr = new BasicDBObject[3];
+		queryObjArr[0] = "historicalWeather";
 		BasicDBObject queryObj = new BasicDBObject();
 		queryObj.append("tempRange", _temperature);
-		queryObjArr[0] = queryObj;
+		queryObjArr[1] = queryObj;
 		BasicDBObject fieldsObj = new BasicDBObject();
 		fieldsObj.append("date", true);
-		queryObjArr[1] = fieldsObj;
+		queryObjArr[2] = fieldsObj;
 		return queryObjArr;
 	}
 	

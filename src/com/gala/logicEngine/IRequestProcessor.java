@@ -1,4 +1,4 @@
-package com.gala.processor;
+package com.gala.logicEngine;
 
 import com.gala.ui.HubwayRequestParameters;
 

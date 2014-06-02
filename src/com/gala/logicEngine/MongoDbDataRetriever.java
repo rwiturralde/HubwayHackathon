@@ -1,14 +1,12 @@
-package com.gala.processor;
+package com.gala.logicEngine;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import com.gala.core.Station;
-import com.gala.dataLoader.MongoDbWriter;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -16,7 +14,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
-public class MongoDbDataRetriever implements IDataRetriever<Station> {
+public class MongoDbDataRetriever implements IDataRetriever {
 
 	static final Logger _logger = Logger.getLogger(MongoDbDataRetriever.class);
 	
@@ -47,17 +45,17 @@ public class MongoDbDataRetriever implements IDataRetriever<Station> {
 			
 			_isInitialized = true;
 		} catch (Exception e) {
-			_logger.error("Exception thrown while initializing MongoDbWriter: " + e);
+			_logger.error("Exception thrown while initializing MongoDbDataRetriever: " + e);
 			return false;
 		}
 		return true;
 	}
 	
-	public List<Station> retrieveData(Object[] query_){
+	public <T> List<T> retrieveData(final QueryType queryType_, final Object[] params_){
 		
-		List<Station> list = new ArrayList<Station>();
+		List<T> list = new ArrayList<T>();
 		
-		String collName_ = "stations";
+		String collName_ = "";
 		DBCollection coll = _collections.get(collName_);
 		if (coll == null) {
 			_logger.warn("Collection not found: " + collName_);
@@ -70,7 +68,7 @@ public class MongoDbDataRetriever implements IDataRetriever<Station> {
 		
 		while(cursor.hasNext()){
 			DBObject objRet = cursor.next();
-			list.add(new Station(objRet.get("station").toString(), 
+			list.add((T) new Station(objRet.get("station").toString(), 
 					Integer.parseInt(objRet.get("_id").toString()), 
 					Double.parseDouble(objRet.get("lat").toString()), 
 					Double.parseDouble(objRet.get("lng").toString())));
