@@ -2,6 +2,6 @@ package com.gala.logicEngine;
 
 public interface IQueryBuilder {
 
-	Object[] buildQuery(final QueryType query_);
+	MongoDbQueryObject buildQuery(final QueryType query_);
 	
 }

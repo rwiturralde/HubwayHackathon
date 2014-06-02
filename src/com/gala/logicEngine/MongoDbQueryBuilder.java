@@ -50,7 +50,7 @@ public class MongoDbQueryBuilder implements IQueryBuilder{
 		_temperature = temperature_;
 	}
 	
-	public Object[] buildQuery(final QueryType query_){
+	public MongoDbQueryObject buildQuery(final QueryType query_){
 		
 		switch(query_) {
 			case STATION_INFO:
@@ -67,24 +67,17 @@ public class MongoDbQueryBuilder implements IQueryBuilder{
 		
 	}
 	
-	protected Object[] buildStationInfoQuery(){
-		Object[] queryObjArr = new BasicDBObject[2];
-		queryObjArr[0] = "stations";
+	protected MongoDbQueryObject buildStationInfoQuery(){
 		BasicDBObject queryObj = new BasicDBObject();
 		queryObj.append("_id", _startStationId);
-		queryObjArr[1] = queryObj;
-		return queryObjArr;
+		return new MongoDbQueryObject(queryObj, new BasicDBObject(), "stations");
 	}
 	
-	protected Object[] buildStationNamesQuery(){
-		Object[] queryObjArr = new BasicDBObject[3];
-		queryObjArr[0] = "stations";
+	protected MongoDbQueryObject buildStationNamesQuery(){
 		BasicDBObject queryObj = new BasicDBObject();
-		queryObjArr[1] = queryObj;
 		BasicDBObject fieldsObj = new BasicDBObject();
 		fieldsObj.append("station", true);
-		queryObjArr[2] = fieldsObj;
-		return queryObjArr;
+		return new MongoDbQueryObject(queryObj, fieldsObj, "stations");
 	}
 	
 	/**
@@ -92,14 +85,11 @@ public class MongoDbQueryBuilder implements IQueryBuilder{
 	 * for the dates and time range provided.
 	 * @return
 	 */
-	protected Object[] buildStationStatusQuery(){
-		Object[] queryObjArr = new BasicDBObject[2];
-		queryObjArr[0] = "stationStatus";
+	protected MongoDbQueryObject buildStationStatusQuery(){
 		BasicDBObject queryObj = new BasicDBObject();
 		queryObj.append("timeRange", _timeOfDay);
 		queryObj.append("date", new BasicDBObject("$in", _validDates));
-		queryObjArr[1] = queryObj;
-		return queryObjArr;
+		return new MongoDbQueryObject(queryObj, new BasicDBObject(), "stationStatus");
 	}
 	
 	/** 
@@ -107,16 +97,12 @@ public class MongoDbQueryBuilder implements IQueryBuilder{
 	 * dates that had weather matching the temperature range given
 	 * @return
 	 */
-	protected Object[] buildWeatherDatesQuery(){
-		Object[] queryObjArr = new BasicDBObject[3];
-		queryObjArr[0] = "historicalWeather";
+	protected MongoDbQueryObject buildWeatherDatesQuery(){
 		BasicDBObject queryObj = new BasicDBObject();
 		queryObj.append("tempRange", _temperature);
-		queryObjArr[1] = queryObj;
 		BasicDBObject fieldsObj = new BasicDBObject();
 		fieldsObj.append("date", true);
-		queryObjArr[2] = fieldsObj;
-		return queryObjArr;
+		return new MongoDbQueryObject(queryObj, fieldsObj, "historicalWeather");
 	}
 	
 }
