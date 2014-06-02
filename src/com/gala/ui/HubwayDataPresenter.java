@@ -34,7 +34,7 @@ public class HubwayDataPresenter implements IHubwayDataPresenter {
 			
 			parameters = _view.getUserParameters();
 		}
-		
+		_view.close();
 		_logger.debug("Run complete.");
 	}
 }

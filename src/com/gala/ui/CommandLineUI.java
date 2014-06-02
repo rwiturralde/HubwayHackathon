@@ -10,6 +10,7 @@ import com.gala.core.Day;
 import com.gala.core.Station;
 import com.gala.core.TimeOfDay;
 
+import dme.forecastiolib.FIODaily;
 import dme.forecastiolib.ForecastIO;
 
 /**
@@ -27,6 +28,7 @@ public class CommandLineUI implements IHubwayUI {
 	
 	protected ForecastIO _forecastIO;
 	protected Set<Station> _stations;
+	protected Scanner _scanner;
 	
 	protected CommandLineUI() {
 		
@@ -34,43 +36,57 @@ public class CommandLineUI implements IHubwayUI {
 	
 	public CommandLineUI(ForecastIO forecastIO_) {
 		_forecastIO = forecastIO_;
+		_forecastIO.setUnits(ForecastIO.UNITS_US);
+		// Exclude minutely from forecast
+		_forecastIO.setExcludeURL("minutely");
 		_stations = loadStations();
+		_scanner = null;
 	}
 	
 	public void launch() {
+		_scanner = new Scanner(System.in);
 		printStartupMessage();
 	}
 	
+	public void close() {
+		if (_scanner != null)
+			_scanner.close();
+	}
 
 	public HubwayRequestParameters getUserParameters() {
 		HubwayRequestParameters userParams = new HubwayRequestParameters();
-		Scanner scanner = new Scanner(System.in);
 		
 		//Day chosenDay = getDayFromUser(scanner);
-		Calendar chosenCal = getForecastDateFromUser(scanner);
+		Calendar chosenCal = getForecastDateFromUser();
 		
 		if (chosenCal == null)
 			return null;
 		
 		userParams.setDay(Day.fromCalendar(chosenCal));
 		
-		Station chosenStation = getHubwayStationFromUser(scanner);
+		Station chosenStation = getHubwayStationFromUser();
 		
 		if (chosenStation == null)
 			return null;
 		
 		userParams.setStartStation(chosenStation);
 		
-		TimeOfDay chosenTimeOfDay = getTimeOfDayFromUser(scanner);
+		TimeOfDay chosenTimeOfDay = getTimeOfDayFromUser();
 		
 		if (chosenTimeOfDay == null)
 			return null;
 		
 		userParams.setTimeOfDay(chosenTimeOfDay);
 		
-		scanner.close();
+		_forecastIO.getForecast(chosenStation.getLatitude().toString(), chosenStation.getLongitude().toString());
+		FIODaily daily = new FIODaily(_forecastIO);
+		if (daily.days() < 0) {
+			System.out.println("No forecast data available for the chosen day...");
+			return null;
+		} else {
+			System.out.println("Temp forecast for that day is " + daily.getDay(0).temperatureMax());
+		}
 		
-		System.out.println("User chose: " + userParams);
 		
 		return userParams;
 	}
@@ -91,7 +107,7 @@ public class CommandLineUI implements IHubwayUI {
 		System.out.println("");
 	}
 
-	protected Calendar getForecastDateFromUser(Scanner scanner_) {
+	protected Calendar getForecastDateFromUser() {
 		
 		String daySelectionString = "";
 		int daySelectionInt = -1;
@@ -106,7 +122,7 @@ public class CommandLineUI implements IHubwayUI {
 			}
 			
 			System.out.print("Enter selection: ");
-			daySelectionString = scanner_.nextLine();
+			daySelectionString = _scanner.nextLine();
 			
 			// Quit if user requested
 			if (daySelectionString.toLowerCase().equals("q"))
@@ -133,7 +149,7 @@ public class CommandLineUI implements IHubwayUI {
 		return returnCal;
 	}
 	
-	protected Station getHubwayStationFromUser(Scanner scanner_) {
+	protected Station getHubwayStationFromUser() {
 		
 		String stationSelectionString = "";
 		int stationSelectionInt = -1;
@@ -149,7 +165,7 @@ public class CommandLineUI implements IHubwayUI {
 			}
 			
 			System.out.print("Enter selection: ");
-			stationSelectionString = scanner_.nextLine();
+			stationSelectionString = _scanner.nextLine();
 			
 			// Quit if user requested
 			if (stationSelectionString.toLowerCase().equals("q"))
@@ -175,7 +191,7 @@ public class CommandLineUI implements IHubwayUI {
 		
 	}
 	
-	protected TimeOfDay getTimeOfDayFromUser(Scanner scanner_) {
+	protected TimeOfDay getTimeOfDayFromUser() {
 		
 		String timeOfDayOrdinalString = "";
 		int timeOfDayOrdinal = -1;
@@ -188,7 +204,7 @@ public class CommandLineUI implements IHubwayUI {
 			}
 			
 			System.out.print("Enter selection: ");
-			timeOfDayOrdinalString = scanner_.nextLine();
+			timeOfDayOrdinalString = _scanner.nextLine();
 			
 			// Quit if user requested
 			if (timeOfDayOrdinalString.toLowerCase().equals("q"))

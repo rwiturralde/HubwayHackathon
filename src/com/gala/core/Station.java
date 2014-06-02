@@ -4,19 +4,19 @@ public class Station {
 
 	private String _name;
 	private int _id;
-	private double _lat;
-	private double _lon;
+	private Double _lat;
+	private Double _lon;
 	private String _municipality;
 	
 	public Station(){
 		_name = "";
 		_id = 0;
-		_lat = 0.0;
-		_lon = 0.0;
+		_lat = new Double(0.0);
+		_lon = new Double(0.0);
 		_municipality = "";
 	}
 	
-	public Station(final String name_, final int id_, final double lon_, final double lat_){
+	public Station(final String name_, final int id_, final Double lon_, final Double lat_){
 		_name = name_;
 		_id = id_;
 		_lon = lon_;
@@ -31,11 +31,11 @@ public class Station {
 		return _id;
 	}
 	
-	public double getLatitude(){
+	public Double getLatitude(){
 		return _lat;
 	}
 	
-	public double getLongitude(){
+	public Double getLongitude(){
 		return _lon;
 	}
 	
@@ -47,11 +47,11 @@ public class Station {
 		_id = id_;
 	}
 	
-	public void setLatitude(final double lat_){
+	public void setLatitude(final Double lat_){
 		_lat = lat_;
 	}
 	
-	public void setLongitude(final double lon_){
+	public void setLongitude(final Double lon_){
 		_lon = lon_;
 	}
 
