@@ -8,9 +8,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.gala.core.Temperature;
-import com.gala.core.TimeOfDay;
-
 public class MongoDbPostProcessorWeatherDateSpan extends MongoDbPostProcessorDateSpan{
 
 	private static final Logger 	_logger = Logger.getLogger(MongoDbPostProcessorWeatherDateSpan.class);
@@ -19,11 +16,11 @@ public class MongoDbPostProcessorWeatherDateSpan extends MongoDbPostProcessorDat
 	protected String 		dateId;
 	
 	
-	public MongoDbPostProcessorWeatherDateSpan(String dayOfWeekSpanName,
-			String timeOfDaySpanName, String mongoDateName,
+	public MongoDbPostProcessorWeatherDateSpan(String dayOfWeekSpanName, 
+			String isWeekdayName, String timeOfDaySpanName, String mongoDateName,
 			DateFormat mongoDateFormat, DateFormat weatherDateFormat, 
 			String dateId,	String timeId) {
-		super(dayOfWeekSpanName, timeOfDaySpanName,	mongoDateName, mongoDateFormat);
+		super(dayOfWeekSpanName, isWeekdayName, timeOfDaySpanName,	mongoDateName, mongoDateFormat);
 		this.weatherDateFormat = weatherDateFormat;
 		this.dateId = dateId;
 		this.timeId = timeId;		

@@ -17,11 +17,11 @@ public class MongoDbPostProcessorStationStatusDateSpan extends
 	protected String minId;
 	
 
-	public MongoDbPostProcessorStationStatusDateSpan(String dayOfWeekSpanName,
-			String timeOfDaySpanName, String mongoDateName,
+	public MongoDbPostProcessorStationStatusDateSpan(String dayOfWeekSpanName, 
+			String isWeekdayName, String timeOfDaySpanName, String mongoDateName,
 			DateFormat mongoDateFormat, String yearId, String monthId, 
 			String dayId, String hourId, String minId) {
-		super(dayOfWeekSpanName, timeOfDaySpanName, mongoDateName, mongoDateFormat);
+		super(dayOfWeekSpanName, isWeekdayName, timeOfDaySpanName, mongoDateName, mongoDateFormat);
 		this.yearId = yearId;
 		this.monthId = monthId;
 		this.dayId = dayId;
