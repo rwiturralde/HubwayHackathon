@@ -8,7 +8,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-public class MongoDbPostProcessorWeatherDateSpan extends MongoDbPostProcessorDateSpans{
+public class MongoDbPostProcessorWeatherDateSpan extends MongoDbPostProcessorDateSpan{
 
 	private static final Logger 	_logger = Logger.getLogger(MongoDbPostProcessorWeatherDateSpan.class);
 	protected DateFormat 	weatherDateFormat;
@@ -20,12 +20,12 @@ public class MongoDbPostProcessorWeatherDateSpan extends MongoDbPostProcessorDat
 			String destinationName, String dayOfWeekSpanName,
 			String timeOfDaySpanName, String mongoDateName,
 			DateFormat mongoDateFormat, DateFormat weatherDateFormat, 
-			String timeId, String dateId) {
+			String dateId,	String timeId) {
 		super(id, mongoId, destinationName, dayOfWeekSpanName, timeOfDaySpanName,
 				mongoDateName, mongoDateFormat);
 		this.weatherDateFormat = weatherDateFormat;
-		this.timeId = timeId;
 		this.dateId = dateId;
+		this.timeId = timeId;		
 	}
 
 	protected Calendar getCalendar(Map<String, Object> map) {

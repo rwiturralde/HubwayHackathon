@@ -2,7 +2,7 @@ package com.gala.core;
 
 public enum TimeOfDay {
 	EVENING (16, 0, "Evening"),	
-	AFTERNOON (11, 0, "Afternoon"),
+	MIDDAY (11, 0, "Midday"),
 	MORNING (0, 0, "Morning");
 	
 	protected int _startHour;

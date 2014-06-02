@@ -9,16 +9,16 @@ import org.apache.log4j.Logger;
 import com.gala.core.Day;
 import com.gala.core.TimeOfDay;
 
-public abstract class MongoDbPostProcessorDateSpans extends MongoDbPostProcessorBase {
+public abstract class MongoDbPostProcessorDateSpan extends MongoDbPostProcessorBase {
 
-	private static final Logger 	_logger = Logger.getLogger(MongoDbPostProcessorDateSpans.class);
+	private static final Logger 	_logger = Logger.getLogger(MongoDbPostProcessorDateSpan.class);
 
 	protected String 		dayOfWeekSpanName;
 	protected String 		timeOfDaySpanName;
 	protected String 		mongoDateName;
 	protected DateFormat	mongoDateFormat;
 	
-	public MongoDbPostProcessorDateSpans(String id, String mongoId,
+	public MongoDbPostProcessorDateSpan(String id, String mongoId,
 			String destinationName, String dayOfWeekSpanName, 
 			String timeOfDaySpanName, String mongoDateName, 
 			DateFormat mongoDateFormat) {

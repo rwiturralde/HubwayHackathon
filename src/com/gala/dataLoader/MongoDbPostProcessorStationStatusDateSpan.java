@@ -6,10 +6,10 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-public class MongoDbPostProcessorStationStatusDateSpans extends
-		MongoDbPostProcessorDateSpans {
+public class MongoDbPostProcessorStationStatusDateSpan extends
+		MongoDbPostProcessorDateSpan {
 
-	private static final Logger 	_logger = Logger.getLogger(MongoDbPostProcessorStationStatusDateSpans.class);
+	private static final Logger 	_logger = Logger.getLogger(MongoDbPostProcessorStationStatusDateSpan.class);
 	protected String yearId;
 	protected String monthId;
 	protected String dayId;
@@ -17,7 +17,7 @@ public class MongoDbPostProcessorStationStatusDateSpans extends
 	protected String minId;
 	
 
-	public MongoDbPostProcessorStationStatusDateSpans(String id,
+	public MongoDbPostProcessorStationStatusDateSpan(String id,
 			String mongoId, String destinationName, String dayOfWeekSpanName,
 			String timeOfDaySpanName, String mongoDateName,
 			DateFormat mongoDateFormat, String yearId, String monthId, 

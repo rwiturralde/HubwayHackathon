@@ -1,5 +1,8 @@
 package com.gala.ui;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Scanner;
 
 import com.gala.core.Day;
@@ -15,6 +18,10 @@ import dme.forecastiolib.ForecastIO;
  */
 public class CommandLineUI implements IHubwayUI {
 
+	// Number of days into the future (incl today) that we'll allow for forecasting
+	protected final int FORECAST_RANGE = 3;
+	protected final SimpleDateFormat _dateFormat = new SimpleDateFormat("E M d, Y");
+	
 	protected ForecastIO _forecastIO;
 	
 	protected CommandLineUI() {
@@ -34,12 +41,13 @@ public class CommandLineUI implements IHubwayUI {
 		HubwayRequestParameters userParams = null;
 		Scanner scanner = new Scanner(System.in);
 		
-		Day chosenDay = getDayFromUser(scanner);
+		//Day chosenDay = getDayFromUser(scanner);
+		Calendar chosenCal = getForecastDateFromUser(scanner);
 		
-		if (chosenDay == null)
+		if (chosenCal == null)
 			return null;
 		
-		System.out.println("User chose " + chosenDay);
+		System.out.println("User chose " + chosenCal.getTime());
 		
 		scanner.close();
 		return userParams;
@@ -53,7 +61,7 @@ public class CommandLineUI implements IHubwayUI {
 	protected void printStartupMessage() {
 		System.out.println("*************************************************");
 		System.out.println("*                                               *");
-		System.out.println("*             Hubway Trip Predictor             *");
+		System.out.println("*             Hubway Forecaster                 *");
 		System.out.println("*                                               *");
 		System.out.println("*************************************************");
 		System.out.println("");
@@ -77,7 +85,7 @@ public class CommandLineUI implements IHubwayUI {
 			dayOrdinalString = scanner_.nextLine();
 			
 			// Quit if user requested
-			if (dayOrdinalString.toLowerCase() == "q")
+			if (dayOrdinalString.toLowerCase().equals("q"))
 				return null;
 			
 			try {
@@ -87,7 +95,7 @@ public class CommandLineUI implements IHubwayUI {
 				continue;
 			} 
 			
-			if (dayOrdinal < 0 || dayOrdinal > Day.values().length -1) {
+			if (dayOrdinal < 0 || dayOrdinal >= Day.values().length) {
 				System.out.println("Invalid selection.  Please choose the number corresponding to a valid day.");
 				continue;
 			} else {
@@ -96,8 +104,49 @@ public class CommandLineUI implements IHubwayUI {
 			}
 		}
 		
-		
 		return Day.values()[dayOrdinal];
+	}
+	
+	protected Calendar getForecastDateFromUser(Scanner scanner_) {
+		
+		String daySelectionString = "";
+		int daySelectionInt = -1;
+		
+		while (true) {
+			System.out.println("Please choose when you play to leave for your trip or enter \'q\' to quit.  Valid days are:");
+			
+			Calendar tempCal = Calendar.getInstance();
+			for(int i = 0; i < FORECAST_RANGE; i++) {
+				System.out.println(i + " : " + _dateFormat.format(tempCal.getTime()));
+				tempCal.add(Calendar.DATE, 1);
+			}
+			
+			System.out.print("Enter selection: ");
+			daySelectionString = scanner_.nextLine();
+			
+			// Quit if user requested
+			if (daySelectionString.toLowerCase().equals("q"))
+				return null;
+			
+			try {
+				daySelectionInt = Integer.parseInt(daySelectionString);
+			} catch (NumberFormatException e) {
+				System.out.println("Invalid number.");
+				continue;
+			} 
+			
+			if (daySelectionInt < 0 || daySelectionInt >= FORECAST_RANGE) {
+				System.out.println("Invalid selection.  Please choose the number corresponding to a valid day.");
+				continue;
+			} else {
+				// Valid selection.
+				break;
+			}
+		}
+		
+		Calendar returnCal = Calendar.getInstance();
+		returnCal.add(Calendar.DATE, daySelectionInt);
+		return returnCal;
 	}
 	
 }

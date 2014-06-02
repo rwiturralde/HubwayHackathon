@@ -17,8 +17,8 @@
 	</bean>
 
 	<bean id="mongoServer" class="com.mongodb.ServerAddress">
-		<constructor-arg index="0" value="ds033459.mongolab.com" />
-		<constructor-arg index="1" value="33459" />
+		<constructor-arg index="0" value="ds051858.mongolab.com" />
+		<constructor-arg index="1" value="51858" />
 	</bean>
 
 	<bean id="mongoCredential" class="com.mongodb.MongoCredential" factory-method="createMongoCRCredential">
@@ -81,6 +81,7 @@
 	</util:list>
 	
 	<util:list id="collectionsToLoad" value-type="java.lang.String">
+		<value>stations</value>
 	</util:list>
 	
 	<bean id="hubwayTripsCsvDataReader" class="com.gala.dataLoader.SimpleZipDelimitedDataReader" destroy-method="cleanup">
@@ -101,14 +102,34 @@
 		<constructor-arg index="3" value="," />
 	</bean>
 	
-	<bean id="hubwayTripsMongoDbPostProcessor" class="com.gala.dataLoader.MongoDbPostProcessorDateSpans">
+	<bean id="weatherCsvDataReader" class="com.gala.dataLoader.SimpleZipDelimitedDataReader" destroy-method="cleanup">
+		<constructor-arg index="0" value="resources/HistoricalWeather.zip" />
+		<constructor-arg index="1" value="true" />
+		<constructor-arg index="2">
+			<null/>
+		</constructor-arg> 
+		<constructor-arg index="3" value="," />
+	</bean>
+	
+	<bean id="hubwayStationStatusCsvDataReader" class="com.gala.dataLoader.SimpleZipDelimitedDataReader" destroy-method="cleanup">
+		<constructor-arg index="0" value="resources/stationStatus_unique_year-month-day-hour.zip" />
+		<constructor-arg index="1" value="true" />
+		<constructor-arg index="2">
+			<null/>
+		</constructor-arg> 
+		<constructor-arg index="3" value="," />
+	</bean>
+
+	<bean id="hubwayTripsMongoDbPostProcessor" class="com.gala.dataLoader.MongoDbPostProcessorHubwayDateSpan">
 		<constructor-arg index="0" value="id" />
 		<constructor-arg index="1" value="_id" />
 		<constructor-arg index="2" value="trips" />
-		<constructor-arg index="3" ref="hubwayDateFormat" />
-		<constructor-arg index="4" value="start_date" />
-		<constructor-arg index="5" value="spannedStartDay" />
-		<constructor-arg index="6" value="spannedStartTime" />
+		<constructor-arg index="3" value="spannedStartDay" />
+		<constructor-arg index="4" value="spannedStartTime" />		
+		<constructor-arg index="5" value="formattedDate" />
+		<constructor-arg index="6" ref="mongoDateFormat" />
+		<constructor-arg index="7" value="start_date" />
+		<constructor-arg index="8" ref="hubwayDateFormat" />
 	</bean>
 	
 	<bean id="hubwayStationsMongoDbPostProcessor" class="com.gala.dataLoader.MongoDbPostProcessorBase">
@@ -117,18 +138,45 @@
 		<constructor-arg index="2" value="stations" />
 	</bean>
 	
-	<bean id="hubwayStationsMongoDbPostProcessor" class="com.gala.dataLoader.MongoDbPostProcessorDateSpans">
-		<constructor-arg index="0" value="id" />
-		<constructor-arg index="1" value="_id" />
+	<bean id="stationStatusMongoDbPostProcessor" class="com.gala.dataLoader.MongoDbPostProcessorStationStatusDateSpan">
+		<constructor-arg index="0"><null/></constructor-arg> 
+		<constructor-arg index="1"><null/></constructor-arg> 
+		<constructor-arg index="2" value="stationStatus" />
+		<constructor-arg index="3" value="spannedDay" />
+		<constructor-arg index="4" value="spannedTime" />
+		<constructor-arg index="5" value="formattedDate" />
+		<constructor-arg index="6" ref="mongoDateFormat" />
+		<constructor-arg index="7" value="year" />
+		<constructor-arg index="8" value="month" />
+		<constructor-arg index="9" value="day" />
+		<constructor-arg index="10" value="hour" />
+		<constructor-arg index="11"><null/></constructor-arg> 
+	</bean>
+	
+	
+	<bean id="weatherMongoDbPostProcessor" class="com.gala.dataLoader.MongoDbPostProcessorWeatherDateSpan">
+		<constructor-arg index="0"><null/></constructor-arg> 
+		<constructor-arg index="1"><null/></constructor-arg> 
 		<constructor-arg index="2" value="historicalWeather" />
-		<constructor-arg index="3" ref="hubwayDateFormat" />
-		<constructor-arg index="4" value="start_date" />
-		<constructor-arg index="5" value="spannedStartDay" />
-		<constructor-arg index="6" value="spannedStartTime" />
+		<constructor-arg index="3" value="spannedDay" />
+		<constructor-arg index="4" value="spannedTime" />
+		<constructor-arg index="5" value="formattedDate" />
+		<constructor-arg index="6" ref="mongoDateFormat" />
+		<constructor-arg index="7" ref="weatherDateFormat" />
+		<constructor-arg index="8" value="Date" />
+		<constructor-arg index="9" value="Time" />
 	</bean>
 	
 	<bean id="hubwayDateFormat" class="java.text.SimpleDateFormat">
 		<constructor-arg index="0" value="yyyy-MM-dd kk:mm:ss" />
+	</bean>
+	
+	<bean id="mongoDateFormat" class="java.text.SimpleDateFormat">
+		<constructor-arg index="0" value="yyyy-MM-dd kk:mm:ss" />
+	</bean>
+	
+	<bean id="weatherDateFormat" class="java.text.SimpleDateFormat">
+		<constructor-arg index="0" value="yyyyMMddkkmm" />
 	</bean>
 
 	<bean id="forecastIO" class="dme.forecastiolib.ForecastIO">
