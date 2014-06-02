@@ -81,6 +81,7 @@
 	</util:list>
 	
 	<util:list id="collectionsToLoad" value-type="java.lang.String">
+		<value>stations</value>
 	</util:list>
 	
 	<bean id="hubwayTripsCsvDataReader" class="com.gala.dataLoader.SimpleZipDelimitedDataReader" destroy-method="cleanup">
