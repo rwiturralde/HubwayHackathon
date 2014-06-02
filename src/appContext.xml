@@ -74,33 +74,87 @@
 	</util:list>
 	
 	<util:list id="collectionsToClear" value-type="java.lang.String">
+		<value>stations</value>
 	    <value>stationStatus</value>
     	<value>historicalWeather</value>  
 	</util:list>
 	
 	<util:list id="collectionsToLoad" value-type="java.lang.String">
+    	<value>stations</value>
     	<value>stationStatus</value>
     	<value>historicalWeather</value>  
 	</util:list>
 	
 	<bean id="tripsReaderProcessorPair" class="java.util.AbstractMap.SimpleEntry">
 		<constructor-arg index="0" ref="hubwayTripsCsvDataReader" />
-		<constructor-arg index="1" ref="hubwayTripsMongoDbPostProcessor" />
+		<constructor-arg index="1" ref="hubwayTripsReaderPostProcessorCoord" />
+	</bean>
+	
+	<bean id="hubwayTripsReaderPostProcessorCoord" class="com.gala.dataLoader.MongoDbPostProcessorCoordinator">
+		<constructor-arg index="0">
+			<list>
+				<ref bean="hubwayTripsMongoDbPostProcessor" />
+			</list>
+		</constructor-arg>
+		<constructor-arg index="1">
+			<list>
+				<value>trips</value>
+			</list>
+		</constructor-arg>
 	</bean>
 	
 	<bean id="stationsReaderProcessorPair" class="java.util.AbstractMap.SimpleEntry">
 		<constructor-arg index="0" ref="hubwayStationsCsvDataReader" />
-		<constructor-arg index="1" ref="hubwayStationsMongoDbPostProcessor" />
+		<constructor-arg index="1" ref="hubwayStationsReaderPostProcessorCoord" />
+	</bean>
+	
+	<bean id="hubwayStationsReaderPostProcessorCoord" class="com.gala.dataLoader.MongoDbPostProcessorCoordinator">
+		<constructor-arg index="0">
+			<list>
+				<ref bean="hubwayStationsMongoDbPostProcessor" />
+			</list>
+		</constructor-arg>
+		<constructor-arg index="1">
+			<list>
+				<value>stations</value>
+			</list>
+		</constructor-arg>
 	</bean>
 	
 	<bean id="stationStatusReaderProcessorPair" class="java.util.AbstractMap.SimpleEntry">
 		<constructor-arg index="0" ref="hubwayStationStatusCsvDataReader" />
-		<constructor-arg index="1" ref="stationStatusMongoDbPostProcessor" />
+		<constructor-arg index="1" ref="stationStatusReaderPostProcessorCoord" />
 	</bean>
 	
+	<bean id="stationStatusReaderPostProcessorCoord" class="com.gala.dataLoader.MongoDbPostProcessorCoordinator">
+		<constructor-arg index="0">
+			<list>
+				<ref bean="stationStatusMongoDbPostProcessor" />
+			</list>
+		</constructor-arg>
+		<constructor-arg index="1">
+			<list>
+				<value>stationStatus</value>
+			</list>
+		</constructor-arg>
+	</bean>
+		
 	<bean id="historicalWeatherReaderProcessorPair" class="java.util.AbstractMap.SimpleEntry">
 		<constructor-arg index="0" ref="historicalWeatherCsvDataReader" />
-		<constructor-arg index="1" ref="historicalWeatherMongoDbPostProcessor" />
+		<constructor-arg index="1" ref="historicalWeatherReaderPostProcessorCoord" />
+	</bean>
+	
+	<bean id="historicalWeatherReaderPostProcessorCoord" class="com.gala.dataLoader.MongoDbPostProcessorCoordinator">
+		<constructor-arg index="0">
+			<list>
+				<ref bean="historicalWeatherMongoDbPostProcessor" />
+			</list>
+		</constructor-arg>
+		<constructor-arg index="1">
+			<list>
+				<value>historicalWeather</value>
+			</list>
+		</constructor-arg>
 	</bean>
 	
 	<bean id="hubwayTripsCsvDataReader" class="com.gala.dataLoader.SimpleZipDelimitedDataReader" destroy-method="cleanup">

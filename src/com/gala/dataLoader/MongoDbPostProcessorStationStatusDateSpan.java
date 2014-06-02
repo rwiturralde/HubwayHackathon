@@ -31,18 +31,6 @@ public class MongoDbPostProcessorStationStatusDateSpan extends
 		this.minId = minId;
 	}
 
-	public Map<String, Map<String, Object>> postProcessDataEntry(Map<String, Object> map) {
-		
-		updateId(map);
-		
-		Calendar calendarDateToSpan = getCalendar(map);
-		
-		addDayOfWeekSpan(map, calendarDateToSpan);
-		addTimeOfDaySpan(map, calendarDateToSpan);
-		
-		return wrapMap(map);
-	}
-
 	@Override
 	protected Calendar getCalendar(Map<String, Object> map) {
 		int year = 0;

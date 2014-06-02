@@ -30,7 +30,7 @@ public abstract class MongoDbPostProcessorDateSpan extends MongoDbPostProcessorB
 		this.mongoDateFormat = mongoDateFormat;
 	}
 	
-	public Map<String, Map<String, Object>> postProcessDataEntry(Map<String, Object> map) {
+	public void postProcessDataEntry(Map<String, Object> map) {
 		
 		updateId(map);
 		
@@ -38,8 +38,7 @@ public abstract class MongoDbPostProcessorDateSpan extends MongoDbPostProcessorB
 
 		addDayOfWeekSpan(map, calendarDateToSpan);
 		addTimeOfDaySpan(map, calendarDateToSpan);
-		
-		return wrapMap(map);
+		addDate(map, calendarDateToSpan);
 	}
 	
 	abstract protected Calendar getCalendar(Map<String, Object> map);
@@ -66,11 +65,10 @@ public abstract class MongoDbPostProcessorDateSpan extends MongoDbPostProcessorB
 		}
 	}
 	
-	// Assumes timeOfDaySpans are ordered from earliest to latest
 	protected void addDate(Map<String, Object> map, Calendar dateToSpan){
 		
 		if (mongoDateName != null && mongoDateFormat != null){
-			map.put(timeOfDaySpanName, mongoDateFormat.format(dateToSpan.getTime()));
+			map.put(mongoDateName, mongoDateFormat.format(dateToSpan.getTime()));
 		} else{
 			_logger.warn(String.format("Invalid mongoDateName: %s and/or invalid mongoDateFormat: %s", mongoDateName, mongoDateFormat));
 		}

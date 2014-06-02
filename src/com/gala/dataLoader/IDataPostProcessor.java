@@ -20,5 +20,5 @@ public interface IDataPostProcessor<K,V> {
 	 * @param Input map to post process
 	 * @return Map of Destination collection name to map entry
 	 */
-	public Map<String, Map<K,V>> postProcessDataEntry(Map<K,V> map);
+	public void postProcessDataEntry(Map<K,V> map);
 }

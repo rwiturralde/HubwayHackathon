@@ -37,11 +37,9 @@ public class MongoDbPostProcessorBase implements IDataPostProcessor <String, Obj
 	 * @return  The map that has been post processed
 	 * 
 	 */
-	public Map<String, Map<String, Object>> postProcessDataEntry(Map<String, Object> map) {
+	public void postProcessDataEntry(Map<String, Object> map) {
 		
 		updateId(map);
-		
-		return wrapMap(map);
 	}
 	
 	protected void updateId(Map<String, Object> map){
@@ -56,13 +54,7 @@ public class MongoDbPostProcessorBase implements IDataPostProcessor <String, Obj
 			_logger.warn(String.format("No value found in entry for %s", id));
 		}
 	}
-	
-	protected Map<String, Map<String, Object>> wrapMap(Map<String, Object> map){
-		Map<String, Map<String, Object>> returnMap = new HashMap<String, Map<String,Object>>();
-		returnMap.put(destinationName, map);
-			
-		return returnMap;
-	}
+
 	
 
 }
