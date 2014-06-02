@@ -46,6 +46,9 @@ public class MongoDbPostProcessorBase implements IDataPostProcessor <String, Obj
 	
 	protected void updateId(Map<String, Object> map){
 		Object mongoDocumentId;
+		if (id == null){
+			return;
+		}
 		if ((mongoDocumentId =map.remove(id)) != null){
 			map.put(mongoId, mongoDocumentId);
 			

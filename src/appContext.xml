@@ -69,21 +69,18 @@
 		</constructor-arg>
 		<constructor-arg index="1" ref="dataWriter" />
 		<constructor-arg index="2" ref="collectionsToLoad" />
+		<constructor-arg index="3" value="1000" />
 	</bean>
 	
 	<util:list id="allCollections" value-type="java.lang.String">
     	<value>stations</value>
-    	<value>trips</value>    	
+    	<value>trips</value>   	
 	</util:list>
 	
 	<util:list id="collectionsToClear" value-type="java.lang.String">
-    	<value>stations</value>
-    	<value>trips</value>    	
 	</util:list>
 	
 	<util:list id="collectionsToLoad" value-type="java.lang.String">
-    	<value>stations</value>
-    	<value>trips</value>
 	</util:list>
 	
 	<bean id="hubwayTripsCsvDataReader" class="com.gala.dataLoader.SimpleZipDelimitedDataReader" destroy-method="cleanup">
@@ -104,7 +101,7 @@
 		<constructor-arg index="3" value="," />
 	</bean>
 	
-	<bean id="hubwayTripsMongoDbPostProcessor" class="com.gala.dataLoader.MongoDbPostProcessorHubwayTrips">
+	<bean id="hubwayTripsMongoDbPostProcessor" class="com.gala.dataLoader.MongoDbPostProcessorDateSpans">
 		<constructor-arg index="0" value="id" />
 		<constructor-arg index="1" value="_id" />
 		<constructor-arg index="2" value="trips" />
