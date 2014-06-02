@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 import com.gala.core.Day;
 import com.gala.core.TimeOfDay;
 
-public abstract class MongoDbPostProcessorDateSpan extends MongoDbPostProcessorBase {
+public abstract class MongoDbPostProcessorDateSpan implements IDataPostProcessor<String, Object> {
 
 	private static final Logger 	_logger = Logger.getLogger(MongoDbPostProcessorDateSpan.class);
 
@@ -18,28 +18,22 @@ public abstract class MongoDbPostProcessorDateSpan extends MongoDbPostProcessorB
 	protected String 		mongoDateName;
 	protected DateFormat	mongoDateFormat;
 	
-	public MongoDbPostProcessorDateSpan(String id, String mongoId,
-			String destinationName, String dayOfWeekSpanName, 
+	public MongoDbPostProcessorDateSpan(String dayOfWeekSpanName, 
 			String timeOfDaySpanName, String mongoDateName, 
 			DateFormat mongoDateFormat) {
-		super(id, mongoId, destinationName);
-
 		this.dayOfWeekSpanName = dayOfWeekSpanName;
 		this.timeOfDaySpanName = timeOfDaySpanName;
 		this.mongoDateName = mongoDateName;
 		this.mongoDateFormat = mongoDateFormat;
 	}
 	
-	public Map<String, Map<String, Object>> postProcessDataEntry(Map<String, Object> map) {
-		
-		updateId(map);
-		
+	public void postProcessDataEntry(Map<String, Object> map) {
+				
 		Calendar calendarDateToSpan = getCalendar(map);
 
 		addDayOfWeekSpan(map, calendarDateToSpan);
 		addTimeOfDaySpan(map, calendarDateToSpan);
-		
-		return wrapMap(map);
+		addDate(map, calendarDateToSpan);
 	}
 	
 	abstract protected Calendar getCalendar(Map<String, Object> map);
@@ -66,11 +60,10 @@ public abstract class MongoDbPostProcessorDateSpan extends MongoDbPostProcessorB
 		}
 	}
 	
-	// Assumes timeOfDaySpans are ordered from earliest to latest
 	protected void addDate(Map<String, Object> map, Calendar dateToSpan){
 		
 		if (mongoDateName != null && mongoDateFormat != null){
-			map.put(timeOfDaySpanName, mongoDateFormat.format(dateToSpan.getTime()));
+			map.put(mongoDateName, mongoDateFormat.format(dateToSpan.getTime()));
 		} else{
 			_logger.warn(String.format("Invalid mongoDateName: %s and/or invalid mongoDateFormat: %s", mongoDateName, mongoDateFormat));
 		}

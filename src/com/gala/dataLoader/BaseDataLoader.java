@@ -21,11 +21,11 @@ public class BaseDataLoader<K,V> implements IDataLoader{
 
 	static final Logger _logger = Logger.getLogger(BaseDataLoader.class);
 	protected IDataWriter<K,V> _writer;
-	protected List<SimpleEntry<IDataReader<K,V>, IDataPostProcessor<K,V>>> _readPostPairs;
+	protected List<SimpleEntry<IDataReader<K,V>, IPostProcessorCoordinator<K, V>>> _readPostPairs;
 	protected List<String> _collectionsToLoad;
 	protected int _batchWriteSize;
 	
-	public BaseDataLoader(final List<SimpleEntry<IDataReader<K,V>, IDataPostProcessor<K,V>>> pairs_, 
+	public BaseDataLoader(final List<SimpleEntry<IDataReader<K,V>, IPostProcessorCoordinator<K, V>>> pairs_, 
 						final IDataWriter<K,V> writer_,
 						final List<String> collToLoad_,
 						final int batchSize_){
@@ -51,13 +51,13 @@ public class BaseDataLoader<K,V> implements IDataLoader{
 		}
 		
 		Map<K,V> nextReaderEntry;
-		Map<String,Map<K,V>> nextCollectionEntry;
+		Map<String,Map<K,V>> nextCollectionEntry = null;
 		Map<String,List<Map<K,V>>> dataToWrite = new HashMap<String,List<Map<K,V>>>();
 		boolean timeToWrite = false;
 		List<String> collectionsWritten = new ArrayList<String>();
 		
 		_logger.info(String.format("BEGINNING DATA LOAD : %s", new java.util.Date()));
-		for (SimpleEntry<IDataReader<K,V>, IDataPostProcessor<K,V>> pair : _readPostPairs){
+		for (SimpleEntry<IDataReader<K, V>, IPostProcessorCoordinator<K, V>> pair : _readPostPairs){
 			int counter = 0;
 			dataToWrite.clear();
 			while ((nextReaderEntry = pair.getKey().getNextDataEntry()) != null) {
