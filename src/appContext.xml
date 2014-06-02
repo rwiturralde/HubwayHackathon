@@ -93,7 +93,8 @@
 	<bean id="hubwayTripsReaderPostProcessorCoord" class="com.gala.dataLoader.MongoDbPostProcessorCoordinator">
 		<constructor-arg index="0">
 			<list>
-				<ref bean="hubwayTripsMongoDbPostProcessor" />
+				<ref bean="hubwayTripsMongoDbPostProcessorId" />
+				<ref bean="hubwayTripsMongoDbPostProcessorDate" />
 			</list>
 		</constructor-arg>
 		<constructor-arg index="1">
@@ -111,7 +112,7 @@
 	<bean id="hubwayStationsReaderPostProcessorCoord" class="com.gala.dataLoader.MongoDbPostProcessorCoordinator">
 		<constructor-arg index="0">
 			<list>
-				<ref bean="hubwayStationsMongoDbPostProcessor" />
+				<ref bean="hubwayStationsMongoDbPostProcessorId" />
 			</list>
 		</constructor-arg>
 		<constructor-arg index="1">
@@ -129,7 +130,7 @@
 	<bean id="stationStatusReaderPostProcessorCoord" class="com.gala.dataLoader.MongoDbPostProcessorCoordinator">
 		<constructor-arg index="0">
 			<list>
-				<ref bean="stationStatusMongoDbPostProcessor" />
+				<ref bean="stationStatusMongoDbPostProcessorDate" />
 			</list>
 		</constructor-arg>
 		<constructor-arg index="1">
@@ -147,7 +148,8 @@
 	<bean id="historicalWeatherReaderPostProcessorCoord" class="com.gala.dataLoader.MongoDbPostProcessorCoordinator">
 		<constructor-arg index="0">
 			<list>
-				<ref bean="historicalWeatherMongoDbPostProcessor" />
+				<ref bean="historicalWeatherMongoDbPostProcessorDate" />
+				<ref bean="historicalWeatherMongoDbPostProcessorTemp" />
 			</list>
 		</constructor-arg>
 		<constructor-arg index="1">
@@ -193,51 +195,53 @@
 		<constructor-arg index="3" value="," />
 	</bean>
 
-	<bean id="hubwayTripsMongoDbPostProcessor" class="com.gala.dataLoader.MongoDbPostProcessorHubwayDateSpan">
+	<bean id="hubwayTripsMongoDbPostProcessorDate" class="com.gala.dataLoader.MongoDbPostProcessorHubwayDateSpan">
+		<constructor-arg index="0" value="spannedStartDay" />
+		<constructor-arg index="1" value="spannedStartTime" />		
+		<constructor-arg index="2" value="formattedDate" />
+		<constructor-arg index="3" ref="mongoDateFormat" />
+		<constructor-arg index="4" value="start_date" />
+		<constructor-arg index="5" ref="hubwayDateFormat" />
+	</bean>
+	
+	<bean id="hubwayTripsMongoDbPostProcessorId" class="com.gala.dataLoader.MongoDbPostProcessorId">
 		<constructor-arg index="0" value="id" />
 		<constructor-arg index="1" value="_id" />
 		<constructor-arg index="2" value="trips" />
-		<constructor-arg index="3" value="spannedStartDay" />
-		<constructor-arg index="4" value="spannedStartTime" />		
-		<constructor-arg index="5" value="formattedDate" />
-		<constructor-arg index="6" ref="mongoDateFormat" />
-		<constructor-arg index="7" value="start_date" />
-		<constructor-arg index="8" ref="hubwayDateFormat" />
 	</bean>
 	
-	<bean id="hubwayStationsMongoDbPostProcessor" class="com.gala.dataLoader.MongoDbPostProcessorBase">
+	<bean id="hubwayStationsMongoDbPostProcessorId" class="com.gala.dataLoader.MongoDbPostProcessorId">
 		<constructor-arg index="0" value="id" />
 		<constructor-arg index="1" value="_id" />
 		<constructor-arg index="2" value="stations" />
 	</bean>
 	
-	<bean id="stationStatusMongoDbPostProcessor" class="com.gala.dataLoader.MongoDbPostProcessorStationStatusDateSpan">
-		<constructor-arg index="0"><null/></constructor-arg> 
-		<constructor-arg index="1"><null/></constructor-arg> 
-		<constructor-arg index="2" value="stationStatus" />
-		<constructor-arg index="3" value="spannedDay" />
-		<constructor-arg index="4" value="spannedTime" />
-		<constructor-arg index="5" value="formattedDate" />
-		<constructor-arg index="6" ref="mongoDateFormat" />
-		<constructor-arg index="7" value="year" />
-		<constructor-arg index="8" value="month" />
-		<constructor-arg index="9" value="day" />
-		<constructor-arg index="10" value="hour" />
-		<constructor-arg index="11"><null/></constructor-arg> 
+	<bean id="stationStatusMongoDbPostProcessorDate" class="com.gala.dataLoader.MongoDbPostProcessorStationStatusDateSpan">
+		<constructor-arg index="0" value="spannedDay" />
+		<constructor-arg index="1" value="spannedTime" />
+		<constructor-arg index="2" value="formattedDate" />
+		<constructor-arg index="3" ref="mongoDateFormat" />
+		<constructor-arg index="4" value="year" />
+		<constructor-arg index="5" value="month" />
+		<constructor-arg index="6" value="day" />
+		<constructor-arg index="7" value="hour" />
+		<constructor-arg index="8"><null/></constructor-arg> 
 	</bean>
 	
+
+	<bean id="historicalWeatherMongoDbPostProcessorDate" class="com.gala.dataLoader.MongoDbPostProcessorWeatherDateSpan">
+		<constructor-arg index="0" value="spannedDay" />
+		<constructor-arg index="1" value="spannedTime" />
+		<constructor-arg index="2" value="formattedDate" />
+		<constructor-arg index="3" ref="mongoDateFormat" />
+		<constructor-arg index="4" ref="weatherDateFormat" />
+		<constructor-arg index="5" value="Date" />
+		<constructor-arg index="6" value="Time" />
+	</bean>
 	
-	<bean id="historicalWeatherMongoDbPostProcessor" class="com.gala.dataLoader.MongoDbPostProcessorWeatherDateSpan">
-		<constructor-arg index="0"><null/></constructor-arg> 
-		<constructor-arg index="1"><null/></constructor-arg> 
-		<constructor-arg index="2" value="historicalWeather" />
-		<constructor-arg index="3" value="spannedDay" />
-		<constructor-arg index="4" value="spannedTime" />
-		<constructor-arg index="5" value="formattedDate" />
-		<constructor-arg index="6" ref="mongoDateFormat" />
-		<constructor-arg index="7" ref="weatherDateFormat" />
-		<constructor-arg index="8" value="Date" />
-		<constructor-arg index="9" value="Time" />
+	<bean id="historicalWeatherMongoDbPostProcessorTemp" class="com.gala.dataLoader.MongoDbPostProcessorWeatherTempSpan">
+		<constructor-arg index="0" value="DryBulbFarenheit" />
+		<constructor-arg index="1" value="spannedTemperature" />
 	</bean>
 	
 	<bean id="hubwayDateFormat" class="java.text.SimpleDateFormat">

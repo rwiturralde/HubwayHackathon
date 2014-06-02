@@ -19,31 +19,17 @@ public class MongoDbPostProcessorWeatherDateSpan extends MongoDbPostProcessorDat
 	protected String 		dateId;
 	
 	
-	public MongoDbPostProcessorWeatherDateSpan(String id, String mongoId,
-			String destinationName, String dayOfWeekSpanName,
+	public MongoDbPostProcessorWeatherDateSpan(String dayOfWeekSpanName,
 			String timeOfDaySpanName, String mongoDateName,
 			DateFormat mongoDateFormat, DateFormat weatherDateFormat, 
 			String dateId,	String timeId) {
-		super(id, mongoId, destinationName, dayOfWeekSpanName, timeOfDaySpanName,
-				mongoDateName, mongoDateFormat);
+		super(dayOfWeekSpanName, timeOfDaySpanName,	mongoDateName, mongoDateFormat);
 		this.weatherDateFormat = weatherDateFormat;
 		this.dateId = dateId;
 		this.timeId = timeId;		
 	}
 
-	public void postProcessDataEntry(Map<String, Object> map) {
-		
-		updateId(map);
-		
-		Calendar calendarDateToSpan = getCalendar(map);
-		
-		addDayOfWeekSpan(map, calendarDateToSpan);
-		addTimeOfDaySpan(map, calendarDateToSpan);
-		addDate(map, calendarDateToSpan);
-		
-		addDerpTemperature(map);
-	}
-	
+
 	protected Calendar getCalendar(Map<String, Object> map) {
 		String date = null;
 		String time = null;
@@ -83,35 +69,5 @@ public class MongoDbPostProcessorWeatherDateSpan extends MongoDbPostProcessorDat
 		}
 	}
 	
-	// TODO fix this (refactor to a series of postprocessors)
-	protected void addDerpTemperature(Map<String, Object> map){
-		String tempMongoId = "spannedTemperature";
-		String tempId = "DryBulbFarenheit";
-		Object tempObj;
-		int tempInt;
-		
-		if ((tempObj = map.get(tempId)) != null){
-			try{
-				tempInt = Integer.parseInt(tempObj.toString());
-			} catch (Exception e){
-				_logger.error(String.format("Failed to parse \"%s\" as an int. No temperature will be added.", tempId));
-				return;
-			}
-		} else {
-			_logger.debug(String.format("No value found in entry for %s", tempId));
-			return;
-		}
-		
-		Temperature tempEnum = Temperature.getTemperature(tempInt);
-		
-		if (tempEnum != null){
-			map.put(tempMongoId, tempEnum.name());
-		} else{
-			_logger.warn(String.format("Unable to retrieve temp enum from temp %s. No temperature will be added.", tempInt));
-		}
-		
-		
 
-
-	}
 }

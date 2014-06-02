@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 import com.gala.core.Day;
 import com.gala.core.TimeOfDay;
 
-public abstract class MongoDbPostProcessorDateSpan extends MongoDbPostProcessorBase {
+public abstract class MongoDbPostProcessorDateSpan implements IDataPostProcessor<String, Object> {
 
 	private static final Logger 	_logger = Logger.getLogger(MongoDbPostProcessorDateSpan.class);
 
@@ -18,12 +18,9 @@ public abstract class MongoDbPostProcessorDateSpan extends MongoDbPostProcessorB
 	protected String 		mongoDateName;
 	protected DateFormat	mongoDateFormat;
 	
-	public MongoDbPostProcessorDateSpan(String id, String mongoId,
-			String destinationName, String dayOfWeekSpanName, 
+	public MongoDbPostProcessorDateSpan(String dayOfWeekSpanName, 
 			String timeOfDaySpanName, String mongoDateName, 
 			DateFormat mongoDateFormat) {
-		super(id, mongoId, destinationName);
-
 		this.dayOfWeekSpanName = dayOfWeekSpanName;
 		this.timeOfDaySpanName = timeOfDaySpanName;
 		this.mongoDateName = mongoDateName;
@@ -31,9 +28,7 @@ public abstract class MongoDbPostProcessorDateSpan extends MongoDbPostProcessorB
 	}
 	
 	public void postProcessDataEntry(Map<String, Object> map) {
-		
-		updateId(map);
-		
+				
 		Calendar calendarDateToSpan = getCalendar(map);
 
 		addDayOfWeekSpan(map, calendarDateToSpan);

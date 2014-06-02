@@ -13,14 +13,14 @@ import org.apache.log4j.Logger;
  * data store insertion.
  * 
  */
-public class MongoDbPostProcessorBase implements IDataPostProcessor <String, Object>{
+public class MongoDbPostProcessorId implements IDataPostProcessor <String, Object>{
 
-	private static final Logger 	_logger = Logger.getLogger(MongoDbPostProcessorBase.class);
+	private static final Logger 	_logger = Logger.getLogger(MongoDbPostProcessorId.class);
 	protected String 		id; 
 	protected String 		mongoId;
 	protected String 		destinationName;
 		
-	public MongoDbPostProcessorBase(String id, String mongoId,
+	public MongoDbPostProcessorId(String id, String mongoId,
 			String destinationName) {
 		this.id = id;
 		this.mongoId = mongoId;
