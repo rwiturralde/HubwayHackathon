@@ -51,7 +51,7 @@ public class MongoDbDataRetriever implements IDataRetriever {
 		return true;
 	}
 	
-	public <T> List<T> retrieveData(final QueryType queryType_, final Object[] params_){
+	public <T> List<T> retrieveData(final QueryType queryType_, final MongoDbQueryParameters params){
 		
 		List<T> list = new ArrayList<T>();
 		
