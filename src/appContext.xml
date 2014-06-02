@@ -17,8 +17,8 @@
 	</bean>
 
 	<bean id="mongoServer" class="com.mongodb.ServerAddress">
-		<constructor-arg index="0" value="ds033459.mongolab.com" />
-		<constructor-arg index="1" value="33459" />
+		<constructor-arg index="0" value="ds051858.mongolab.com" />
+		<constructor-arg index="1" value="51858" />
 	</bean>
 
 	<bean id="mongoCredential" class="com.mongodb.MongoCredential" factory-method="createMongoCRCredential">
