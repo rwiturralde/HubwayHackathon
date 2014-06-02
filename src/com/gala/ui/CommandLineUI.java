@@ -2,7 +2,6 @@ package com.gala.ui;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
@@ -24,7 +23,7 @@ public class CommandLineUI implements IHubwayUI {
 
 	// Number of days into the future (incl today) that we'll allow for forecasting
 	protected final int FORECAST_RANGE = 3;
-	protected final SimpleDateFormat _dateFormat = new SimpleDateFormat("E M d, Y");
+	protected final SimpleDateFormat _dateFormat = new SimpleDateFormat("EEE MMM d, yyyy");
 	
 	protected ForecastIO _forecastIO;
 	protected Set<Station> _stations;
@@ -44,7 +43,7 @@ public class CommandLineUI implements IHubwayUI {
 	
 
 	public HubwayRequestParameters getUserParameters() {
-		HubwayRequestParameters userParams = null;
+		HubwayRequestParameters userParams = new HubwayRequestParameters();
 		Scanner scanner = new Scanner(System.in);
 		
 		//Day chosenDay = getDayFromUser(scanner);
@@ -53,23 +52,26 @@ public class CommandLineUI implements IHubwayUI {
 		if (chosenCal == null)
 			return null;
 		
-		System.out.println("User chose " + chosenCal.getTime());
+		userParams.setDay(Day.fromCalendar(chosenCal));
 		
 		Station chosenStation = getHubwayStationFromUser(scanner);
 		
 		if (chosenStation == null)
 			return null;
 		
-		System.out.println("User chose " + chosenStation);
+		userParams.setStartStation(chosenStation);
 		
 		TimeOfDay chosenTimeOfDay = getTimeOfDayFromUser(scanner);
 		
 		if (chosenTimeOfDay == null)
 			return null;
 		
-		System.out.println("User chose " + chosenTimeOfDay);
+		userParams.setTimeOfDay(chosenTimeOfDay);
 		
 		scanner.close();
+		
+		System.out.println("User chose: " + userParams);
+		
 		return userParams;
 	}
 
