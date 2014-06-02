@@ -1,18 +1,19 @@
 package com.gala.ui;
 
 import com.gala.core.Day;
+import com.gala.core.Station;
 import com.gala.core.TimeOfDay;
 
 public class HubwayRequestParameters {
 
 	protected Day _day;
 	protected TimeOfDay _timeOfDay;
-	protected int _startStationId;
+	protected Station _startStation;
 	
-	public HubwayRequestParameters(Day day_, TimeOfDay timeOfDay_, int startStationId_) {
+	public HubwayRequestParameters(Day day_, TimeOfDay timeOfDay_, Station startStation_) {
 		_day = day_;
 		_timeOfDay = timeOfDay_;
-		_startStationId = startStationId_;
+		_startStation = startStation_;
 	}
 	
 	
@@ -41,14 +42,14 @@ public class HubwayRequestParameters {
 
 
 
-	public int getStartStationId() {
-		return _startStationId;
+	public Station getStartStationId() {
+		return _startStation;
 	}
 
 
 
-	public void setStartStationId(int startStationId_) {
-		this._startStationId = startStationId_;
+	public void setStartStationId(Station startStation_) {
+		this._startStation = startStation_;
 	}
 
 
@@ -62,8 +63,8 @@ public class HubwayRequestParameters {
 		sb.append("TimeOfDay: ");
 		sb.append(_timeOfDay);
 		sb.append(" | ");
-		sb.append("StartStationId: ");
-		sb.append(_startStationId);
+		sb.append("StartStation: ");
+		sb.append(_startStation);
 		
 		return sb.toString();
 	}
