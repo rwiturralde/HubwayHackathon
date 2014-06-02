@@ -28,7 +28,7 @@ public enum Temperature {
 	
 	public static Temperature getTemperature(int temp_){
 		for (Temperature t : Temperature.values()){
-			if (temp_ > t.getTempLowerLimit()){
+			if (temp_ >= t.getTempLowerLimit()){
 				return t;
 			} 
 		}		
