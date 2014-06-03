@@ -89,7 +89,7 @@ public class CommandLineUI implements IHubwayUI {
 			
 			// Get the forecast and temperature for the day and time chosen by the user.
 			_forecastIO.getForecast(chosenStation.getLatitude().toString(), chosenStation.getLongitude().toString());
-			Temperature forecastTemp = getTemperature(chosenCal, chosenTimeOfDay, _forecastIO);
+			Temperature forecastTemp = getTemperature(chosenCal, chosenTimeOfDay);
 			
 			if (forecastTemp == null)
 				return null;
