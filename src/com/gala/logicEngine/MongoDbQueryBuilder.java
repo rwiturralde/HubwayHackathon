@@ -1,12 +1,6 @@
 package com.gala.logicEngine;
 
-import java.util.Date;
-import java.util.List;
-
-import com.gala.core.Temperature;
-import com.gala.core.TimeOfDay;
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 
 /** 
  * Class for constructing mongo db query objects based on query type
@@ -52,6 +46,7 @@ public class MongoDbQueryBuilder implements IQueryBuilder{
 	protected MongoDbQueryObject buildStationStatusQuery(final MongoDbQueryParameters params_){
 		BasicDBObject queryObj = new BasicDBObject();
 		queryObj.append("spannedTime", params_.getTimeOfDay());
+		queryObj.append("station_id", params_.getStartStationId());
 		queryObj.append("date", new BasicDBObject("$in", params_.getValidDates()));
 		return new MongoDbQueryObject(queryObj, new BasicDBObject(), "stationStatus");
 	}
