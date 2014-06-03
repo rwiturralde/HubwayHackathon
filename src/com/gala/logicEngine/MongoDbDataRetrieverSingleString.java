@@ -39,7 +39,7 @@ public class MongoDbDataRetrieverSingleString extends MongoDbDataRetriever<Strin
 				_logger.warn(String.format("Unable to retrieve field %s from DB response", _columnToRetrieve));
 				continue;
 			}
-			returnList.add(responseObj.toString());
+			returnList.add(retrievedObj.toString());
 		}
 		
 		return returnList;

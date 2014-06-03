@@ -12,10 +12,13 @@ public class HubwayRequestProcessor implements IRequestProcessor{
 
 	static final Logger _logger = Logger.getLogger(HubwayRequestProcessor.class);
 	
-	protected IDataRetriever _dataRetriever;
+	protected IDataRetriever<String> _weatherDataRetriever;
+	protected IDataRetriever<StationStatus> _stationStatusDataRetriever;
 	
-	public HubwayRequestProcessor(IDataRetriever dataRetriever_){
-		_dataRetriever = dataRetriever_;
+	public HubwayRequestProcessor(final IDataRetriever<String> weatherDataRetriever_, 
+			final IDataRetriever<StationStatus> stationStatusDataRetriever_){
+		_weatherDataRetriever = weatherDataRetriever_;
+		_stationStatusDataRetriever = stationStatusDataRetriever_;
 	}
 	
 	public HubwayResults processRequest(HubwayRequestParameters parameters_){
@@ -23,14 +26,14 @@ public class HubwayRequestProcessor implements IRequestProcessor{
 		// Get dates with weather matching temp
 		MongoDbQueryParameters params = new MongoDbQueryParameters(parameters_.getStartStation().getId(), 
 				parameters_.getTimeOfDay(), parameters_.getTemperature(), null, QueryType.WEATHER_DATES);
-		List<String> datesMatchingWeather = _dataRetriever.retrieveData(params);
+		List<String> datesMatchingWeather = _weatherDataRetriever.retrieveData(params);
 		_logger.info(String.format("Weather data set size of %d for params - Temp Range: %s Time of Day: %s", 
 				datesMatchingWeather.size(), parameters_.getTemperature(), parameters_.getTimeOfDay()));
 		
 		// Get station status for those dates in time range
 		params.setValidDates(datesMatchingWeather);
 		params.setQueryType(QueryType.STATION_STATUS_FOR_DATETIME);
-		List<StationStatus> stationStatusList = _dataRetriever.retrieveData(params);
+		List<StationStatus> stationStatusList = _stationStatusDataRetriever.retrieveData(params);
 		
 		return convertResponseToResult(stationStatusList, parameters_.getStartStation());
 	}
@@ -42,13 +45,13 @@ public class HubwayRequestProcessor implements IRequestProcessor{
 			_logger.info(String.format("Station Status list size: %d", stationStatusList_.size()));
 			double total = 0.0;
 			for (StationStatus ss : stationStatusList_){
-				total += ss.getNumBikesAvailable() / ss.getCapactity();
+				total += ss.getNumBikesAvailable();
 			}
 			
 			double avg = total / stationStatusList_.size();
-			_logger.info(String.format("Average availability calculated as %f%", avg));
-			int expectedNumBikes = (int) Math.floor(avg * station_.getCapacity());
-			_logger.info(String.format("Expected number of bikes available %f%", expectedNumBikes));
+			int expectedNumBikes = (int)Math.floor(avg);
+			_logger.info(String.format("Average number of bikes available %f", avg));
+			_logger.info(String.format("Expected number of bikes available %d", expectedNumBikes));
 			results = new HubwayResults(avg, expectedNumBikes);
 		} else {
 			_logger.info(String.format("Station Status list empty for station Id %s", station_.getId()));

@@ -272,14 +272,15 @@
 		<constructor-arg index="5" value="capacity" />		
 		<constructor-arg index="6" value="formattedDate" />
 		<constructor-arg index="7" value="spannedDay" />
-		<constructor-arg index="7" value="spannedTime" />
-		<constructor-arg index="8" ref="mongoDateFormat" /> 
+		<constructor-arg index="8" value="spannedTime" />
+		<constructor-arg index="9" ref="mongoDateFormat" /> 
 	</bean>
 	
 	<bean id="requestProcessor" class="com.gala.logicEngine.HubwayRequestProcessor">
-		<constructor-arg index="0" ref="dataRetriever" /> 
+		<constructor-arg index="0" ref="weatherDataRetriever" />
+		<constructor-arg index="1" ref="stationStatusDataRetriever" /> 
 	</bean>
 	
-	<bean id="MongoDbQueryBuilder" class="com.mongodb.BasicDBObject.MongoDbQueryBuilder"/>
+	<bean id="MongoDbQueryBuilder" class="com.gala.logicEngine.MongoDbQueryBuilder"/>
 	
 </beans>
