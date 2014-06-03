@@ -6,7 +6,6 @@ import org.apache.log4j.Logger;
 
 import com.gala.core.Station;
 import com.gala.core.StationStatus;
-import com.gala.core.Temperature;
 import com.gala.ui.HubwayRequestParameters;
 
 public class HubwayRequestProcessor implements IRequestProcessor{
@@ -26,7 +25,7 @@ public class HubwayRequestProcessor implements IRequestProcessor{
 				parameters_.getTimeOfDay(), parameters_.getTemperature(), null);
 		List<String> datesMatchingWeather = _dataRetriever.retrieveData(QueryType.WEATHER_DATES, params);
 		_logger.info(String.format("Weather data set size of %d for params - Temp Range: %s Time of Day: %s", 
-				datesMatchingWeather.size(), Temperature.SEVENTIES, parameters_.getTimeOfDay()));
+				datesMatchingWeather.size(), parameters_.getTemperature(), parameters_.getTimeOfDay()));
 		
 		// Get station status for those dates in time range
 		params.setValidDates(datesMatchingWeather);

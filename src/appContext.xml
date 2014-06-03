@@ -34,9 +34,7 @@
 
 	<bean id="uiPresenter" class="com.gala.ui.HubwayDataPresenter">
 		<constructor-arg index="0" ref="commandLineUI" /> 
-		<constructor-arg index="1" > <!-- TEMPORARY - LogicEngine -->
-			<null />
-		</constructor-arg>
+		<constructor-arg index="1" ref="requestProcessor"/>
 	</bean>
 	
 	<bean id="commandLineUI" class="com.gala.ui.CommandLineUI" >
@@ -49,9 +47,7 @@
 		<constructor-arg index="2" ref="allCollections" />
 		<constructor-arg index="3" ref="collectionsToClear" />
 	</bean>
-	
 
-	
 	<bean id="dataLoader" class="com.gala.dataLoader.BaseDataLoader">
 		<constructor-arg index="0" >
 			<list>
@@ -263,6 +259,10 @@
 		<constructor-arg index="0" ref="mongoClient" />
 		<constructor-arg index="1" value="hubwayhackathon" />
 		<constructor-arg index="2" ref="allCollections" />
+	</bean>
+	
+	<bean id="requestProcessor" class="com.gala.logicEngine.HubwayRequestProcessor">
+		<constructor-arg index="0" ref="dataRetriever" /> 
 	</bean>
 	
 </beans>
