@@ -244,7 +244,7 @@
 	</bean>
 	
 	<bean id="mongoDateFormat" class="java.text.SimpleDateFormat">
-		<constructor-arg index="0" value="yyyy-MM-dd kk:mm:ss" />
+		<constructor-arg index="0" value="yyyy-MM-dd" />
 	</bean>
 	
 	<bean id="weatherDateFormat" class="java.text.SimpleDateFormat">
