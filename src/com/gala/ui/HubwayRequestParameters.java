@@ -11,19 +11,30 @@ public class HubwayRequestParameters {
 	protected TimeOfDay _timeOfDay;
 	protected Station _startStation;
 	protected Temperature _temperature;
+	protected RequestType _requestType;
 	
 	public HubwayRequestParameters() {
 		_day = null;
 		_timeOfDay = null;
 		_startStation = null;
 		_temperature = null;
+		_requestType = null;
 	}
 	
-	public HubwayRequestParameters(Day day_, TimeOfDay timeOfDay_, Station startStation_, Temperature temperature_) {
+	public HubwayRequestParameters(Day day_, TimeOfDay timeOfDay_, Station startStation_, Temperature temperature_, RequestType requestType_) {
 		_day = day_;
 		_timeOfDay = timeOfDay_;
 		_startStation = startStation_;
 		_temperature = temperature_;
+		_requestType = requestType_;				
+	}
+	
+	public RequestType getRequestType() {
+		return _requestType;
+	}
+
+	public void setRequestType(RequestType requestType_) {
+		_requestType = requestType_;
 	}
 	
 	public Day getDay() {
@@ -62,6 +73,9 @@ public class HubwayRequestParameters {
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
+		sb.append("RequestType: ");
+		sb.append(_requestType);
+		sb.append(" | ");
 		sb.append("Day: ");
 		sb.append(_day);
 		sb.append(" | ");
@@ -73,6 +87,7 @@ public class HubwayRequestParameters {
 		sb.append(" | ");
 		sb.append("Temperature: ");
 		sb.append(_temperature);
+		
 		
 		return sb.toString();
 	}

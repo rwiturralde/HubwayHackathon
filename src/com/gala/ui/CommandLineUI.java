@@ -55,37 +55,96 @@ public class CommandLineUI implements IHubwayUI {
 	public HubwayRequestParameters getUserParameters() {
 		HubwayRequestParameters userParams = new HubwayRequestParameters();
 		
-		// Get the day the user plans to depart
-		Calendar chosenCal = getForecastDateFromUser();
-		if (chosenCal == null)
+		// Get request type
+		RequestType requestType = getRequestTypeFromUser();
+		if (requestType == null)
 			return null;
 		
-		userParams.setDay(Day.fromCalendar(chosenCal));
+		userParams.setRequestType(requestType);
 		
-		// Get the departing station from the user
-		Station chosenStation = getHubwayStationFromUser();
-		if (chosenStation == null)
-			return null;
+		switch (userParams._requestType){
+		case WEATHER:
+			// Get the day the user plans to depart
+			Calendar chosenCal = getForecastDateFromUser();
+			if (chosenCal == null)
+				return null;
+			
+			userParams.setDay(Day.fromCalendar(chosenCal));
+			
+			// Get the departing station from the user
+			Station chosenStation = getHubwayStationFromUser();
+			if (chosenStation == null)
+				return null;
+			
+			userParams.setStartStation(chosenStation);
+			
+			// Get the time of day the user plans to leave
+			TimeOfDay chosenTimeOfDay = getTimeOfDayFromUser();
+			if (chosenTimeOfDay == null)
+				return null;
+			
+			userParams.setTimeOfDay(chosenTimeOfDay);
+			
+			// Get the forecast and temperature for the day and time chosen by the user.
+			_forecastIO.getForecast(chosenStation.getLatitude().toString(), chosenStation.getLongitude().toString());
+			Temperature forecastTemp = getTemperature(chosenCal, chosenTimeOfDay, _forecastIO);
+			
+			if (forecastTemp == null)
+				return null;
+			
+			userParams.setTemperature(forecastTemp);
+			
+			break;
+		case TRIP:
+			
+			break;
+			
+		default: return null;
+		}
 		
-		userParams.setStartStation(chosenStation);
-		
-		// Get the time of day the user plans to leave
-		TimeOfDay chosenTimeOfDay = getTimeOfDayFromUser();
-		if (chosenTimeOfDay == null)
-			return null;
-		
-		userParams.setTimeOfDay(chosenTimeOfDay);
-		
-		// Get the forecast and temperature for the day and time chosen by the user.
-		_forecastIO.getForecast(chosenStation.getLatitude().toString(), chosenStation.getLongitude().toString());
-		Temperature forecastTemp = getTemperature(chosenCal, chosenTimeOfDay, _forecastIO);
-		
-		if (forecastTemp == null)
-			return null;
-		
-		userParams.setTemperature(forecastTemp);
-		
+
 		return userParams;
+	}
+
+	private RequestType getRequestTypeFromUser() {
+		String queryTypeSelectionString = "";
+		int queryTypeSelectionInt = -1;
+		
+		RequestType returnRequestType = null;
+		
+		while (true) {
+			System.out.println("\n\nPlease choose the query type you would like to continue with or enter \'q\' to quit.  Valid stations are:");
+			
+			int i = 0;
+			for(RequestType requestType : RequestType.values()) {
+				System.out.println(i + " : " + requestType.name());
+			}
+			
+			System.out.print("Enter selection: ");
+			queryTypeSelectionString = _scanner.nextLine();
+			
+			// Quit if user requested
+			if (queryTypeSelectionString.toLowerCase().equals("q"))
+				return null;
+			
+			try {
+				queryTypeSelectionInt = Integer.parseInt(queryTypeSelectionString);
+			} catch (NumberFormatException e) {
+				System.out.println("Invalid number.");
+				continue;
+			} 
+			
+			try {
+				returnRequestType = RequestType.values()[queryTypeSelectionInt];
+				break;
+			} catch (Exception e){
+				System.out.println("Invalid selection. Please choose the number corresponding to a valid station.");
+				continue;
+			}
+			
+		}
+		
+		return returnRequestType;
 	}
 
 	public void displayResults(Object results_) {

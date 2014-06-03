@@ -60,8 +60,13 @@
 
 	<bean id="uiPresenter" class="com.gala.ui.HubwayDataPresenter">
 		<constructor-arg index="0" ref="commandLineUI" /> 
-		<constructor-arg index="1" ref="requestProcessor"/>
+		<constructor-arg index="1" ref="requestProcessors"/>
 	</bean>
+	
+	<util:map id="requestProcessors">
+		<entry key="WEATHER" value-ref="commandLineUI" /> 
+		<entry key="TRIP" value-ref="requestProcessor"/>
+	</util:map>
 	
 	<bean id="commandLineUI" class="com.gala.ui.CommandLineUI" >
 		<constructor-arg index="0" ref="forecastIO" />
