@@ -12,6 +12,7 @@ public class MongoDbQueryParameters {
 	protected Temperature 	_temperature;
 	protected List<String> 	_validDates;
 	protected QueryType		_queryType;
+	protected List<String> 	_stationList;
 	
 	public MongoDbQueryParameters(final int startStationId_, final TimeOfDay tod_, final Temperature temp_, final List<String> dates_, final QueryType queryType_){
 		_startStationId = startStationId_;
@@ -41,6 +42,10 @@ public class MongoDbQueryParameters {
 		return _queryType;
 	}
 	
+	public List<String> getStationList(){
+		return _stationList;
+	}
+	
 	public void setStartStationId(int startStationId_){
 		_startStationId = startStationId_;
 	}
@@ -59,6 +64,10 @@ public class MongoDbQueryParameters {
 	
 	public void setQueryType(QueryType queryType_){
 		_queryType = queryType_;
+	}
+	
+	public void setStationList(List<String> stationList_){
+		_stationList = stationList_;
 	}
 	
 	

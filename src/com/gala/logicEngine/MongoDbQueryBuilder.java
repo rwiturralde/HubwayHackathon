@@ -1,6 +1,10 @@
 package com.gala.logicEngine;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 
 /** 
  * Class for constructing mongo db query objects based on query type
@@ -20,6 +24,10 @@ public class MongoDbQueryBuilder implements IQueryBuilder{
 				return buildWeatherDatesQuery(params_);
 			case STATION_STATUS_FOR_DATETIME:
 				return buildStationStatusQuery(params_);
+			case TRIP_END_STATION:
+				return buildTripEndQuery(params_);
+			case STATION_NAMES_FOR_LIST:
+				return buildStationNamesForListQuery(params_);
 				
 			default: return null;
 		}
@@ -64,6 +72,36 @@ public class MongoDbQueryBuilder implements IQueryBuilder{
 		fieldsObj.append("formattedDate", true);
 		fieldsObj.append("spannedTime", true);
 		return new MongoDbQueryObject(queryObj, fieldsObj, "historicalWeather");
+	}
+	
+	protected MongoDbQueryObject buildTripEndQuery(final MongoDbQueryParameters params_){
+		
+		// Match on time of day and starting station
+		BasicDBObject matchFields = new BasicDBObject();
+		matchFields.append("spannedStartTime", params_.getTimeOfDay().name());
+		matchFields.append("start_station", Integer.toString(params_.getStartStationId()));
+		DBObject matchObject = new BasicDBObject("$match", matchFields);
+		
+		// group by ending station
+		BasicDBObject groupFields = new BasicDBObject( "_id", "$end_station");
+		groupFields.put("count", new BasicDBObject( "$sum", 1));
+		DBObject groupObject = new BasicDBObject("$group", groupFields );
+		
+		// sort the results in descending order
+		BasicDBObject sortFields = new BasicDBObject("count", -1);
+		DBObject sortObject = new BasicDBObject("$sort", sortFields );
+		
+		// Do not change the order of the defined query objects
+		// it determines the order in which queries are executed
+		return new MongoDbQueryObject(Arrays.asList(matchObject,groupObject, sortObject),"trips");
+	}
+	
+	protected MongoDbQueryObject buildStationNamesForListQuery(final MongoDbQueryParameters params_){
+		BasicDBObject queryObj = new BasicDBObject();
+		queryObj.append("id", new BasicDBObject("$in", params_.getStationList()));
+		BasicDBObject fieldsObj = new BasicDBObject();
+		fieldsObj.append("name", true);
+		return new MongoDbQueryObject(queryObj, fieldsObj, "stations");
 	}
 	
 }
