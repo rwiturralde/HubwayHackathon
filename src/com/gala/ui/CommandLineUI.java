@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.gala.core.Day;
 import com.gala.core.Station;
+import com.gala.core.Temperature;
 import com.gala.core.TimeOfDay;
 
 import dme.forecastiolib.FIODaily;
@@ -37,8 +38,6 @@ public class CommandLineUI implements IHubwayUI {
 	public CommandLineUI(ForecastIO forecastIO_) {
 		_forecastIO = forecastIO_;
 		_forecastIO.setUnits(ForecastIO.UNITS_US);
-		// Exclude minutely from forecast
-		_forecastIO.setExcludeURL("minutely");
 		_stations = loadStations();
 		_scanner = null;
 	}
@@ -56,37 +55,35 @@ public class CommandLineUI implements IHubwayUI {
 	public HubwayRequestParameters getUserParameters() {
 		HubwayRequestParameters userParams = new HubwayRequestParameters();
 		
-		//Day chosenDay = getDayFromUser(scanner);
+		// Get the day the user plans to depart
 		Calendar chosenCal = getForecastDateFromUser();
-		
 		if (chosenCal == null)
 			return null;
 		
 		userParams.setDay(Day.fromCalendar(chosenCal));
 		
+		// Get the departing station from the user
 		Station chosenStation = getHubwayStationFromUser();
-		
 		if (chosenStation == null)
 			return null;
 		
 		userParams.setStartStation(chosenStation);
 		
+		// Get the time of day the user plans to leave
 		TimeOfDay chosenTimeOfDay = getTimeOfDayFromUser();
-		
 		if (chosenTimeOfDay == null)
 			return null;
 		
 		userParams.setTimeOfDay(chosenTimeOfDay);
 		
+		// Get the forecast and temperature for the day and time chosen by the user.
 		_forecastIO.getForecast(chosenStation.getLatitude().toString(), chosenStation.getLongitude().toString());
-		FIODaily daily = new FIODaily(_forecastIO);
-		if (daily.days() < 0) {
-			System.out.println("No forecast data available for the chosen day...");
-			return null;
-		} else {
-			System.out.println("Temp forecast for that day is " + daily.getDay(0).temperatureMax());
-		}
+		Temperature forecastTemp = getTemperature(chosenCal, chosenTimeOfDay, _forecastIO);
 		
+		if (forecastTemp == null)
+			return null;
+		
+		userParams.setTemperature(forecastTemp);
 		
 		return userParams;
 	}
@@ -228,7 +225,34 @@ public class CommandLineUI implements IHubwayUI {
 		
 		return TimeOfDay.values()[timeOfDayOrdinal];		
 	}
+
+	/**
+	 * Get the forecasted temperature for a given day and time range using the Forecast
+	 * 
+	 * @param cal_
+	 * @param fio_
+	 * @return
+	 */
+	protected Temperature getTemperature(Calendar cal_, TimeOfDay timeOfDay_, ForecastIO fio_) {
+		
+		int dayOffset = cal_.get(Calendar.DAY_OF_WEEK) - Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+		
+		FIODaily daily = new FIODaily(_forecastIO);
+		if (daily.days() < 0) {
+			System.out.println("No forecast data available for the chosen day...");
+			return null;
+		} else {
+			return Temperature.getTemperature(daily.getDay(0).temperatureMax().intValue());
+		}
+	}
 	
+	/**
+	 * Get the set of valid stations for the user to choose from.  These should
+	 * be stations for which we have all the necessary data to get forecasts and 
+	 * calculate our metrics.
+	 * 
+	 * @return Set of stations from which the user can choose to depart.
+	 */
 	protected Set<Station> loadStations() {
 		Set<Station> stations = new HashSet<Station>();
 		

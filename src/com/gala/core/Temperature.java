@@ -27,6 +27,7 @@ public enum Temperature {
 	
 	
 	public static Temperature getTemperature(int temp_){
+		// ASSUMES ORDER OF THE ENUM VALUES ABOVE!!!!!!!!!!!!!!!!
 		for (Temperature t : Temperature.values()){
 			if (temp_ >= t.getTempLowerLimit()){
 				return t;
