@@ -8,14 +8,14 @@ import com.gala.core.Station;
 import com.gala.core.StationStatus;
 import com.gala.ui.HubwayRequestParameters;
 
-public class HubwayRequestProcessor implements IRequestProcessor{
+public class HubwayWeatherRequestProcessor implements IRequestProcessor{
 
-	static final Logger _logger = Logger.getLogger(HubwayRequestProcessor.class);
+	static final Logger _logger = Logger.getLogger(HubwayWeatherRequestProcessor.class);
 	
 	protected IDataRetriever<String> _weatherDataRetriever;
 	protected IDataRetriever<StationStatus> _stationStatusDataRetriever;
 	
-	public HubwayRequestProcessor(final IDataRetriever<String> weatherDataRetriever_, 
+	public HubwayWeatherRequestProcessor(final IDataRetriever<String> weatherDataRetriever_, 
 			final IDataRetriever<StationStatus> stationStatusDataRetriever_){
 		_weatherDataRetriever = weatherDataRetriever_;
 		_stationStatusDataRetriever = stationStatusDataRetriever_;

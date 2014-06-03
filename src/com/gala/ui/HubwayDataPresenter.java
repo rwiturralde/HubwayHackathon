@@ -1,5 +1,7 @@
 package com.gala.ui;
 
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 
 import com.gala.logicEngine.HubwayResults;
@@ -9,7 +11,7 @@ public class HubwayDataPresenter implements IHubwayDataPresenter {
 
 	protected final Logger _logger = Logger.getLogger(HubwayDataPresenter.class);
 	protected IHubwayUI _view;
-	protected IRequestProcessor _logicEngine;
+	protected Map<RequestType, IRequestProcessor> _logicEngineMap;
 	
 	/**
 	 * Hidden constructor to not allow construction without parameters
@@ -22,9 +24,9 @@ public class HubwayDataPresenter implements IHubwayDataPresenter {
 	 * @param view_
 	 * @param logicEngine_
 	 */
-	public HubwayDataPresenter(IHubwayUI view_, IRequestProcessor logicEngine_) {
+	public HubwayDataPresenter(IHubwayUI view_, Map<RequestType, IRequestProcessor> logicEngine_) {
 		_view = view_;
-		_logicEngine = logicEngine_;
+		_logicEngineMap = logicEngine_;
 	}
 	
 	public void run() {
@@ -34,7 +36,8 @@ public class HubwayDataPresenter implements IHubwayDataPresenter {
 		HubwayRequestParameters parameters = _view.getUserParameters(); 
 		while(parameters != null) {
 			_logger.info("Parameters are " + parameters);
-			HubwayResults res = _logicEngine.processRequest(parameters);
+			
+			HubwayResults res = _logicEngineMap.get(parameters._requestType).processRequest(parameters);
 			
 			parameters = _view.getUserParameters();
 		}
