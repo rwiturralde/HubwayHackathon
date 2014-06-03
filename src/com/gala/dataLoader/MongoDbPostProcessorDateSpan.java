@@ -41,8 +41,9 @@ public abstract class MongoDbPostProcessorDateSpan implements IDataPostProcessor
 	abstract protected Calendar getCalendar(Map<String, Object> map);
 	
 	protected void addDayOfWeekSpan(Map<String, Object> map, Calendar dateToSpan){
-		Day dayOfWeek = Day.getDay(dateToSpan.get(Calendar.DAY_OF_WEEK));
 		
+		Day dayOfWeek = Day.fromCalendar(dateToSpan);
+
 		if (dayOfWeek != null){
 			map.put(dayOfWeekSpanName, dayOfWeek.name());
 			map.put(isWeekdayName, dayOfWeek.isWeekday());

@@ -2,6 +2,8 @@ package com.gala.ui;
 
 import org.apache.log4j.Logger;
 
+import com.gala.logicEngine.IRequestProcessor;
+
 public class HubwayDataPresenter implements IHubwayDataPresenter {
 
 	protected final Logger _logger = Logger.getLogger(HubwayDataPresenter.class);
@@ -19,7 +21,7 @@ public class HubwayDataPresenter implements IHubwayDataPresenter {
 	 * @param view_
 	 * @param logicEngine_
 	 */
-	public HubwayDataPresenter(IHubwayUI view_, Object logicEngine_) {
+	public HubwayDataPresenter(IHubwayUI view_, IRequestProcessor logicEngine_) {
 		_view = view_;
 		_logicEngine = logicEngine_;
 	}
@@ -34,7 +36,7 @@ public class HubwayDataPresenter implements IHubwayDataPresenter {
 			
 			parameters = _view.getUserParameters();
 		}
-		
+		_view.close();
 		_logger.debug("Run complete.");
 	}
 }

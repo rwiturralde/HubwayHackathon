@@ -3,7 +3,6 @@ package com.gala.core;
 import org.apache.log4j.Logger;
 
 import com.gala.dataLoader.IDataLoader;
-import com.gala.ui.HubwayDataPresenter;
 import com.gala.ui.IHubwayDataPresenter;
 
 /**

@@ -1,21 +1,22 @@
 package com.gala.core;
 
+import java.util.Calendar;
+
 public enum Day {
-	SUNDAY (false, 1, "Sunday"), 
-	MONDAY (true, 2, "Monday"), 
-	TUESDAY (true, 3, "Tuesday"), 
-	WEDNESDAY (true, 4, "Wednesday"),
-    THURSDAY (true, 5, "Thursday"), 
-    FRIDAY (true, 6, "Friday"), 
-    SATURDAY (false, 7, "Saturday");
+	SUNDAY (false, "Sunday"), 
+	MONDAY (true, "Monday"), 
+	TUESDAY (true, "Tuesday"), 
+	WEDNESDAY (true, "Wednesday"),
+    THURSDAY (true, "Thursday"), 
+    FRIDAY (true, "Friday"), 
+    SATURDAY (false, "Saturday");
 	
 	protected boolean _isWeekday;
 	protected String _printName;
 	protected int _calendarIntDay;
 	
-	Day(boolean isWeekday_, int calendarIntDay_, String printName_) {
+	Day(boolean isWeekday_, String printName_) {
 		_isWeekday = isWeekday_;
-		_calendarIntDay = calendarIntDay_;
 		_printName = printName_;
 	}
 	
@@ -23,17 +24,35 @@ public enum Day {
 		return _isWeekday;
 	}
 	
-	public int getCalendarInt(){
-		return _calendarIntDay;
-	}
-	
-	public static Day getDay(int calendarInt_){
-		for (Day d : Day.values()){
-			if (calendarInt_ == d._calendarIntDay){
-				return d;
-			} 
-		}		
-		return null;
+	public static Day fromCalendar(Calendar cal_) {
+		
+		Day returnDay = null;
+		
+		switch(cal_.get(Calendar.DAY_OF_WEEK)) {
+			case Calendar.SUNDAY: 
+				returnDay = Day.SUNDAY;
+				break;
+			case Calendar.MONDAY: 
+				returnDay = Day.MONDAY;
+				break;
+			case Calendar.TUESDAY: 
+				returnDay = Day.TUESDAY;
+				break;
+			case Calendar.WEDNESDAY: 
+				returnDay = Day.WEDNESDAY;
+				break;
+			case Calendar.THURSDAY: 
+				returnDay = Day.THURSDAY;
+				break;
+			case Calendar.FRIDAY: 
+				returnDay = Day.FRIDAY;
+				break;
+			case Calendar.SATURDAY: 
+				returnDay = Day.SATURDAY;
+				break;
+			}
+			
+			return returnDay;
 	}
 	
 	@Override
