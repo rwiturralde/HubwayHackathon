@@ -1,20 +1,16 @@
 package com.gala.logicEngine;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.gala.core.Station;
-import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
-public class MongoDbDataRetriever implements IDataRetriever {
+public abstract class MongoDbDataRetriever<T> implements IDataRetriever <T> {
 
 	static final Logger _logger = Logger.getLogger(MongoDbDataRetriever.class);
 	
@@ -24,17 +20,19 @@ public class MongoDbDataRetriever implements IDataRetriever {
 	protected String 						_dbName;
 	protected List<String> 					_collectionNames;
 	protected HashMap<String, DBCollection> _collections;
+	protected MongoDbQueryBuilder			_mongoDbQueryBuilder;
 	
 	public MongoDbDataRetriever(final MongoClient client_, final String dbName_, 
-			final List<String> collNames_){
+			final List<String> collNames_, final MongoDbQueryBuilder mongoDbQueryBuilder_){
 		_client = client_;
 		_dbName = dbName_;
 		_collectionNames = collNames_;
+		_mongoDbQueryBuilder = mongoDbQueryBuilder_;
 		_isInitialized = false;
 		_collections = new HashMap<String, DBCollection>();
 	}
 	
-	public boolean init(){
+	protected boolean init(){
 		
 		try {
 			_db = _client.getDB(_dbName);
@@ -51,29 +49,29 @@ public class MongoDbDataRetriever implements IDataRetriever {
 		return true;
 	}
 	
-	public <T> List<T> retrieveData(final QueryType queryType_, final MongoDbQueryParameters params){
+	protected DBCursor retrieveCursor(final MongoDbQueryParameters params_){
+		MongoDbQueryObject queryObject = _mongoDbQueryBuilder.buildQuery(params_);
 		
-		List<T> list = new ArrayList<T>();
-		
-		String collName_ = "";
-		DBCollection coll = _collections.get(collName_);
-		if (coll == null) {
-			_logger.warn("Collection not found: " + collName_);
+		if (queryObject == null){
+			_logger.warn(String.format("Unable to build query object using query type %s and the provided mongoQueryParams", params_._queryType));
 			return null;
 		}
 		
-		BasicDBObject query = new BasicDBObject();
-		query.put("_id", "5");
-		DBCursor cursor = coll.find(query);
+		DBCollection coll = _collections.get(queryObject._collectionName);
+		if (coll == null) {
+			_logger.warn(String.format("Unable to retrieve collection %s using query type %s and the provided mongoQueryParams", queryObject._collectionName, params_._queryType));
+			return null;
+		}		
 		
-		while(cursor.hasNext()){
-			DBObject objRet = cursor.next();
-			list.add((T) new Station(objRet.get("station").toString(), 
-					Integer.parseInt(objRet.get("_id").toString()), 
-					Double.parseDouble(objRet.get("lat").toString()), 
-					Double.parseDouble(objRet.get("lng").toString())));
+		DBCursor cursor = coll.find(queryObject._queryObject, queryObject._fieldsRequest);
+		
+		if (cursor == null){
+			_logger.warn(String.format("Unable to retrieve DB cursor from collection %s with query type %s and the provided mongoQueryParams", queryObject._collectionName, params_._queryType));
+			return null;
 		}
 		
-		return list;
+		return cursor;
 	}
+	
+
 }

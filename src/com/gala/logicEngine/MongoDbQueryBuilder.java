@@ -1,12 +1,6 @@
 package com.gala.logicEngine;
 
-import java.util.Date;
-import java.util.List;
-
-import com.gala.core.Temperature;
-import com.gala.core.TimeOfDay;
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 
 /** 
  * Class for constructing mongo db query objects based on query type
@@ -15,9 +9,9 @@ import com.mongodb.DBObject;
  */
 public class MongoDbQueryBuilder implements IQueryBuilder{
 	
-	public MongoDbQueryObject buildQuery(final QueryType query_, final MongoDbQueryParameters params_){
+	public MongoDbQueryObject buildQuery(final MongoDbQueryParameters params_){
 		
-		switch(query_) {
+		switch(params_._queryType) {
 			case STATION_INFO:
 				return buildStationInfoQuery(params_);
 			case STATION_NAMES:
@@ -33,7 +27,7 @@ public class MongoDbQueryBuilder implements IQueryBuilder{
 	
 	protected MongoDbQueryObject buildStationInfoQuery(final MongoDbQueryParameters params_){
 		BasicDBObject queryObj = new BasicDBObject();
-		queryObj.append("_id", params_);
+		queryObj.append("_id", params_.getStartStationId());
 		return new MongoDbQueryObject(queryObj, new BasicDBObject(), "stations");
 	}
 	
@@ -51,8 +45,9 @@ public class MongoDbQueryBuilder implements IQueryBuilder{
 	 */
 	protected MongoDbQueryObject buildStationStatusQuery(final MongoDbQueryParameters params_){
 		BasicDBObject queryObj = new BasicDBObject();
-		queryObj.append("timeRange", params_);
-		queryObj.append("date", new BasicDBObject("$in", params_));
+		queryObj.append("spannedTime", params_.getTimeOfDay().name());
+		queryObj.append("station_id", Integer.toString(params_.getStartStationId()));
+		queryObj.append("formattedDate", new BasicDBObject("$in", params_.getValidDates()));
 		return new MongoDbQueryObject(queryObj, new BasicDBObject(), "stationStatus");
 	}
 	
@@ -63,9 +58,11 @@ public class MongoDbQueryBuilder implements IQueryBuilder{
 	 */
 	protected MongoDbQueryObject buildWeatherDatesQuery(final MongoDbQueryParameters params_){
 		BasicDBObject queryObj = new BasicDBObject();
-		queryObj.append("tempRange", params_);
+		queryObj.append("spannedTemperature", params_.getTemperature().name());
+		queryObj.append("spannedTime", params_.getTimeOfDay().name());
 		BasicDBObject fieldsObj = new BasicDBObject();
-		fieldsObj.append("date", true);
+		fieldsObj.append("formattedDate", true);
+		fieldsObj.append("spannedTime", true);
 		return new MongoDbQueryObject(queryObj, fieldsObj, "historicalWeather");
 	}
 	

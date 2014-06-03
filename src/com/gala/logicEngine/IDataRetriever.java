@@ -8,7 +8,7 @@ import java.util.List;
  *
  * @param <T>
  */
-public interface IDataRetriever {
+public interface IDataRetriever <T> {
 
-	<T> List<T> retrieveData(final QueryType queryType_, final MongoDbQueryParameters params_);
+	List<T> retrieveData(final MongoDbQueryParameters params_);
 }
