@@ -12,6 +12,8 @@ import com.gala.core.Temperature;
 import com.gala.core.TimeOfDay;
 
 import dme.forecastiolib.FIODaily;
+import dme.forecastiolib.FIODataPoint;
+import dme.forecastiolib.FIOHourly;
 import dme.forecastiolib.ForecastIO;
 
 /**
@@ -24,7 +26,7 @@ import dme.forecastiolib.ForecastIO;
 public class CommandLineUI implements IHubwayUI {
 
 	// Number of days into the future (incl today) that we'll allow for forecasting
-	protected final int FORECAST_RANGE = 3;
+	protected final int FORECAST_RANGE = 5;
 	protected final SimpleDateFormat _dateFormat = new SimpleDateFormat("EEE MMM d, yyyy");
 	
 	protected ForecastIO _forecastIO;
@@ -289,19 +291,61 @@ public class CommandLineUI implements IHubwayUI {
 	 * Get the forecasted temperature for a given day and time range using the Forecast
 	 * 
 	 * @param cal_
-	 * @param fio_
+	 * @param timeOfDay_
 	 * @return
 	 */
-	protected Temperature getTemperature(Calendar cal_, TimeOfDay timeOfDay_, ForecastIO fio_) {
+	protected Temperature getTemperature(Calendar cal_, TimeOfDay timeOfDay_) {
 		
 		int dayOffset = cal_.get(Calendar.DAY_OF_WEEK) - Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+		int hourOffset = 0;
 		
-		FIODaily daily = new FIODaily(_forecastIO);
-		if (daily.days() < 0) {
-			System.out.println("No forecast data available for the chosen day...");
-			return null;
+		// Hacky.  Assign arbitrary times for each TimeOfDay value so we can get the hourly forecast
+		// for that time.  Approximate.
+		switch(timeOfDay_) {
+			case MORNING:
+				hourOffset = 8 - Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+				break;
+			case MIDDAY:
+				hourOffset = 12 - Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+				break;
+			case EVENING:
+				hourOffset = 17 - Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+				break;
+			default:
+				hourOffset = 0;
+		}
+
+		int totalHourOffset = (dayOffset * 24) + hourOffset;
+		
+		if (totalHourOffset < 0) {
+			System.out.println("You've chosen a time in the past.  Defaulting to the current forecast");
+			totalHourOffset = 0;
+		}
+		
+		//Forecast.io only supports 48 hours of hourly forecast data, though the 
+		// shitty Java wrapper for the API claims it has 49 hours of forecast and 
+		// throws an IndexOutOfBounds if you ask for 49.
+		if (totalHourOffset <= 48) {
+			FIOHourly hourly = new FIOHourly(_forecastIO);  
+			
+			if (hourly.hours() < 0 || hourly.hours() < totalHourOffset || hourly.getHour(totalHourOffset).temperature() == null) {
+				System.out.println("Insufficient forecast data for the chosen day...");
+				return null;
+			} else {
+				System.out.println("Hourly - Time: " + hourly.getHour(totalHourOffset).time() + "GMT Temp: " + hourly.getHour(totalHourOffset).temperature());
+				return Temperature.getTemperature(hourly.getHour(totalHourOffset).temperature().intValue());
+			}
 		} else {
-			return Temperature.getTemperature(daily.getDay(0).temperatureMax().intValue());
+			// Insufficient hourly data.  Use the high for the day in question.
+			FIODaily daily = new FIODaily(_forecastIO);
+			
+			if (daily.days() < 0 || daily.days() < dayOffset || daily.getDay(dayOffset).temperatureMax() == null) {
+				System.out.println("Insufficient forecast data for the chosen day...");
+				return null;
+			} else {
+				System.out.println("Daily - Time: " + daily.getDay(dayOffset).time() + "GMT Temp: " + daily.getDay(dayOffset).temperatureMax());
+				return Temperature.getTemperature(daily.getDay(dayOffset).temperatureMax().intValue());
+			}
 		}
 	}
 	
