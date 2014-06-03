@@ -64,8 +64,8 @@
 	</bean>
 	
 	<util:map id="requestProcessors">
-		<entry key="WEATHER" value-ref="commandLineUI" /> 
-		<entry key="TRIP" value-ref="requestProcessor"/>
+		<entry key="WEATHER" value-ref="weatherRequestProcessor" /> 
+		<entry key="TRIP" value-ref="tripRequestProcessor"/>
 	</util:map>
 	
 	<bean id="commandLineUI" class="com.gala.ui.CommandLineUI" >
@@ -336,23 +336,34 @@
 		<constructor-arg index="9" ref="mongoDateFormat" /> 
 	</bean>
 	
+	<bean id="stationDataRetriever" class="com.gala.logicEngine.MongoDbDataRetrieverStationStatus" init-method="init">
+		<constructor-arg index="0" ref="mongoClientTrip" />
+		<constructor-arg index="1" value="hubwayhackathon" />
+		<constructor-arg index="2" ref="allTripCollections" />
+		<constructor-arg index="3" ref="MongoDbQueryBuilder" />
+		<constructor-arg index="4" value="_id" />
+		<constructor-arg index="5" value="station" />		
+		<constructor-arg index="6" value="municipality" />
+		<constructor-arg index="7" value="nb_docks" />
+		<constructor-arg index="8" value="lat" />
+		<constructor-arg index="9" value="lng" /> 
+	</bean>
+	
 	<bean id="tripsDataRetriever" class="com.gala.logicEngine.MongoDbDataRetrieverSimpleEntry" init-method="init">
 		<constructor-arg index="0" ref="mongoClientTrip" />
 		<constructor-arg index="1" value="hubwayhackathon" />
-		<constructor-arg index="2">
-			<list>
-				<value>trips</value>
-				<value>stations</value>
-			</list>
-		</constructor-arg>
+		<constructor-arg index="2" ref="allTripCollections" />
 		<constructor-arg index="3" ref="MongoDbQueryBuilder" />
 		<constructor-arg index="4" value="_id" />
 		<constructor-arg index="5" value="count" />
 	</bean>
 	
-	<bean id="requestProcessor" class="com.gala.logicEngine.HubwayRequestProcessor">
+	<bean id="weatherRequestProcessor" class="com.gala.logicEngine.HubwayWeatherRequestProcessor">
 		<constructor-arg index="0" ref="weatherDataRetriever" />
 		<constructor-arg index="1" ref="stationStatusDataRetriever" /> 
+	</bean>
+	
+	<bean id="tripRequestProcessor" class="com.gala.logicEngine.HubwayTripRequestProcessor">
 	</bean>
 	
 	<bean id="MongoDbQueryBuilder" class="com.gala.logicEngine.MongoDbQueryBuilder"/>

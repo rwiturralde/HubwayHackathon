@@ -64,24 +64,28 @@ public class CommandLineUI implements IHubwayUI {
 		
 		userParams.setRequestType(requestType);
 		
+		Calendar chosenCal;
+		Station chosenStation;
+		TimeOfDay chosenTimeOfDay;
+		
 		switch (userParams._requestType){
 		case WEATHER:
 			// Get the day the user plans to depart
-			Calendar chosenCal = getForecastDateFromUser();
+			chosenCal = getForecastDateFromUser();
 			if (chosenCal == null)
 				return null;
 			
 			userParams.setDay(Day.fromCalendar(chosenCal));
 			
 			// Get the departing station from the user
-			Station chosenStation = getHubwayStationFromUser();
+			chosenStation = getHubwayStationFromUser();
 			if (chosenStation == null)
 				return null;
 			
 			userParams.setStartStation(chosenStation);
 			
 			// Get the time of day the user plans to leave
-			TimeOfDay chosenTimeOfDay = getTimeOfDayFromUser();
+			chosenTimeOfDay = getTimeOfDayFromUser();
 			if (chosenTimeOfDay == null)
 				return null;
 			
@@ -98,7 +102,26 @@ public class CommandLineUI implements IHubwayUI {
 			
 			break;
 		case TRIP:
+			// Get the day the user plans to depart
+			chosenCal = getForecastDateFromUser();
+			if (chosenCal == null)
+				return null;
 			
+			userParams.setDay(Day.fromCalendar(chosenCal));
+			
+			// Get the departing station from the user
+			chosenStation = getHubwayStationFromUser();
+			if (chosenStation == null)
+				return null;
+			
+			userParams.setStartStation(chosenStation);
+			
+			// Get the time of day the user plans to leave
+			chosenTimeOfDay = getTimeOfDayFromUser();
+			if (chosenTimeOfDay == null)
+				return null;
+			
+			userParams.setTimeOfDay(chosenTimeOfDay);
 			break;
 			
 		default: return null;
@@ -115,11 +138,12 @@ public class CommandLineUI implements IHubwayUI {
 		RequestType returnRequestType = null;
 		
 		while (true) {
-			System.out.println("\n\nPlease choose the query type you would like to continue with or enter \'q\' to quit.  Valid stations are:");
+			System.out.println("\n\nPlease choose the query type you would like to continue with or enter \'q\' to quit.  Valid Queries are:");
 			
 			int i = 0;
 			for(RequestType requestType : RequestType.values()) {
-				System.out.println(i + " : " + requestType.name());
+				System.out.println(i + " : " + requestType.getPrintSummary());
+				i++;
 			}
 			
 			System.out.print("Enter selection: ");

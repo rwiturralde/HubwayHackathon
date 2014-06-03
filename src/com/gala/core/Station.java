@@ -2,12 +2,13 @@ package com.gala.core;
 
 public class Station {
 
-	private String _name;
 	private int _id;
-	private Double _lat;
-	private Double _lon;
+	private String _name;	
 	private String _municipality;
 	private int _capacity;
+	private Double _lat;
+	private Double _lon;
+
 	
 	public Station(){
 		_name = "";
@@ -18,12 +19,13 @@ public class Station {
 		_capacity = 0;
 	}
 	
-	public Station(final String name_, final int id_, final Double lon_, final Double lat_, final int capacity_){
-		_name = name_;
+	public Station(final int id_, final String name_, final String municipality_, final int capacity_, final Double lat_, final Double lon_){
 		_id = id_;
+		_name = name_;
+		_municipality = municipality_;
+		_capacity = capacity_;
 		_lon = lon_;
 		_lat = lat_;
-		_capacity = capacity_;
 	}
 	
 	public String getName(){
