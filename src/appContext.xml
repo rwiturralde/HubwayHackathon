@@ -259,18 +259,27 @@
 		<constructor-arg index="0" ref="mongoClient" />
 		<constructor-arg index="1" value="hubwayhackathon" />
 		<constructor-arg index="2" ref="allCollections" />
+		<constructor-arg index="3" ref="MongoDbQueryBuilder" />
+		<constructor-arg index="4" value="formattedDate" />
 	</bean>
 	
 	<bean id="stationStatusDataRetriever" class="com.gala.logicEngine.MongoDbDataRetrieverStationStatus" init-method="init">
 		<constructor-arg index="0" ref="mongoClient" />
 		<constructor-arg index="1" value="hubwayhackathon" />
 		<constructor-arg index="2" ref="allCollections" />
+		<constructor-arg index="3" ref="MongoDbQueryBuilder" />
+		<constructor-arg index="4" value="nbBikes" />
+		<constructor-arg index="5" value="capacity" />		
+		<constructor-arg index="6" value="formattedDate" />
+		<constructor-arg index="7" value="spannedDay" />
+		<constructor-arg index="7" value="spannedTime" />
+		<constructor-arg index="8" ref="mongoDateFormat" /> 
 	</bean>
 	
 	<bean id="requestProcessor" class="com.gala.logicEngine.HubwayRequestProcessor">
 		<constructor-arg index="0" ref="dataRetriever" /> 
 	</bean>
 	
-	
+	<bean id="MongoDbQueryBuilder" class="com.mongodb.BasicDBObject.MongoDbQueryBuilder"/>
 	
 </beans>
