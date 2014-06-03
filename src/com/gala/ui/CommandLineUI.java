@@ -255,8 +255,13 @@ public class CommandLineUI implements IHubwayUI {
 			default:
 				hourOffset = 0;
 		}
-		
+
 		int totalHourOffset = (dayOffset * 24) + hourOffset;
+		
+		if (totalHourOffset < 0) {
+			System.out.println("You've chosen a time in the past.  Defaulting to the current forecast");
+			totalHourOffset = 0;
+		}
 		
 		//Forecast.io only supports 48 hours of hourly forecast data, though the 
 		// shitty Java wrapper for the API claims it has 49 hours of forecast and 
