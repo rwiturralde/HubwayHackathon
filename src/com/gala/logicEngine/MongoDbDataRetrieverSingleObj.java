@@ -9,12 +9,12 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
-public class MongoDbDataRetrieverSingleString extends MongoDbDataRetriever<String>{
+public class MongoDbDataRetrieverSingleObj<T> extends MongoDbDataRetriever<T>{
 	
-	static final Logger _logger 			= Logger.getLogger(MongoDbDataRetrieverSingleString.class);
+	static final Logger _logger 			= Logger.getLogger(MongoDbDataRetrieverSingleObj.class);
 	protected String 	_columnToRetrieve;
 	
-	public MongoDbDataRetrieverSingleString(final MongoClient client_,
+	public MongoDbDataRetrieverSingleObj(final MongoClient client_,
 			final String dbName_, final List<String> collNames_, 
 			final MongoDbQueryBuilder mongoDbQueryBuilder_, 
 			final String columnToRetrieve_) {
@@ -22,7 +22,8 @@ public class MongoDbDataRetrieverSingleString extends MongoDbDataRetriever<Strin
 		_columnToRetrieve = columnToRetrieve_;
 	}
 
-	public List<String> retrieveData(final MongoDbQueryParameters params_){
+	@SuppressWarnings("unchecked")
+	public List<T> retrieveData(final MongoDbQueryParameters params_){
 		
 		DBCursor cursor = retrieveCursor(params_);
 		
@@ -31,7 +32,7 @@ public class MongoDbDataRetrieverSingleString extends MongoDbDataRetriever<Strin
 			return null;
 		}
 		
-		List<String> returnList = new ArrayList<String>();
+		List<T> returnList = new ArrayList<T>();
 		while(cursor.hasNext()){
 			DBObject responseObj = cursor.next();
 			Object retrievedObj = responseObj.get(_columnToRetrieve);
@@ -39,7 +40,11 @@ public class MongoDbDataRetrieverSingleString extends MongoDbDataRetriever<Strin
 				_logger.warn(String.format("Unable to retrieve field %s from DB response", _columnToRetrieve));
 				continue;
 			}
-			returnList.add(retrievedObj.toString());
+			try {
+				returnList.add((T) retrievedObj);
+			} catch (Exception e){
+				_logger.warn(String.format("Unable to cast db entry %s to specified type. Exception: %s", retrievedObj, e));
+			}			
 		}
 		
 		return returnList;

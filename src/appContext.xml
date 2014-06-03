@@ -127,13 +127,9 @@
 	</util:list>
 	
 	<util:list id="tripCollectionsToClear" value-type="java.lang.String"> 
-    	<value>stations</value>
-    	<value>trips</value>    	
 	</util:list>
 	
 	<util:list id="tripCollectionsToLoad" value-type="java.lang.String">
-    	<value>stations</value>
-    	<value>trips</value>    	
 	</util:list>
 	
 	<bean id="tripsReaderProcessorPair" class="java.util.AbstractMap.SimpleEntry">
@@ -314,7 +310,7 @@
 		<constructor-arg index="0" value="2e4135288e84ee81b4bb8418d67d6710" /> <!-- API KEY -->
 	</bean>
 	
-	<bean id="weatherDataRetriever" class="com.gala.logicEngine.MongoDbDataRetrieverSingleString" init-method="init">
+	<bean id="weatherDataRetriever" class="com.gala.logicEngine.MongoDbDataRetrieverSingleObj" init-method="init">
 		<constructor-arg index="0" ref="mongoClientWeather" />
 		<constructor-arg index="1" value="hubwayhackathon" />
 		<constructor-arg index="2" ref="allWeatherCollections" />
