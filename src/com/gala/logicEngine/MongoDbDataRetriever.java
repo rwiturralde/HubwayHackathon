@@ -49,24 +49,24 @@ public abstract class MongoDbDataRetriever<T> implements IDataRetriever <T> {
 		return true;
 	}
 	
-	protected DBCursor retrieveCursor(final QueryType queryType_, final MongoDbQueryParameters params_){
-		MongoDbQueryObject queryObject = _mongoDbQueryBuilder.buildQuery(queryType_, params_);
+	protected DBCursor retrieveCursor(final MongoDbQueryParameters params_){
+		MongoDbQueryObject queryObject = _mongoDbQueryBuilder.buildQuery(params_);
 		
 		if (queryObject == null){
-			_logger.warn(String.format("Unable to build query object using query type %s and the provided mongoQueryParams", queryType_));
+			_logger.warn(String.format("Unable to build query object using query type %s and the provided mongoQueryParams", params_._queryType));
 			return null;
 		}
 		
 		DBCollection coll = _collections.get(queryObject._collectionName);
 		if (coll == null) {
-			_logger.warn(String.format("Unable to retrieve collection %s using query type %s and the provided mongoQueryParams", queryObject._collectionName, queryType_));
+			_logger.warn(String.format("Unable to retrieve collection %s using query type %s and the provided mongoQueryParams", queryObject._collectionName, params_._queryType));
 			return null;
 		}		
 		
 		DBCursor cursor = coll.find(queryObject._queryObject, queryObject._fieldsRequest);
 		
 		if (cursor == null){
-			_logger.warn(String.format("Unable to retrieve DB cursor from collection %s with query type %s and the provided mongoQueryParams", queryObject._collectionName, queryType_));
+			_logger.warn(String.format("Unable to retrieve DB cursor from collection %s with query type %s and the provided mongoQueryParams", queryObject._collectionName, params_._queryType));
 			return null;
 		}
 		

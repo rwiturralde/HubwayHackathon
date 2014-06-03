@@ -22,9 +22,9 @@ public class MongoDbDataRetrieverSingleString extends MongoDbDataRetriever<Strin
 		_columnToRetrieve = columnToRetrieve_;
 	}
 
-	public List<String> retrieveData(final QueryType queryType_, final MongoDbQueryParameters params_){
+	public List<String> retrieveData(final MongoDbQueryParameters params_){
 		
-		DBCursor cursor = retrieveCursor(queryType_, params_);
+		DBCursor cursor = retrieveCursor(params_);
 		
 		if (cursor == null){
 			// errors logged at retrieve cursor

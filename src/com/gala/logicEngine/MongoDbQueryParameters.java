@@ -1,6 +1,5 @@
 package com.gala.logicEngine;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.gala.core.Temperature;
@@ -8,23 +7,18 @@ import com.gala.core.TimeOfDay;
 
 public class MongoDbQueryParameters {
 
-	protected int _startStationId;
-	protected TimeOfDay _timeOfDay;
-	protected Temperature _temperature;
-	protected List<String> _validDates;
+	protected int 			_startStationId;
+	protected TimeOfDay 	_timeOfDay;
+	protected Temperature 	_temperature;
+	protected List<String> 	_validDates;
+	protected QueryType		_queryType;
 	
-	public MongoDbQueryParameters(){
-		_startStationId = 0;
-		_timeOfDay = TimeOfDay.MORNING;
-		_temperature = Temperature.ZEROES;
-		_validDates = new ArrayList<String>();
-	}
-	
-	public MongoDbQueryParameters(final int startStationId_, final TimeOfDay tod_, final Temperature temp_, final List<String> dates_){
+	public MongoDbQueryParameters(final int startStationId_, final TimeOfDay tod_, final Temperature temp_, final List<String> dates_, final QueryType queryType_){
 		_startStationId = startStationId_;
 		_timeOfDay = tod_;
 		_temperature = temp_;
 		_validDates = dates_;
+		_queryType = queryType_;
 	}
 	
 	public int getStartStationId(){
@@ -43,6 +37,10 @@ public class MongoDbQueryParameters {
 		return _validDates;
 	}
 	
+	public QueryType getQueryType(){
+		return _queryType;
+	}
+	
 	public void setStartStationId(int startStationId_){
 		_startStationId = startStationId_;
 	}
@@ -58,5 +56,11 @@ public class MongoDbQueryParameters {
 	public void setValidDates(List<String> validDates_){
 		_validDates = validDates_;
 	}
+	
+	public void setQueryType(QueryType queryType_){
+		_queryType = queryType_;
+	}
+	
+	
 	
 }

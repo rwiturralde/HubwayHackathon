@@ -9,9 +9,9 @@ import com.mongodb.BasicDBObject;
  */
 public class MongoDbQueryBuilder implements IQueryBuilder{
 	
-	public MongoDbQueryObject buildQuery(final QueryType query_, final MongoDbQueryParameters params_){
+	public MongoDbQueryObject buildQuery(final MongoDbQueryParameters params_){
 		
-		switch(query_) {
+		switch(params_._queryType) {
 			case STATION_INFO:
 				return buildStationInfoQuery(params_);
 			case STATION_NAMES:

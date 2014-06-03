@@ -38,8 +38,8 @@ public class MongoDbDataRetrieverStationStatus extends
 		_dateFormat = dateFormat_;
 	}
 
-	public List<StationStatus> retrieveData(QueryType queryType_, MongoDbQueryParameters params_) {
-		DBCursor cursor = retrieveCursor(queryType_, params_);
+	public List<StationStatus> retrieveData(MongoDbQueryParameters params_) {
+		DBCursor cursor = retrieveCursor(params_);
 		
 		if (cursor == null){
 			// errors logged at retrieve cursor

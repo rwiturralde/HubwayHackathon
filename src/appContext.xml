@@ -255,7 +255,13 @@
 		<constructor-arg index="0" value="2e4135288e84ee81b4bb8418d67d6710" /> <!-- API KEY -->
 	</bean>
 	
-	<bean id="dataRetriever" class="com.gala.logicEngine.MongoDbDataRetriever" init-method="init">
+	<bean id="weatherDataRetriever" class="com.gala.logicEngine.MongoDbDataRetrieverSingleString" init-method="init">
+		<constructor-arg index="0" ref="mongoClient" />
+		<constructor-arg index="1" value="hubwayhackathon" />
+		<constructor-arg index="2" ref="allCollections" />
+	</bean>
+	
+	<bean id="stationStatusDataRetriever" class="com.gala.logicEngine.MongoDbDataRetrieverStationStatus" init-method="init">
 		<constructor-arg index="0" ref="mongoClient" />
 		<constructor-arg index="1" value="hubwayhackathon" />
 		<constructor-arg index="2" ref="allCollections" />
@@ -264,5 +270,7 @@
 	<bean id="requestProcessor" class="com.gala.logicEngine.HubwayRequestProcessor">
 		<constructor-arg index="0" ref="dataRetriever" /> 
 	</bean>
+	
+	
 	
 </beans>
