@@ -262,6 +262,7 @@ public class CommandLineUI implements IHubwayUI {
 		station1.setLatitude(42.35977);
 		station1.setLongitude(-71.051601);
 		station1.setMunicipality("Boston");
+		station1.setCapacity(19);
 		
 		stations.add(station1);
 		
@@ -271,6 +272,7 @@ public class CommandLineUI implements IHubwayUI {
 		station2.setLatitude(42.360583);
 		station2.setLongitude(-71.056868);
 		station2.setMunicipality("Boston");
+		station2.setCapacity(19);
 		
 		stations.add(station2);
 		

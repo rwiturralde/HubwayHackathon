@@ -42,12 +42,13 @@ public class HubwayRequestProcessor implements IRequestProcessor{
 			_logger.info(String.format("Station Status list size: %d", stationStatusList_.size()));
 			double total = 0.0;
 			for (StationStatus ss : stationStatusList_){
-				total += ss.getNumBikesAvailable();
+				total += ss.getNumBikesAvailable() / ss.getCapactity();
 			}
 			
 			double avg = total / stationStatusList_.size();
 			_logger.info(String.format("Average availability calculated as %f%", avg));
-			int expectedNumBikes = (int) Math.floor(avg * station_.getId());
+			int expectedNumBikes = (int) Math.floor(avg * station_.getCapacity());
+			_logger.info(String.format("Expected number of bikes available %f%", expectedNumBikes));
 			results = new HubwayResults(avg, expectedNumBikes);
 		} else {
 			_logger.info(String.format("Station Status list empty for station Id %s", station_.getId()));
