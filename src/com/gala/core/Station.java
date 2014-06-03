@@ -7,6 +7,7 @@ public class Station {
 	private Double _lat;
 	private Double _lon;
 	private String _municipality;
+	private int _capacity;
 	
 	public Station(){
 		_name = "";
@@ -14,13 +15,15 @@ public class Station {
 		_lat = new Double(0.0);
 		_lon = new Double(0.0);
 		_municipality = "";
+		_capacity = 0;
 	}
 	
-	public Station(final String name_, final int id_, final Double lon_, final Double lat_){
+	public Station(final String name_, final int id_, final Double lon_, final Double lat_, final int capacity_){
 		_name = name_;
 		_id = id_;
 		_lon = lon_;
 		_lat = lat_;
+		_capacity = capacity_;
 	}
 	
 	public String getName(){
@@ -37,6 +40,10 @@ public class Station {
 	
 	public Double getLongitude(){
 		return _lon;
+	}
+	
+	public int getCapacity(){
+		return _capacity;
 	}
 	
 	public void setName(final String name_){
@@ -61,6 +68,10 @@ public class Station {
 
 	public void setMunicipality(String municipality_) {
 		this._municipality = municipality_;
+	}
+	
+	public void setCapacity(final int capacity_){
+		_capacity = capacity_;
 	}
 
 	@Override
