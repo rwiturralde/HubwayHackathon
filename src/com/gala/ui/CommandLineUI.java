@@ -69,62 +69,63 @@ public class CommandLineUI implements IHubwayUI {
 		TimeOfDay chosenTimeOfDay;
 		
 		switch (userParams._requestType){
-		case WEATHER:
-			// Get the day the user plans to depart
-			chosenCal = getForecastDateFromUser();
-			if (chosenCal == null)
-				return null;
-			
-			userParams.setDay(Day.fromCalendar(chosenCal));
-			
-			// Get the time of day the user plans to leave
-			chosenTimeOfDay = getTimeOfDayFromUser();
-			if (chosenTimeOfDay == null)
-				return null;
-			
-			userParams.setTimeOfDay(chosenTimeOfDay);
-			
-			// Get the departing station from the user
-			chosenStation = getHubwayStationFromUser();
-			if (chosenStation == null)
-				return null;
-			
-			userParams.setStartStation(chosenStation);
-			
-			// Get the forecast and temperature for the day and time chosen by the user.
-			_forecastIO.getForecast(chosenStation.getLatitude().toString(), chosenStation.getLongitude().toString());
-			Temperature forecastTemp = getTemperature(chosenCal, chosenTimeOfDay);
-			
-			if (forecastTemp == null)
-				return null;
-			
-			userParams.setTemperature(forecastTemp);
-			
-			break;
-		case TRIP:
-			// Get the day the user plans to depart
-			chosenCal = getForecastDateFromUser();
-			if (chosenCal == null)
-				return null;
-			
-			userParams.setDay(Day.fromCalendar(chosenCal));
-			
-			// Get the departing station from the user
-			chosenStation = getHubwayStationFromUser();
-			if (chosenStation == null)
-				return null;
-			
-			userParams.setStartStation(chosenStation);
-			
-			// Get the time of day the user plans to leave
-			chosenTimeOfDay = getTimeOfDayFromUser();
-			if (chosenTimeOfDay == null)
-				return null;
-			
-			userParams.setTimeOfDay(chosenTimeOfDay);
-			break;
-			
-		default: return null;
+			case WEATHER:
+				// Get the day the user plans to depart
+				chosenCal = getForecastDateFromUser();
+				if (chosenCal == null)
+					return null;
+				
+				userParams.setDay(Day.fromCalendar(chosenCal));
+				
+				// Get the time of day the user plans to leave
+				chosenTimeOfDay = getTimeOfDayFromUser();
+				if (chosenTimeOfDay == null)
+					return null;
+				
+				userParams.setTimeOfDay(chosenTimeOfDay);
+				
+				// Get the departing station from the user
+				chosenStation = getHubwayStationFromUser();
+				if (chosenStation == null)
+					return null;
+				
+				userParams.setStartStation(chosenStation);
+				
+				// Get the forecast and temperature for the day and time chosen by the user.
+				_forecastIO.getForecast(chosenStation.getLatitude().toString(), chosenStation.getLongitude().toString());
+				Temperature forecastTemp = getTemperature(chosenCal, chosenTimeOfDay);
+				
+				if (forecastTemp == null)
+					return null;
+				
+				userParams.setTemperature(forecastTemp);
+				
+				break;
+			case TRIP:
+				// Get the day the user plans to depart
+				chosenCal = getForecastDateFromUser();
+				if (chosenCal == null)
+					return null;
+				
+				userParams.setDay(Day.fromCalendar(chosenCal));
+				
+				// Get the time of day the user plans to leave
+				chosenTimeOfDay = getTimeOfDayFromUser();
+				if (chosenTimeOfDay == null)
+					return null;
+				
+				userParams.setTimeOfDay(chosenTimeOfDay);
+				
+				// Get the departing station from the user
+				chosenStation = getHubwayStationFromUser();
+				if (chosenStation == null)
+					return null;
+				
+				userParams.setStartStation(chosenStation);
+				
+				break;
+				
+			default: return null;
 		}
 		
 
