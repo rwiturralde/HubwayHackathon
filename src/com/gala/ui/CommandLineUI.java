@@ -133,9 +133,7 @@ public class CommandLineUI implements IHubwayUI {
 
 	private RequestType getRequestTypeFromUser() {
 		int queryTypeSelectionInt = -1;
-		
-		RequestType returnRequestType = null;
-		
+				
 		while (true) {
 			System.out.println("\n\nPlease choose the query type you would like to continue with or enter \'q\' to quit.  Valid Queries are:");
 			
@@ -152,17 +150,15 @@ public class CommandLineUI implements IHubwayUI {
 				case -2: continue; // invalid user selection
 			} 
 			
-			try {
-				returnRequestType = RequestType.values()[queryTypeSelectionInt];
-				break;
-			} catch (Exception e){
+			if (queryTypeSelectionInt < 0 || queryTypeSelectionInt >= RequestType.values().length){ 
 				System.out.println("Invalid selection. Please choose the number corresponding to a valid station.");
 				continue;
-			}
-			
+			} else {
+				break;
+			}			
 		}
 		
-		return returnRequestType;
+		return RequestType.values()[queryTypeSelectionInt];
 	}
 
 	public void displayResults(HubwayResults results_) {
