@@ -31,6 +31,7 @@ public class CommandLineUI implements IHubwayUI {
 	// Number of days into the future (incl today) that we'll allow for forecasting
 	protected final Logger _logger = Logger.getLogger(CommandLineUI.class);
 	protected final int FORECAST_RANGE = 5;
+	protected final double PRECIP_PERCENT_THRESHOLD = 0.25;
 	protected final SimpleDateFormat _dateFormat = new SimpleDateFormat("EEE MMM d, yyyy");
 	
 	protected ForecastIO _forecastIO;
@@ -380,6 +381,9 @@ public class CommandLineUI implements IHubwayUI {
 		//Forecast.io only supports 48 hours of hourly forecast data, though the 
 		// shitty Java wrapper for the API claims it has 49 hours of forecast and 
 		// throws an IndexOutOfBounds if you ask for 49.
+		
+		Double temp = 0.0;
+		Double precip = 0.0;
 		if (totalHourOffset <= 48) {
 			FIOHourly hourly = new FIOHourly(_forecastIO);  
 			
@@ -387,22 +391,28 @@ public class CommandLineUI implements IHubwayUI {
 				System.out.println("Insufficient forecast data for the chosen day...");
 				return null;
 			} else {
-				_logger.info("Hourly forecast - Time: " + hourly.getHour(totalHourOffset).time() + " Temp: " + hourly.getHour(totalHourOffset).temperature());
-				return new Weather(Temperature.getTemperature(hourly.getHour(totalHourOffset).temperature().intValue()), false);
+				temp = hourly.getHour(totalHourOffset).temperature();
+				precip = hourly.getHour(totalHourOffset).precipProbability();
+				
+				_logger.info("Hourly forecast - Time: " + hourly.getHour(totalHourOffset).time() + " Temp: " + temp + " Percent change precip: " + precip);
 			}
 		} else {
 			// Insufficient hourly data.  Use the high for the day in question.
 			_logger.info("Total hour offset from the current time is " + totalHourOffset + ", which exceeds the supported hourly forecast range.  Defaulting to daily forecast");
 			FIODaily daily = new FIODaily(_forecastIO);
 			
-			if (daily.days() < 0 || daily.days() < dayOffset || daily.getDay(dayOffset).temperatureMax() == null) {
+		    if (daily.days() < 0 || daily.days() < dayOffset || daily.getDay(dayOffset).temperatureMax() == null) {
 				System.out.println("Insufficient forecast data for the chosen day...");
 				return null;
 			} else {
-				_logger.info("Daily forecast - Time: " + daily.getDay(dayOffset).time() + " Temp: " + daily.getDay(dayOffset).temperatureMax());
-				return new Weather(Temperature.getTemperature(daily.getDay(dayOffset).temperatureMax().intValue()), false);
+				temp = daily.getDay(dayOffset).temperatureMax();
+				precip = daily.getDay(dayOffset).precipProbability();
+				
+				_logger.info("Daily forecast - Time: " + daily.getDay(dayOffset).time() + " Temp: " + temp + " Percent change precip: " + precip);				
 			}
 		}
+		
+		return new Weather(Temperature.getTemperature(temp.intValue()), precip > PRECIP_PERCENT_THRESHOLD);
 	}
 
 	

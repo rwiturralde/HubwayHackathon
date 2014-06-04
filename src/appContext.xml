@@ -119,11 +119,9 @@
 	</util:list>
 	
 	<util:list id="weatherCollectionsToClear" value-type="java.lang.String"> 
-
 	</util:list>
 	
 	<util:list id="weatherCollectionsToLoad" value-type="java.lang.String">
-
 	</util:list>
 
 	<util:list id="allTripCollections" value-type="java.lang.String">
@@ -201,7 +199,8 @@
 		<constructor-arg index="0">
 			<list>
 				<ref bean="historicalWeatherMongoDbPostProcessorDate" />
-				<ref bean="historicalWeatherMongoDbPostProcessorTemp" />
+				<ref bean="historicalWeatherMongoDbPostProcessorTemp" />				
+				<ref bean="historicalWeatherMongoDbPostProcessorPrecipitation" />
 			</list>
 		</constructor-arg>
 		<constructor-arg index="1">
@@ -297,6 +296,14 @@
 	<bean id="historicalWeatherMongoDbPostProcessorTemp" class="com.gala.dataLoader.MongoDbPostProcessorWeatherTempSpan">
 		<constructor-arg index="0" value="DryBulbFarenheit" />
 		<constructor-arg index="1" value="spannedTemperature" />
+	</bean>
+	
+	<bean id="historicalWeatherMongoDbPostProcessorPrecipitation" class="com.gala.dataLoader.MongoDbPostProcessorWeatherPrecipitation">
+		<constructor-arg index="0" value="HourlyPrecip" />
+		<constructor-arg index="1" value="itDonRained" />
+		<constructor-arg index="2" value="0.01" />
+		<constructor-arg index="3" value="T" />
+		<constructor-arg index="4" value="0.001" />
 	</bean>
 	
 	<bean id="hubwayDateFormat" class="java.text.SimpleDateFormat">
