@@ -12,7 +12,6 @@ import com.gala.core.Temperature;
 import com.gala.core.TimeOfDay;
 
 import dme.forecastiolib.FIODaily;
-import dme.forecastiolib.FIODataPoint;
 import dme.forecastiolib.FIOHourly;
 import dme.forecastiolib.ForecastIO;
 
@@ -134,9 +133,7 @@ public class CommandLineUI implements IHubwayUI {
 	private RequestType getRequestTypeFromUser() {
 		String queryTypeSelectionString = "";
 		int queryTypeSelectionInt = -1;
-		
-		RequestType returnRequestType = null;
-		
+				
 		while (true) {
 			System.out.println("\n\nPlease choose the query type you would like to continue with or enter \'q\' to quit.  Valid Queries are:");
 			
@@ -160,17 +157,15 @@ public class CommandLineUI implements IHubwayUI {
 				continue;
 			} 
 			
-			try {
-				returnRequestType = RequestType.values()[queryTypeSelectionInt];
-				break;
-			} catch (Exception e){
+			if (queryTypeSelectionInt < 0 || queryTypeSelectionInt >= RequestType.values().length){ 
 				System.out.println("Invalid selection. Please choose the number corresponding to a valid station.");
 				continue;
-			}
-			
+			} else {
+				break;
+			}			
 		}
 		
-		return returnRequestType;
+		return RequestType.values()[queryTypeSelectionInt];
 	}
 
 	public void displayResults(Object results_) {
