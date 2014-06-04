@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import com.gala.core.Day;
 import com.gala.core.Station;
 import com.gala.core.Temperature;
@@ -26,6 +28,7 @@ import dme.forecastiolib.ForecastIO;
 public class CommandLineUI implements IHubwayUI {
 
 	// Number of days into the future (incl today) that we'll allow for forecasting
+	protected final Logger _logger = Logger.getLogger(CommandLineUI.class);
 	protected final int FORECAST_RANGE = 5;
 	protected final SimpleDateFormat _dateFormat = new SimpleDateFormat("EEE MMM d, yyyy");
 	
@@ -33,10 +36,18 @@ public class CommandLineUI implements IHubwayUI {
 	protected Set<Station> _stations;
 	protected Scanner _scanner;
 	
+	/**
+	 * Hidden default constructor to not allow construction without the necessary parameters.
+	 */
 	protected CommandLineUI() {
 		
 	}
 	
+	/**
+	 * Constructor to create a Hubway command line UI 
+	 * 
+	 * @param forecastIO_ ForecastIO wrapper for forecast.io interactions to fetch weather forecast data.
+	 */
 	public CommandLineUI(ForecastIO forecastIO_) {
 		_forecastIO = forecastIO_;
 		_forecastIO.setUnits(ForecastIO.UNITS_US);
@@ -44,16 +55,27 @@ public class CommandLineUI implements IHubwayUI {
 		_scanner = null;
 	}
 	
+	/**
+	 * Launch the UI.  Display welcome message to user and initialize resources.
+	 */
 	public void launch() {
 		_scanner = new Scanner(System.in);
 		printStartupMessage();
 	}
 	
+	/**
+	 * Close the UI and close and open resources.
+	 */
 	public void close() {
 		if (_scanner != null)
 			_scanner.close();
 	}
 
+	/**
+	 * Get the data request parameters from the user
+	 * 
+	 * @return HubwayRequestParameters object wrapping the details of the request from the user. 
+	 */
 	public HubwayRequestParameters getUserParameters() {
 		HubwayRequestParameters userParams = new HubwayRequestParameters();
 		
@@ -61,8 +83,8 @@ public class CommandLineUI implements IHubwayUI {
 		RequestType requestType = getRequestTypeFromUser();
 		if (requestType == null)
 			return null;
-		
 		userParams.setRequestType(requestType);
+		_logger.info("User chose a request type of " + requestType);
 		
 		Calendar chosenCal;
 		Station chosenStation;
@@ -74,30 +96,29 @@ public class CommandLineUI implements IHubwayUI {
 				chosenCal = getForecastDateFromUser();
 				if (chosenCal == null)
 					return null;
-				
 				userParams.setDay(Day.fromCalendar(chosenCal));
+				_logger.info("User chose a day of " + _dateFormat.format(chosenCal.getTime()));
 				
 				// Get the time of day the user plans to leave
 				chosenTimeOfDay = getTimeOfDayFromUser();
 				if (chosenTimeOfDay == null)
 					return null;
-				
 				userParams.setTimeOfDay(chosenTimeOfDay);
+				_logger.info("User chose a time of day of " + chosenTimeOfDay);
 				
 				// Get the departing station from the user
 				chosenStation = getHubwayStationFromUser();
 				if (chosenStation == null)
 					return null;
-				
 				userParams.setStartStation(chosenStation);
+				_logger.info("User chose station " + chosenStation);
 				
 				// Get the forecast and temperature for the day and time chosen by the user.
 				_forecastIO.getForecast(chosenStation.getLatitude().toString(), chosenStation.getLongitude().toString());
 				Temperature forecastTemp = getTemperature(chosenCal, chosenTimeOfDay);
-				
 				if (forecastTemp == null)
 					return null;
-				
+				_logger.info("Forecasted temperature for inputs is " + forecastTemp);
 				userParams.setTemperature(forecastTemp);
 				
 				break;
@@ -106,22 +127,22 @@ public class CommandLineUI implements IHubwayUI {
 				chosenCal = getForecastDateFromUser();
 				if (chosenCal == null)
 					return null;
-				
 				userParams.setDay(Day.fromCalendar(chosenCal));
+				_logger.info("User chose a day of " + _dateFormat.format(chosenCal.getTime()));
 				
 				// Get the time of day the user plans to leave
 				chosenTimeOfDay = getTimeOfDayFromUser();
 				if (chosenTimeOfDay == null)
 					return null;
-				
 				userParams.setTimeOfDay(chosenTimeOfDay);
+				_logger.info("User chose a time of day of " + chosenTimeOfDay);
 				
 				// Get the departing station from the user
 				chosenStation = getHubwayStationFromUser();
 				if (chosenStation == null)
 					return null;
-				
 				userParams.setStartStation(chosenStation);
+				_logger.info("User chose station " + chosenStation);
 				
 				break;
 				
@@ -132,6 +153,11 @@ public class CommandLineUI implements IHubwayUI {
 		return userParams;
 	}
 
+	/**
+	 * Get the type of Hubway data request from the user.  
+	 * 
+	 * @return RequestType representing the type of query the user wishes to run or null if the user wishes to quit.
+	 */
 	private RequestType getRequestTypeFromUser() {
 		int queryTypeSelectionInt = -1;
 				
@@ -147,7 +173,10 @@ public class CommandLineUI implements IHubwayUI {
 			queryTypeSelectionInt = getSelectionFromUser();
 			
 			switch (queryTypeSelectionInt) {
-				case -1: return null; // user requested quit
+				case -1:
+					// user requested quit
+					_logger.info("User chose to quit from request type selection");
+					return null; 
 				case -2: continue; // invalid user selection
 			} 
 			
@@ -162,11 +191,19 @@ public class CommandLineUI implements IHubwayUI {
 		return RequestType.values()[queryTypeSelectionInt];
 	}
 
+	/**
+	 * Display the results of the Hubway data query to the user.
+	 * 
+	 * @param results_ The HubwayResults object wrapping the results of the query
+	 */
 	public void displayResults(HubwayResults results_) {
 		// TODO Auto-generated method stub
 
 	}
 
+	/**
+	 * Prints the message to be displayed to the user on startup
+	 */
 	protected void printStartupMessage() {
 		System.out.println("*************************************************");
 		System.out.println("*                                               *");
@@ -178,6 +215,11 @@ public class CommandLineUI implements IHubwayUI {
 		System.out.println("");
 	}
 
+	/**
+	 * Get the date that the user plans to depart on their trip.  This range is bound by FORECAST_RANGE
+	 * 
+	 * @return Calendar day the user wishes to depart or null if the user wishes to quit.
+	 */
 	protected Calendar getForecastDateFromUser() {
 		int daySelectionInt = -1;
 		
@@ -193,7 +235,10 @@ public class CommandLineUI implements IHubwayUI {
 			daySelectionInt = getSelectionFromUser();
 			
 			switch (daySelectionInt) {
-				case -1: return null; // user requested quit
+				case -1:
+					// user requested quit
+					_logger.info("User chose to quit from forecast date selection");
+					return null; 
 				case -2: continue; // invalid user selection
 			} 
 			
@@ -211,6 +256,11 @@ public class CommandLineUI implements IHubwayUI {
 		return returnCal;
 	}
 	
+	/**
+	 * Get the station from which the user plans to depart
+	 * 
+	 * @return The Station from which the user plans to leave or null if the user wishes to quit.
+	 */
 	protected Station getHubwayStationFromUser() {
 		int stationSelectionInt = -1;
 		
@@ -227,7 +277,10 @@ public class CommandLineUI implements IHubwayUI {
 			stationSelectionInt = getSelectionFromUser();
 			
 			switch (stationSelectionInt) {
-				case -1: return null; // user requested quit
+				case -1: 
+					// user requested quit
+					_logger.info("User chose to quit from hubway station selection");
+					return null; 
 				case -2: continue; // invalid user selection
 			}
 			
@@ -244,6 +297,11 @@ public class CommandLineUI implements IHubwayUI {
 		
 	}
 	
+	/**
+	 * Get the time of day that the user plans to depart
+	 * 
+	 * @return TimeOfDay representing when the user plans to depart or null if the user wishes to quit.
+	 */
 	protected TimeOfDay getTimeOfDayFromUser() {
 		int timeOfDayOrdinal = -1;
 		
@@ -257,7 +315,10 @@ public class CommandLineUI implements IHubwayUI {
 			timeOfDayOrdinal = getSelectionFromUser();
 			
 			switch (timeOfDayOrdinal) {
-				case -1: return null; // user requested quit
+				case -1: 
+					// user requested quit
+					_logger.info("User chose to quit from time of day selection");
+					return null;
 				case -2: continue; // invalid user selection
 			} 
 			
@@ -274,11 +335,14 @@ public class CommandLineUI implements IHubwayUI {
 	}
 
 	/**
-	 * Get the forecasted temperature for a given day and time range using the Forecast
+	 * Get the forecasted temperature for a given day and time range using the Forecast.  
+	 * Hourly forecast is used for departure times <= 48 hours from now (as supported by the weather API)
+	 * while daily high temperatures are used for requests beyond that time.  If hourly, an hour at the mid-section of
+	 * the TimeOfDay range is chosen.
 	 * 
-	 * @param cal_
-	 * @param timeOfDay_
-	 * @return
+	 * @param cal_ Calendar for the day the user plans to leave
+	 * @param timeOfDay_ TimeOfDay that the user plans to depart
+	 * @return Temperature forecasted for the day & time provided.  
 	 */
 	protected Temperature getTemperature(Calendar cal_, TimeOfDay timeOfDay_) {
 		
@@ -304,6 +368,7 @@ public class CommandLineUI implements IHubwayUI {
 		int totalHourOffset = (dayOffset * 24) + hourOffset;
 		
 		if (totalHourOffset < 0) {
+			_logger.info("User chose a time in the past (hour offset from current time is " + totalHourOffset + ". Defaulting to current temperature.");
 			System.out.println("You've chosen a time in the past.  Defaulting to the current forecast");
 			totalHourOffset = 0;
 		}
@@ -318,18 +383,19 @@ public class CommandLineUI implements IHubwayUI {
 				System.out.println("Insufficient forecast data for the chosen day...");
 				return null;
 			} else {
-				System.out.println("Hourly - Time: " + hourly.getHour(totalHourOffset).time() + "GMT Temp: " + hourly.getHour(totalHourOffset).temperature());
+				_logger.info("Hourly forecast - Time: " + hourly.getHour(totalHourOffset).time() + " Temp: " + hourly.getHour(totalHourOffset).temperature());
 				return Temperature.getTemperature(hourly.getHour(totalHourOffset).temperature().intValue());
 			}
 		} else {
 			// Insufficient hourly data.  Use the high for the day in question.
+			_logger.info("Total hour offset from the current time is " + totalHourOffset + ", which exceeds the supported hourly forecast range.  Defaulting to daily forecast");
 			FIODaily daily = new FIODaily(_forecastIO);
 			
 			if (daily.days() < 0 || daily.days() < dayOffset || daily.getDay(dayOffset).temperatureMax() == null) {
 				System.out.println("Insufficient forecast data for the chosen day...");
 				return null;
 			} else {
-				System.out.println("Daily - Time: " + daily.getDay(dayOffset).time() + "GMT Temp: " + daily.getDay(dayOffset).temperatureMax());
+				_logger.info("Daily forecast - Time: " + daily.getDay(dayOffset).time() + " Temp: " + daily.getDay(dayOffset).temperatureMax());
 				return Temperature.getTemperature(daily.getDay(dayOffset).temperatureMax().intValue());
 			}
 		}
@@ -356,6 +422,7 @@ public class CommandLineUI implements IHubwayUI {
 		try {
 			selectionInt = Integer.parseInt(selectionString);
 		} catch (NumberFormatException e) {
+			_logger.info("User entered an invalid number: " + selectionString);
 			System.out.println("Invalid number.");
 			return -2;
 		} 
@@ -372,6 +439,8 @@ public class CommandLineUI implements IHubwayUI {
 	 */
 	protected Set<Station> loadStations() {
 		Set<Station> stations = new HashSet<Station>();
+		
+		_logger.debug("Loading station data...");
 		
 		Station station1 = new Station();
 		station1.setId(20);
