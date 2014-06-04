@@ -2,16 +2,16 @@ package com.gala.logicEngine;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
-import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
-public class MongoDbDataRetrieverSimpleEntry <K, V> extends MongoDbDataRetriever<Entry<K, V>> {
+public class MongoDbDataRetrieverSimpleEntry <K, V> extends MongoDbDataRetrieverBase<Entry<K, V>> {
 
 	static final Logger _logger 			= Logger.getLogger(MongoDbDataRetrieverSingleObj.class);
 	protected String 	_keyToRetrieve;
@@ -27,16 +27,16 @@ public class MongoDbDataRetrieverSimpleEntry <K, V> extends MongoDbDataRetriever
 
 	@SuppressWarnings("unchecked")
 	public List<Entry<K,V>> retrieveData(MongoDbQueryParameters params_) {
-		DBCursor cursor = retrieveCursor(params_);
+		Iterator<DBObject> iterator = retrieveCursor(params_);
 		
-		if (cursor == null){
+		if (iterator == null){
 			// errors logged at retrieve cursor
 			return null;
 		}
 		
 		List<Entry<K,V>> returnList = new ArrayList<Entry<K,V>>();
-		while(cursor.hasNext()){
-			DBObject responseObj = cursor.next();
+		while(iterator.hasNext()){
+			DBObject responseObj = iterator.next();
 			Object retrievedKeyObj = responseObj.get(_keyToRetrieve);
 			if (retrievedKeyObj == null){
 				_logger.warn(String.format("Unable to retrieve field %s from DB response", _keyToRetrieve));

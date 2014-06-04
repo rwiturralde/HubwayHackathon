@@ -1,15 +1,15 @@
 package com.gala.logicEngine;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
-public class MongoDbDataRetrieverSingleObj<T> extends MongoDbDataRetriever<T>{
+public class MongoDbDataRetrieverSingleObj<T> extends MongoDbDataRetrieverBase<T>{
 	
 	static final Logger _logger 			= Logger.getLogger(MongoDbDataRetrieverSingleObj.class);
 	protected String 	_columnToRetrieve;
@@ -25,16 +25,16 @@ public class MongoDbDataRetrieverSingleObj<T> extends MongoDbDataRetriever<T>{
 	@SuppressWarnings("unchecked")
 	public List<T> retrieveData(final MongoDbQueryParameters params_){
 		
-		DBCursor cursor = retrieveCursor(params_);
+		Iterator<DBObject> iterator =  retrieveCursor(params_);
 		
-		if (cursor == null){
+		if (iterator == null){
 			// errors logged at retrieve cursor
 			return null;
 		}
 		
 		List<T> returnList = new ArrayList<T>();
-		while(cursor.hasNext()){
-			DBObject responseObj = cursor.next();
+		while(iterator.hasNext()){
+			DBObject responseObj = iterator.next();
 			Object retrievedObj = responseObj.get(_columnToRetrieve);
 			if (retrievedObj == null){
 				_logger.warn(String.format("Unable to retrieve field %s from DB response", _columnToRetrieve));
