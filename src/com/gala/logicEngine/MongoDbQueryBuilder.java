@@ -55,6 +55,12 @@ public class MongoDbQueryBuilder implements IQueryBuilder{
 		queryObj.append("spannedTime", params_.getTimeOfDay().name());
 		queryObj.append("station_id", Integer.toString(params_.getStartStationId()));
 		queryObj.append("formattedDate", new BasicDBObject("$in", params_.getValidDates()));
+		
+		// Optionally include day parameter
+		if (!params_.getExcludeDayParam()) {
+			queryObj.append("isWeekday", params_.getDay().isWeekday());
+		}
+		
 		return new MongoDbQueryObject(queryObj, new BasicDBObject(), "stationStatus");
 	}
 	
@@ -79,6 +85,12 @@ public class MongoDbQueryBuilder implements IQueryBuilder{
 		BasicDBObject matchFields = new BasicDBObject();
 		matchFields.append("spannedStartTime", params_.getTimeOfDay().name());
 		matchFields.append("start_station", Integer.toString(params_.getStartStationId()));
+		
+		// Optionally include day parameter
+		if (!params_.getExcludeDayParam()) {
+			matchFields.append("isWeekday", params_.getDay().isWeekday());
+		}
+		
 		DBObject matchObject = new BasicDBObject("$match", matchFields);
 		
 		// group by ending station

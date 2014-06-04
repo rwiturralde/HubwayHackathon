@@ -17,21 +17,31 @@ public class HubwayTripRequestProcessor implements IRequestProcessor {
 	protected IDataRetriever<SimpleEntry<String, Integer>> _tripsDataRetriever;
 	protected IDataRetriever<Station> 					   _stationInfoRetriever;
 	protected int										   _numResultsToReturn;
+	protected int										   _resultThreshold;
 	
 	public HubwayTripRequestProcessor(final IDataRetriever<SimpleEntry<String, Integer>> tripsDataRetriever_,
-			final IDataRetriever<Station> stationInfoRetriever_, final int numResults_) {
+			final IDataRetriever<Station> stationInfoRetriever_, final int numResults_, final int resultThreshold_) {
 		_tripsDataRetriever = tripsDataRetriever_;
 		_stationInfoRetriever = stationInfoRetriever_;
 		_numResultsToReturn = numResults_;
+		_resultThreshold = resultThreshold_;
 	}
 
 	public HubwayResults processRequest(HubwayRequestParameters parameters_) {
 		// Get dates with weather matching temp
 		MongoDbQueryParameters params = new MongoDbQueryParameters(parameters_.getStartStation().getId(), 
-				parameters_.getTimeOfDay(), parameters_.getTemperature(), null, QueryType.TRIP_END_STATION);
+				parameters_.getTimeOfDay(), parameters_.getDay(), parameters_.getTemperature(), QueryType.TRIP_END_STATION);
 		List<SimpleEntry<String,Integer>> endStationCounts = _tripsDataRetriever.retrieveData(params);
 		
-		HashMap<String, Double> probMap = calculateProbabilites(endStationCounts);
+		int totalTrips = calculateTotalTrips(endStationCounts);
+		if (totalTrips < _resultThreshold) {
+			_logger.warn(String.format("Trips query returned %d results which is under threshold of %d. Excluding day parameter and querying again.", totalTrips, _resultThreshold));
+			params.setExcludeDayParam(true);
+			endStationCounts = _tripsDataRetriever.retrieveData(params);
+			totalTrips = calculateTotalTrips(endStationCounts);
+		}
+		
+		HashMap<String, Double> probMap = calculateProbabilites(endStationCounts, totalTrips);
 		
 		// List returned from query is sorted in descending order
 		List<String> topStations = new ArrayList<String>(_numResultsToReturn);
@@ -50,18 +60,21 @@ public class HubwayTripRequestProcessor implements IRequestProcessor {
 		return convertResponseToResult(probMap, stationInfoList);
 	}
 	
-	protected HashMap<String, Double> calculateProbabilites(final List<SimpleEntry<String,Integer>> endStationCounts_){
-		
-		double totalTrips = 0;
+	protected int calculateTotalTrips(final List<SimpleEntry<String,Integer>> endStationCounts_) {
+		int totalTrips = 0;
 		for (SimpleEntry<String,Integer> entry : endStationCounts_){
 			totalTrips += entry.getValue();
 		}
+		return totalTrips;
+	}
+	
+	protected HashMap<String, Double> calculateProbabilites(final List<SimpleEntry<String,Integer>> endStationCounts_, final int totalTrips){
 		
 		HashMap<String, Double> endStationProbabilities = new HashMap<String, Double>();
 		
 		if (totalTrips != 0){
 			for (SimpleEntry<String,Integer> entry : endStationCounts_){
-				double val = entry.getValue()/totalTrips;
+				double val = entry.getValue()/(double)totalTrips;
 				endStationProbabilities.put(entry.getKey(), val);
 			}
 		}

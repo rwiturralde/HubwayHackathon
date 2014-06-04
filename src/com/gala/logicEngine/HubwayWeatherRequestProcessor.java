@@ -14,18 +14,22 @@ public class HubwayWeatherRequestProcessor implements IRequestProcessor{
 	
 	protected IDataRetriever<String> _weatherDataRetriever;
 	protected IDataRetriever<StationStatus> _stationStatusDataRetriever;
+	protected int							_resultThreshold;
 	
 	public HubwayWeatherRequestProcessor(final IDataRetriever<String> weatherDataRetriever_, 
-			final IDataRetriever<StationStatus> stationStatusDataRetriever_){
+			final IDataRetriever<StationStatus> stationStatusDataRetriever_,
+			final int resultThreshold_){
 		_weatherDataRetriever = weatherDataRetriever_;
 		_stationStatusDataRetriever = stationStatusDataRetriever_;
+		_resultThreshold = resultThreshold_;
 	}
 	
 	public HubwayResults processRequest(HubwayRequestParameters parameters_){
 		
 		// Get dates with weather matching temp
 		MongoDbQueryParameters params = new MongoDbQueryParameters(parameters_.getStartStation().getId(), 
-				parameters_.getTimeOfDay(), parameters_.getTemperature(), null, QueryType.WEATHER_DATES);
+				parameters_.getTimeOfDay(), parameters_.getDay(), 
+				parameters_.getTemperature(), QueryType.WEATHER_DATES);
 		List<String> datesMatchingWeather = _weatherDataRetriever.retrieveData(params);
 		_logger.info(String.format("Weather data set size of %d for params - Temp Range: %s Time of Day: %s", 
 				datesMatchingWeather.size(), parameters_.getTemperature(), parameters_.getTimeOfDay()));
@@ -34,6 +38,12 @@ public class HubwayWeatherRequestProcessor implements IRequestProcessor{
 		params.setValidDates(datesMatchingWeather);
 		params.setQueryType(QueryType.STATION_STATUS_FOR_DATETIME);
 		List<StationStatus> stationStatusList = _stationStatusDataRetriever.retrieveData(params);
+		
+		if (stationStatusList.size() < _resultThreshold) {
+			_logger.warn(String.format("Station status query returned %d results which is under threshold of %d. Excluding day parameter and querying again.", stationStatusList.size(), _resultThreshold));
+			params.setExcludeDayParam(true);
+			stationStatusList = _stationStatusDataRetriever.retrieveData(params);
+		}
 		
 		return convertResponseToResult(stationStatusList, parameters_.getStartStation());
 	}
