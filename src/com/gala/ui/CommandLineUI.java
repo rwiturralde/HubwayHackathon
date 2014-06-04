@@ -10,7 +10,7 @@ import com.gala.core.Day;
 import com.gala.core.Station;
 import com.gala.core.Temperature;
 import com.gala.core.TimeOfDay;
-import com.gala.logicEngine.HubwayResults;
+import com.gala.logicEngine.IHubwayResults;
 
 import dme.forecastiolib.FIODaily;
 import dme.forecastiolib.FIOHourly;
@@ -162,7 +162,7 @@ public class CommandLineUI implements IHubwayUI {
 		return RequestType.values()[queryTypeSelectionInt];
 	}
 
-	public void displayResults(HubwayResults results_) {
+	public void displayResults(IHubwayResults results_) {
 		// TODO Auto-generated method stub
 
 	}

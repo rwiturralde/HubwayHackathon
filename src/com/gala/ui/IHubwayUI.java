@@ -1,6 +1,6 @@
 package com.gala.ui;
 
-import com.gala.logicEngine.HubwayResults;
+import com.gala.logicEngine.IHubwayResults;
 
 /**
  * Interface for getting input from the user and displaying results to the user
@@ -16,5 +16,5 @@ public interface IHubwayUI {
 	
 	HubwayRequestParameters getUserParameters();
 	
-	void displayResults(HubwayResults results_);
+	void displayResults(IHubwayResults results_);
 }

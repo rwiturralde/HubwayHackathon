@@ -27,7 +27,7 @@ public class HubwayTripRequestProcessor implements IRequestProcessor {
 		_resultThreshold = resultThreshold_;
 	}
 
-	public HubwayResults processRequest(final HubwayRequestParameters parameters_) {
+	public IHubwayResults processRequest(final HubwayRequestParameters parameters_) {
 		// Get dates with weather matching temp
 		MongoDbQueryParameters params = new MongoDbQueryParameters(parameters_.getStartStation().getId(), 
 				parameters_.getTimeOfDay(), parameters_.getDay(), parameters_.getTemperature(), QueryType.TRIP_END_STATION);
@@ -105,7 +105,7 @@ public class HubwayTripRequestProcessor implements IRequestProcessor {
 	 * @param stationInfoList
 	 * @return
 	 */
-	protected HubwayResults convertResponseToResult(final HashMap<String, Double> probMap, 
+	protected IHubwayResults convertResponseToResult(final HashMap<String, Double> probMap, 
 			final List<Station> stationInfoList) {
 		
 		HashMap<String, Double> resultMap = new HashMap<String,Double>();

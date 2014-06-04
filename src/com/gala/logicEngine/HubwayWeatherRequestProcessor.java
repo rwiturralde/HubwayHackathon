@@ -24,7 +24,7 @@ public class HubwayWeatherRequestProcessor implements IRequestProcessor{
 		_resultThreshold = resultThreshold_;
 	}
 	
-	public HubwayResults processRequest(HubwayRequestParameters parameters_){
+	public IHubwayResults processRequest(HubwayRequestParameters parameters_){
 		
 		// Get dates with weather matching temp
 		MongoDbQueryParameters params = new MongoDbQueryParameters(parameters_.getStartStation().getId(), 
@@ -62,8 +62,8 @@ public class HubwayWeatherRequestProcessor implements IRequestProcessor{
 		return convertResponseToResult(stationStatusList, parameters_.getStartStation());
 	}
 
-	protected HubwayResults convertResponseToResult(List<StationStatus> stationStatusList_, Station station_){
-		HubwayResults results = new HubwayWeatherResults();
+	protected IHubwayResults convertResponseToResult(List<StationStatus> stationStatusList_, Station station_){
+		IHubwayResults results = new HubwayWeatherResults();
 		
 		if (stationStatusList_ != null && stationStatusList_.size() > 0){
 			_logger.info(String.format("Station Status list size: %d", stationStatusList_.size()));

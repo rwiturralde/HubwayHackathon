@@ -1,6 +1,6 @@
 package com.gala.logicEngine;
 
-public class HubwayWeatherResults extends HubwayResults {
+public class HubwayWeatherResults implements IHubwayResults {
 
 	protected double _avgAvailability;
 	protected int _expNumBikes;

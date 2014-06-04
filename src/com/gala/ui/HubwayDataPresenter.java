@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.gala.logicEngine.HubwayResults;
+import com.gala.logicEngine.IHubwayResults;
 import com.gala.logicEngine.IRequestProcessor;
 
 public class HubwayDataPresenter implements IHubwayDataPresenter {
@@ -37,7 +37,7 @@ public class HubwayDataPresenter implements IHubwayDataPresenter {
 		while(parameters != null) {
 			_logger.info("Parameters are " + parameters);
 			
-			HubwayResults res = _logicEngineMap.get(parameters._requestType).processRequest(parameters);
+			IHubwayResults res = _logicEngineMap.get(parameters._requestType).processRequest(parameters);
 			_view.displayResults(res);
 			
 			// Get new set of parameters
