@@ -66,16 +66,25 @@ public abstract class MongoDbDataRetrieverBase<T> implements IDataRetriever <T> 
 			return null;
 		}		
 		
+		long queryStartTime, queryEndTime;
 		Iterator<DBObject> returnIterator;
 		if (queryObject._shouldAggregate){
+			queryStartTime = System.currentTimeMillis();
 			AggregationOutput aggregationOutput = coll.aggregate(queryObject._aggregateObject);
+			queryEndTime = System.currentTimeMillis();
+			_logger.info(String.format("MongoDb query time was %d ms for query %s", (queryEndTime-queryStartTime), params_.getQueryType()));
+			
 			if (aggregationOutput == null || aggregationOutput.results() == null ){
 				_logger.warn(String.format("Unable to retrieve iterator from collection %s with query type %s and the provided mongoQueryParams", queryObject._collectionName, params_._queryType));
 				return null;
 			}
 			returnIterator = aggregationOutput.results().iterator();
 		} else{
+			queryStartTime = System.currentTimeMillis();
 			DBCursor cursor = coll.find(queryObject._queryObject, queryObject._fieldsRequest);
+			queryEndTime = System.currentTimeMillis();
+			_logger.info(String.format("MongoDb query time was %d ms for query %s", (queryEndTime-queryStartTime), params_.getQueryType()));
+			
 			if (cursor == null){
 				_logger.warn(String.format("Unable to retrieve iterator from collection %s with query type %s and the provided mongoQueryParams", queryObject._collectionName, params_._queryType));
 				return null;

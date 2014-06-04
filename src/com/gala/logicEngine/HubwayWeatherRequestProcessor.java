@@ -30,19 +30,33 @@ public class HubwayWeatherRequestProcessor implements IRequestProcessor{
 		MongoDbQueryParameters params = new MongoDbQueryParameters(parameters_.getStartStation().getId(), 
 				parameters_.getTimeOfDay(), parameters_.getDay(), 
 				parameters_.getTemperature(), QueryType.WEATHER_DATES);
+		
+		long queryStartTime, queryEndTime;
+		
+		queryStartTime = System.currentTimeMillis();
 		List<String> datesMatchingWeather = _weatherDataRetriever.retrieveData(params);
-		_logger.info(String.format("Weather data set size of %d for params - Temp Range: %s Time of Day: %s", 
-				datesMatchingWeather.size(), parameters_.getTemperature(), parameters_.getTimeOfDay()));
+		queryEndTime = System.currentTimeMillis();
+		_logger.info(String.format("Weather data set size of %d returned in %d ms for params - Temp Range: %s Time of Day: %s", 
+				datesMatchingWeather.size(), (queryEndTime - queryStartTime), parameters_.getTemperature(), parameters_.getTimeOfDay()));
 		
 		// Get station status for those dates in time range
 		params.setValidDates(datesMatchingWeather);
 		params.setQueryType(QueryType.STATION_STATUS_FOR_DATETIME);
+		queryStartTime = System.currentTimeMillis();
 		List<StationStatus> stationStatusList = _stationStatusDataRetriever.retrieveData(params);
+		queryEndTime = System.currentTimeMillis();
+		_logger.info(String.format("Station status query returned %d results in %d ms.", 
+				stationStatusList.size(), (queryEndTime - queryStartTime)));
 		
 		if (stationStatusList.size() < _resultThreshold) {
-			_logger.warn(String.format("Station status query returned %d results which is under threshold of %d. Excluding day parameter and querying again.", stationStatusList.size(), _resultThreshold));
+			_logger.warn(String.format("Station status result set size is under threshold of %d. Excluding day parameter and querying again.", 
+					_resultThreshold));
 			params.setExcludeDayParam(true);
+			queryStartTime = System.currentTimeMillis();
 			stationStatusList = _stationStatusDataRetriever.retrieveData(params);
+			queryEndTime = System.currentTimeMillis();
+			_logger.info(String.format("Station status query returned %d results in %d ms with day parameter excluded.", 
+					stationStatusList.size(), (queryEndTime - queryStartTime)));
 		}
 		
 		return convertResponseToResult(stationStatusList, parameters_.getStartStation());
