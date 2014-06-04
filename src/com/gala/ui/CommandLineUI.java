@@ -76,19 +76,19 @@ public class CommandLineUI implements IHubwayUI {
 			
 			userParams.setDay(Day.fromCalendar(chosenCal));
 			
-			// Get the departing station from the user
-			chosenStation = getHubwayStationFromUser();
-			if (chosenStation == null)
-				return null;
-			
-			userParams.setStartStation(chosenStation);
-			
 			// Get the time of day the user plans to leave
 			chosenTimeOfDay = getTimeOfDayFromUser();
 			if (chosenTimeOfDay == null)
 				return null;
 			
 			userParams.setTimeOfDay(chosenTimeOfDay);
+			
+			// Get the departing station from the user
+			chosenStation = getHubwayStationFromUser();
+			if (chosenStation == null)
+				return null;
+			
+			userParams.setStartStation(chosenStation);
 			
 			// Get the forecast and temperature for the day and time chosen by the user.
 			_forecastIO.getForecast(chosenStation.getLatitude().toString(), chosenStation.getLongitude().toString());
@@ -131,7 +131,6 @@ public class CommandLineUI implements IHubwayUI {
 	}
 
 	private RequestType getRequestTypeFromUser() {
-		String queryTypeSelectionString = "";
 		int queryTypeSelectionInt = -1;
 				
 		while (true) {
@@ -143,18 +142,11 @@ public class CommandLineUI implements IHubwayUI {
 				i++;
 			}
 			
-			System.out.print("Enter selection: ");
-			queryTypeSelectionString = _scanner.nextLine();
+			queryTypeSelectionInt = getSelectionFromUser();
 			
-			// Quit if user requested
-			if (queryTypeSelectionString.toLowerCase().equals("q"))
-				return null;
-			
-			try {
-				queryTypeSelectionInt = Integer.parseInt(queryTypeSelectionString);
-			} catch (NumberFormatException e) {
-				System.out.println("Invalid number.");
-				continue;
+			switch (queryTypeSelectionInt) {
+				case -1: return null; // user requested quit
+				case -2: continue; // invalid user selection
 			} 
 			
 			if (queryTypeSelectionInt < 0 || queryTypeSelectionInt >= RequestType.values().length){ 
@@ -185,8 +177,6 @@ public class CommandLineUI implements IHubwayUI {
 	}
 
 	protected Calendar getForecastDateFromUser() {
-		
-		String daySelectionString = "";
 		int daySelectionInt = -1;
 		
 		while (true) {
@@ -198,18 +188,11 @@ public class CommandLineUI implements IHubwayUI {
 				tempCal.add(Calendar.DATE, 1);
 			}
 			
-			System.out.print("Enter selection: ");
-			daySelectionString = _scanner.nextLine();
+			daySelectionInt = getSelectionFromUser();
 			
-			// Quit if user requested
-			if (daySelectionString.toLowerCase().equals("q"))
-				return null;
-			
-			try {
-				daySelectionInt = Integer.parseInt(daySelectionString);
-			} catch (NumberFormatException e) {
-				System.out.println("Invalid number.");
-				continue;
+			switch (daySelectionInt) {
+				case -1: return null; // user requested quit
+				case -2: continue; // invalid user selection
 			} 
 			
 			if (daySelectionInt < 0 || daySelectionInt >= FORECAST_RANGE) {
@@ -227,8 +210,6 @@ public class CommandLineUI implements IHubwayUI {
 	}
 	
 	protected Station getHubwayStationFromUser() {
-		
-		String stationSelectionString = "";
 		int stationSelectionInt = -1;
 		
 		Station[] stationArray = new Station[_stations.size()]; 
@@ -241,19 +222,12 @@ public class CommandLineUI implements IHubwayUI {
 				System.out.println(i + " : " + stationArray[i].getName());
 			}
 			
-			System.out.print("Enter selection: ");
-			stationSelectionString = _scanner.nextLine();
+			stationSelectionInt = getSelectionFromUser();
 			
-			// Quit if user requested
-			if (stationSelectionString.toLowerCase().equals("q"))
-				return null;
-			
-			try {
-				stationSelectionInt = Integer.parseInt(stationSelectionString);
-			} catch (NumberFormatException e) {
-				System.out.println("Invalid number.");
-				continue;
-			} 
+			switch (stationSelectionInt) {
+				case -1: return null; // user requested quit
+				case -2: continue; // invalid user selection
+			}
 			
 			if (stationSelectionInt < 0 || stationSelectionInt >= stationArray.length) {
 				System.out.println("Invalid selection.  Please choose the number corresponding to a valid station.");
@@ -269,8 +243,6 @@ public class CommandLineUI implements IHubwayUI {
 	}
 	
 	protected TimeOfDay getTimeOfDayFromUser() {
-		
-		String timeOfDayOrdinalString = "";
 		int timeOfDayOrdinal = -1;
 		
 		while (true) {
@@ -280,18 +252,11 @@ public class CommandLineUI implements IHubwayUI {
 				System.out.println(tod.ordinal() + " : " + tod);
 			}
 			
-			System.out.print("Enter selection: ");
-			timeOfDayOrdinalString = _scanner.nextLine();
+			timeOfDayOrdinal = getSelectionFromUser();
 			
-			// Quit if user requested
-			if (timeOfDayOrdinalString.toLowerCase().equals("q"))
-				return null;
-			
-			try {
-				timeOfDayOrdinal = Integer.parseInt(timeOfDayOrdinalString);
-			} catch (NumberFormatException e) {
-				System.out.println("Invalid number.");
-				continue;
+			switch (timeOfDayOrdinal) {
+				case -1: return null; // user requested quit
+				case -2: continue; // invalid user selection
 			} 
 			
 			if (timeOfDayOrdinal < 0 || timeOfDayOrdinal >= TimeOfDay.values().length) {
@@ -366,6 +331,34 @@ public class CommandLineUI implements IHubwayUI {
 				return Temperature.getTemperature(daily.getDay(dayOffset).temperatureMax().intValue());
 			}
 		}
+	}
+
+	
+	/**
+	 * Get an integer from the user at the command line.  The user can enter Q to quit.
+	 * @return The integer entered by the user.  -1 if the user asked to quit.  -2 if
+	 * the user entered an invalid selection.
+	 */
+	protected int getSelectionFromUser() {
+		String selectionString = "";
+		int selectionInt = -2;
+		
+		System.out.print("Enter selection: ");
+		
+		selectionString = _scanner.nextLine().trim();
+		
+		// Quit if user requested.  -1 for Quit.
+		if (selectionString.toLowerCase().equals("q"))
+			return -1;
+		
+		try {
+			selectionInt = Integer.parseInt(selectionString);
+		} catch (NumberFormatException e) {
+			System.out.println("Invalid number.");
+			return -2;
+		} 
+		
+		return selectionInt;
 	}
 	
 	/**
