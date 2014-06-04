@@ -10,9 +10,9 @@ import com.gala.core.Day;
 import com.gala.core.Station;
 import com.gala.core.Temperature;
 import com.gala.core.TimeOfDay;
+import com.gala.logicEngine.HubwayResults;
 
 import dme.forecastiolib.FIODaily;
-import dme.forecastiolib.FIODataPoint;
 import dme.forecastiolib.FIOHourly;
 import dme.forecastiolib.ForecastIO;
 
@@ -165,7 +165,7 @@ public class CommandLineUI implements IHubwayUI {
 		return returnRequestType;
 	}
 
-	public void displayResults(Object results_) {
+	public void displayResults(HubwayResults results_) {
 		// TODO Auto-generated method stub
 
 	}
@@ -383,7 +383,6 @@ public class CommandLineUI implements IHubwayUI {
 		station1.setLongitude(-71.051601);
 		station1.setMunicipality("Boston");
 		station1.setCapacity(19);
-		
 		stations.add(station1);
 		
 		Station station2 = new Station();
@@ -393,8 +392,25 @@ public class CommandLineUI implements IHubwayUI {
 		station2.setLongitude(-71.056868);
 		station2.setMunicipality("Boston");
 		station2.setCapacity(19);
-		
 		stations.add(station2);
+		
+		Station station3 = new Station();
+		station3.setId(22);
+		station3.setName("South Station - 700 Atlantic Ave.");
+		station3.setLatitude(42.352175);
+		station3.setLongitude(-71.055547);
+		station3.setMunicipality("Boston");
+		station3.setCapacity(47);
+		stations.add(station3);
+		
+		Station station4 = new Station();
+		station4.setId(57);
+		station4.setName("Columbus Ave. at Mass. Ave.");
+		station4.setLatitude(42.340799);
+		station4.setLongitude(-71.081572);
+		station4.setMunicipality("Boston");
+		station4.setCapacity(11);
+		stations.add(station4);
 		
 		return stations;
 	}
