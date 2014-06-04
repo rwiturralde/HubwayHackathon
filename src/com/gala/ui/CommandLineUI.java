@@ -10,9 +10,9 @@ import com.gala.core.Day;
 import com.gala.core.Station;
 import com.gala.core.Temperature;
 import com.gala.core.TimeOfDay;
+import com.gala.logicEngine.HubwayResults;
 
 import dme.forecastiolib.FIODaily;
-import dme.forecastiolib.FIODataPoint;
 import dme.forecastiolib.FIOHourly;
 import dme.forecastiolib.ForecastIO;
 
@@ -69,62 +69,63 @@ public class CommandLineUI implements IHubwayUI {
 		TimeOfDay chosenTimeOfDay;
 		
 		switch (userParams._requestType){
-		case WEATHER:
-			// Get the day the user plans to depart
-			chosenCal = getForecastDateFromUser();
-			if (chosenCal == null)
-				return null;
-			
-			userParams.setDay(Day.fromCalendar(chosenCal));
-			
-			// Get the time of day the user plans to leave
-			chosenTimeOfDay = getTimeOfDayFromUser();
-			if (chosenTimeOfDay == null)
-				return null;
-			
-			userParams.setTimeOfDay(chosenTimeOfDay);
-			
-			// Get the departing station from the user
-			chosenStation = getHubwayStationFromUser();
-			if (chosenStation == null)
-				return null;
-			
-			userParams.setStartStation(chosenStation);
-			
-			// Get the forecast and temperature for the day and time chosen by the user.
-			_forecastIO.getForecast(chosenStation.getLatitude().toString(), chosenStation.getLongitude().toString());
-			Temperature forecastTemp = getTemperature(chosenCal, chosenTimeOfDay);
-			
-			if (forecastTemp == null)
-				return null;
-			
-			userParams.setTemperature(forecastTemp);
-			
-			break;
-		case TRIP:
-			// Get the day the user plans to depart
-			chosenCal = getForecastDateFromUser();
-			if (chosenCal == null)
-				return null;
-			
-			userParams.setDay(Day.fromCalendar(chosenCal));
-			
-			// Get the departing station from the user
-			chosenStation = getHubwayStationFromUser();
-			if (chosenStation == null)
-				return null;
-			
-			userParams.setStartStation(chosenStation);
-			
-			// Get the time of day the user plans to leave
-			chosenTimeOfDay = getTimeOfDayFromUser();
-			if (chosenTimeOfDay == null)
-				return null;
-			
-			userParams.setTimeOfDay(chosenTimeOfDay);
-			break;
-			
-		default: return null;
+			case WEATHER:
+				// Get the day the user plans to depart
+				chosenCal = getForecastDateFromUser();
+				if (chosenCal == null)
+					return null;
+				
+				userParams.setDay(Day.fromCalendar(chosenCal));
+				
+				// Get the time of day the user plans to leave
+				chosenTimeOfDay = getTimeOfDayFromUser();
+				if (chosenTimeOfDay == null)
+					return null;
+				
+				userParams.setTimeOfDay(chosenTimeOfDay);
+				
+				// Get the departing station from the user
+				chosenStation = getHubwayStationFromUser();
+				if (chosenStation == null)
+					return null;
+				
+				userParams.setStartStation(chosenStation);
+				
+				// Get the forecast and temperature for the day and time chosen by the user.
+				_forecastIO.getForecast(chosenStation.getLatitude().toString(), chosenStation.getLongitude().toString());
+				Temperature forecastTemp = getTemperature(chosenCal, chosenTimeOfDay);
+				
+				if (forecastTemp == null)
+					return null;
+				
+				userParams.setTemperature(forecastTemp);
+				
+				break;
+			case TRIP:
+				// Get the day the user plans to depart
+				chosenCal = getForecastDateFromUser();
+				if (chosenCal == null)
+					return null;
+				
+				userParams.setDay(Day.fromCalendar(chosenCal));
+				
+				// Get the time of day the user plans to leave
+				chosenTimeOfDay = getTimeOfDayFromUser();
+				if (chosenTimeOfDay == null)
+					return null;
+				
+				userParams.setTimeOfDay(chosenTimeOfDay);
+				
+				// Get the departing station from the user
+				chosenStation = getHubwayStationFromUser();
+				if (chosenStation == null)
+					return null;
+				
+				userParams.setStartStation(chosenStation);
+				
+				break;
+				
+			default: return null;
 		}
 		
 
@@ -133,9 +134,7 @@ public class CommandLineUI implements IHubwayUI {
 
 	private RequestType getRequestTypeFromUser() {
 		int queryTypeSelectionInt = -1;
-		
-		RequestType returnRequestType = null;
-		
+				
 		while (true) {
 			System.out.println("\n\nPlease choose the query type you would like to continue with or enter \'q\' to quit.  Valid Queries are:");
 			
@@ -152,20 +151,18 @@ public class CommandLineUI implements IHubwayUI {
 				case -2: continue; // invalid user selection
 			} 
 			
-			try {
-				returnRequestType = RequestType.values()[queryTypeSelectionInt];
-				break;
-			} catch (Exception e){
+			if (queryTypeSelectionInt < 0 || queryTypeSelectionInt >= RequestType.values().length){ 
 				System.out.println("Invalid selection. Please choose the number corresponding to a valid station.");
 				continue;
-			}
-			
+			} else {
+				break;
+			}			
 		}
 		
-		return returnRequestType;
+		return RequestType.values()[queryTypeSelectionInt];
 	}
 
-	public void displayResults(Object results_) {
+	public void displayResults(HubwayResults results_) {
 		// TODO Auto-generated method stub
 
 	}
@@ -383,7 +380,6 @@ public class CommandLineUI implements IHubwayUI {
 		station1.setLongitude(-71.051601);
 		station1.setMunicipality("Boston");
 		station1.setCapacity(19);
-		
 		stations.add(station1);
 		
 		Station station2 = new Station();
@@ -393,8 +389,25 @@ public class CommandLineUI implements IHubwayUI {
 		station2.setLongitude(-71.056868);
 		station2.setMunicipality("Boston");
 		station2.setCapacity(19);
-		
 		stations.add(station2);
+		
+		Station station3 = new Station();
+		station3.setId(22);
+		station3.setName("South Station - 700 Atlantic Ave.");
+		station3.setLatitude(42.352175);
+		station3.setLongitude(-71.055547);
+		station3.setMunicipality("Boston");
+		station3.setCapacity(47);
+		stations.add(station3);
+		
+		Station station4 = new Station();
+		station4.setId(57);
+		station4.setName("Columbus Ave. at Mass. Ave.");
+		station4.setLatitude(42.340799);
+		station4.setLongitude(-71.081572);
+		station4.setMunicipality("Boston");
+		station4.setCapacity(11);
+		stations.add(station4);
 		
 		return stations;
 	}

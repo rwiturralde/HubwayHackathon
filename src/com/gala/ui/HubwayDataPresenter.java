@@ -38,7 +38,9 @@ public class HubwayDataPresenter implements IHubwayDataPresenter {
 			_logger.info("Parameters are " + parameters);
 			
 			HubwayResults res = _logicEngineMap.get(parameters._requestType).processRequest(parameters);
+			_view.displayResults(res);
 			
+			// Get new set of parameters
 			parameters = _view.getUserParameters();
 		}
 		_view.close();
