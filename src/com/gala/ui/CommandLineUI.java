@@ -67,6 +67,8 @@ public class CommandLineUI implements IHubwayUI {
 	 * Close the UI and close and open resources.
 	 */
 	public void close() {
+		System.out.println("Thanks for playing");
+		
 		if (_scanner != null)
 			_scanner.close();
 	}
@@ -197,8 +199,7 @@ public class CommandLineUI implements IHubwayUI {
 	 * @param results_ The HubwayResults object wrapping the results of the query
 	 */
 	public void displayResults(HubwayResults results_) {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 	/**
