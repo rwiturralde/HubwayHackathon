@@ -3,32 +3,34 @@ package com.gala.logicEngine;
 import java.util.List;
 
 import com.gala.core.Day;
+import com.gala.core.Station;
 import com.gala.core.Temperature;
 import com.gala.core.TimeOfDay;
+import com.gala.core.Weather;
 
 public class MongoDbQueryParameters {
 
-	protected int 			_startStationId;
+	protected Station		_startStation;
 	protected TimeOfDay 	_timeOfDay;
 	protected Day 			_day;
-	protected Temperature 	_temperature;
+	protected Weather 		_weather;
 	protected List<String> 	_validDates;
 	protected QueryType		_queryType;
 	protected List<String> 	_stationList;
 	protected boolean 		_excludeDayParam;
 	
-	public MongoDbQueryParameters(final int startStationId_, final TimeOfDay tod_, final Day day_,
-			final Temperature temp_, final QueryType queryType_){
-		_startStationId = startStationId_;
+	public MongoDbQueryParameters(final Station startStation_, final TimeOfDay tod_, final Day day_,
+			final Weather weather_, final QueryType queryType_){
+		_startStation = startStation_;
 		_timeOfDay = tod_;
 		_day = day_;
-		_temperature = temp_;
+		_weather = weather_;
 		_queryType = queryType_;
 		_excludeDayParam = false;
 	}
 	
-	public int getStartStationId(){
-		return _startStationId;
+	public Station getStartStation(){
+		return _startStation;
 	}
 	
 	public TimeOfDay getTimeOfDay(){
@@ -39,8 +41,8 @@ public class MongoDbQueryParameters {
 		 return _day;
 	}
 	
-	public Temperature getTemperature(){
-		return _temperature;
+	public Weather getWeather(){
+		return _weather;
 	}
 	
 	public List<String> getValidDates(){
@@ -59,8 +61,8 @@ public class MongoDbQueryParameters {
 		return _excludeDayParam;
 	}
 	
-	public void setStartStationId(int startStationId_){
-		_startStationId = startStationId_;
+	public void setStartStation(Station startStation_){
+		_startStation = startStation_;
 	}
 	
 	public void setTimeOfDay(TimeOfDay timeOfDay_){
@@ -71,8 +73,8 @@ public class MongoDbQueryParameters {
 		_day = day_;
 	}
 	
-	public void setTemperature(Temperature temperature_){
-		_temperature = temperature_;
+	public void setWeather(Weather weather_){
+		_weather = weather_;
 	}
 	
 	public void setValidDates(List<String> validDates_){

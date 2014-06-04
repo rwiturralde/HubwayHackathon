@@ -29,8 +29,8 @@ public class HubwayTripRequestProcessor implements IRequestProcessor {
 
 	public IHubwayResults processRequest(final HubwayRequestParameters parameters_) {
 		// Get dates with weather matching temp
-		MongoDbQueryParameters params = new MongoDbQueryParameters(parameters_.getStartStation().getId(), 
-				parameters_.getTimeOfDay(), parameters_.getDay(), parameters_.getWeather().getTemperature(), QueryType.TRIP_END_STATION);
+		MongoDbQueryParameters params = new MongoDbQueryParameters(parameters_.getStartStation(), 
+				parameters_.getTimeOfDay(), parameters_.getDay(), parameters_.getWeather(), QueryType.TRIP_END_STATION);
 		
 		long queryStartTime, queryEndTime;
 		queryStartTime = System.currentTimeMillis();
@@ -73,7 +73,7 @@ public class HubwayTripRequestProcessor implements IRequestProcessor {
 		_logger.info(String.format("Station data query returned %d results in %d ms.", 
 				stationInfoList.size(), (queryEndTime - queryStartTime)));		
 		
-		return convertResponseToResult(probMap, stationInfoList);
+		return convertResponseToResult(params, probMap, stationInfoList);
 	}
 	
 	protected int calculateTotalTrips(final List<SimpleEntry<String,Integer>> endStationCounts_) {
@@ -105,7 +105,8 @@ public class HubwayTripRequestProcessor implements IRequestProcessor {
 	 * @param stationInfoList
 	 * @return
 	 */
-	protected IHubwayResults convertResponseToResult(final HashMap<String, Double> probMap, 
+	protected IHubwayResults convertResponseToResult(final MongoDbQueryParameters parameters_,
+			final HashMap<String, Double> probMap, 
 			final List<Station> stationInfoList) {
 		
 		HashMap<String, Double> resultMap = new HashMap<String,Double>();
@@ -114,7 +115,8 @@ public class HubwayTripRequestProcessor implements IRequestProcessor {
 			resultMap.put(stationName, probMap.get(Integer.toString(entry.getId())));
 		}
 		
-		return new HubwayTripResults(resultMap);
+		return new HubwayTripResults(parameters_.getDay(), parameters_.getTimeOfDay(), 
+				parameters_.getStartStation(),parameters_.getExcludeDayParam(), resultMap);
 	}
 	
 	

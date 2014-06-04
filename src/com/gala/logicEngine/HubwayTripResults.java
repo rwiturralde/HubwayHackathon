@@ -2,15 +2,22 @@ package com.gala.logicEngine;
 
 import java.util.HashMap;
 
-public class HubwayTripResults implements IHubwayResults {
+import com.gala.core.Day;
+import com.gala.core.Station;
+import com.gala.core.TimeOfDay;
 
-	protected HashMap<String, Double> _possibleDestinations;
+public class HubwayTripResults extends AHubwayResults{
+
+	protected HashMap<String, Double> _possibleDestinations;	
 	
-	public HubwayTripResults(){
+	public HubwayTripResults(final Day day_, final TimeOfDay tod_, final Station startStation_, final boolean excludeDayParam_){
+		super(day_, tod_, startStation_, excludeDayParam_);
 		_possibleDestinations = new HashMap<String, Double>();
 	}
 	
-	public HubwayTripResults(final HashMap<String, Double> possibleDestinations_) {
+	public HubwayTripResults(final Day day_, final TimeOfDay tod_, final Station startStation_, final boolean excludeDayParam_, 
+			final HashMap<String, Double> possibleDestinations_) {
+		super(day_, tod_, startStation_, excludeDayParam_);
 		_possibleDestinations = possibleDestinations_;
 	}
 	
@@ -23,15 +30,17 @@ public class HubwayTripResults implements IHubwayResults {
 	}
 	
 	public String printResults(){
+		
+		String baseResult = super.printResults();
 		StringBuilder builder = new StringBuilder();
 		
 		for (String key : _possibleDestinations.keySet()) {
-			builder.append("Station name=");
+			builder.append("\nEnding station name= ");
 			builder.append(key);
-			builder.append(", Probability=");
+			builder.append(", Probability= ");
 			builder.append(_possibleDestinations.get(key));
 		}
 		
-		return builder.toString();
+		return String.format("%s%s", baseResult, builder.toString());
 	}
 }

@@ -34,7 +34,7 @@ public class MongoDbQueryBuilder implements IQueryBuilder{
 	
 	protected MongoDbQueryObject buildStationInfoQuery(final MongoDbQueryParameters params_){
 		BasicDBObject queryObj = new BasicDBObject();
-		queryObj.append("_id", params_.getStartStationId());
+		queryObj.append("_id", params_.getStartStation().getId());
 		return new MongoDbQueryObject(queryObj, new BasicDBObject(), "stations");
 	}
 	
@@ -53,7 +53,7 @@ public class MongoDbQueryBuilder implements IQueryBuilder{
 	protected MongoDbQueryObject buildStationStatusQuery(final MongoDbQueryParameters params_){
 		BasicDBObject queryObj = new BasicDBObject();
 		queryObj.append("spannedTime", params_.getTimeOfDay().name());
-		queryObj.append("station_id", Integer.toString(params_.getStartStationId()));
+		queryObj.append("station_id", Integer.toString(params_.getStartStation().getId()));
 		queryObj.append("formattedDate", new BasicDBObject("$in", params_.getValidDates()));
 		
 		// Optionally include day parameter
@@ -71,7 +71,8 @@ public class MongoDbQueryBuilder implements IQueryBuilder{
 	 */
 	protected MongoDbQueryObject buildWeatherDatesQuery(final MongoDbQueryParameters params_){
 		BasicDBObject queryObj = new BasicDBObject();
-		queryObj.append("spannedTemperature", params_.getTemperature().name());
+		queryObj.append("spannedTemperature", params_.getWeather().getTemperature().name());
+		queryObj.append("itDonRained", params_.getWeather().isGonRain());
 		queryObj.append("spannedTime", params_.getTimeOfDay().name());
 		BasicDBObject fieldsObj = new BasicDBObject();
 		fieldsObj.append("formattedDate", true);
@@ -84,7 +85,7 @@ public class MongoDbQueryBuilder implements IQueryBuilder{
 		// Match on time of day and starting station
 		BasicDBObject matchFields = new BasicDBObject();
 		matchFields.append("spannedStartTime", params_.getTimeOfDay().name());
-		matchFields.append("start_station", Integer.toString(params_.getStartStationId()));
+		matchFields.append("start_station", Integer.toString(params_.getStartStation().getId()));
 		
 		// Optionally include day parameter
 		if (!params_.getExcludeDayParam()) {

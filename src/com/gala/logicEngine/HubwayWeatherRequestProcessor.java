@@ -24,12 +24,12 @@ public class HubwayWeatherRequestProcessor implements IRequestProcessor{
 		_resultThreshold = resultThreshold_;
 	}
 	
-	public IHubwayResults processRequest(HubwayRequestParameters parameters_){
+	public IHubwayResults processRequest(final HubwayRequestParameters parameters_){
 		
 		// Get dates with weather matching temp
-		MongoDbQueryParameters params = new MongoDbQueryParameters(parameters_.getStartStation().getId(), 
+		MongoDbQueryParameters params = new MongoDbQueryParameters(parameters_.getStartStation(), 
 				parameters_.getTimeOfDay(), parameters_.getDay(), 
-				parameters_.getWeather().getTemperature(), QueryType.WEATHER_DATES);
+				parameters_.getWeather(), QueryType.WEATHER_DATES);
 		
 		long queryStartTime, queryEndTime;
 		
@@ -59,11 +59,14 @@ public class HubwayWeatherRequestProcessor implements IRequestProcessor{
 					stationStatusList.size(), (queryEndTime - queryStartTime)));
 		}
 		
-		return convertResponseToResult(stationStatusList, parameters_.getStartStation());
+		return convertResponseToResult(params, stationStatusList);
 	}
 
-	protected IHubwayResults convertResponseToResult(List<StationStatus> stationStatusList_, Station station_){
-		IHubwayResults results = new HubwayWeatherResults();
+	protected IHubwayResults convertResponseToResult(final MongoDbQueryParameters parameters_,
+			final List<StationStatus> stationStatusList_){
+		
+		double avg = 0.0;
+		int expectedNumBikes = 0;
 		
 		if (stationStatusList_ != null && stationStatusList_.size() > 0){
 			_logger.info(String.format("Station Status list size: %d", stationStatusList_.size()));
@@ -72,17 +75,17 @@ public class HubwayWeatherRequestProcessor implements IRequestProcessor{
 				total += ss.getNumBikesAvailable();
 			}
 			
-			double avg = total / stationStatusList_.size();
-			int expectedNumBikes = (int)Math.floor(avg);
+			avg = total / stationStatusList_.size();
+			expectedNumBikes = (int)Math.floor(avg);
 			_logger.info(String.format("Average number of bikes available %f", avg));
 			_logger.info(String.format("Expected number of bikes available %d", expectedNumBikes));
-			results = new HubwayWeatherResults(avg, expectedNumBikes);
 		} else {
-			_logger.info(String.format("Station Status list empty for station Id %s", station_.getId()));
+			_logger.info(String.format("Station Status list empty for station Id %s", parameters_.getStartStation().getId()));
 		}
 			
-		return results;
-		
+		return new HubwayWeatherResults(parameters_.getDay(), parameters_.getTimeOfDay(), 
+				parameters_.getStartStation(), parameters_.getExcludeDayParam(), 
+				parameters_.getWeather(), avg, expectedNumBikes);
 	}
 	
 }
