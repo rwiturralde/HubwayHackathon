@@ -29,7 +29,7 @@ public class HubwayWeatherRequestProcessor implements IRequestProcessor{
 		// Get dates with weather matching temp
 		MongoDbQueryParameters params = new MongoDbQueryParameters(parameters_.getStartStation().getId(), 
 				parameters_.getTimeOfDay(), parameters_.getDay(), 
-				parameters_.getTemperature(), QueryType.WEATHER_DATES);
+				parameters_.getWeather().getTemperature(), QueryType.WEATHER_DATES);
 		
 		long queryStartTime, queryEndTime;
 		
@@ -37,7 +37,7 @@ public class HubwayWeatherRequestProcessor implements IRequestProcessor{
 		List<String> datesMatchingWeather = _weatherDataRetriever.retrieveData(params);
 		queryEndTime = System.currentTimeMillis();
 		_logger.info(String.format("Weather data set size of %d returned in %d ms for params - Temp Range: %s Time of Day: %s", 
-				datesMatchingWeather.size(), (queryEndTime - queryStartTime), parameters_.getTemperature(), parameters_.getTimeOfDay()));
+				datesMatchingWeather.size(), (queryEndTime - queryStartTime), parameters_.getWeather().getTemperature(), parameters_.getTimeOfDay()));
 		
 		// Get station status for those dates in time range
 		params.setValidDates(datesMatchingWeather);

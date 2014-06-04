@@ -30,7 +30,7 @@ public class HubwayTripRequestProcessor implements IRequestProcessor {
 	public IHubwayResults processRequest(final HubwayRequestParameters parameters_) {
 		// Get dates with weather matching temp
 		MongoDbQueryParameters params = new MongoDbQueryParameters(parameters_.getStartStation().getId(), 
-				parameters_.getTimeOfDay(), parameters_.getDay(), parameters_.getTemperature(), QueryType.TRIP_END_STATION);
+				parameters_.getTimeOfDay(), parameters_.getDay(), parameters_.getWeather().getTemperature(), QueryType.TRIP_END_STATION);
 		
 		long queryStartTime, queryEndTime;
 		queryStartTime = System.currentTimeMillis();

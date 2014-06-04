@@ -2,30 +2,30 @@ package com.gala.ui;
 
 import com.gala.core.Day;
 import com.gala.core.Station;
-import com.gala.core.Temperature;
 import com.gala.core.TimeOfDay;
+import com.gala.core.Weather;
 
 public class HubwayRequestParameters {
 
 	protected Day _day;
 	protected TimeOfDay _timeOfDay;
 	protected Station _startStation;
-	protected Temperature _temperature;
+	protected Weather _weather;
 	protected RequestType _requestType;
 	
 	public HubwayRequestParameters() {
 		_day = null;
 		_timeOfDay = null;
 		_startStation = null;
-		_temperature = null;
+		_weather = null;
 		_requestType = null;
 	}
 	
-	public HubwayRequestParameters(Day day_, TimeOfDay timeOfDay_, Station startStation_, Temperature temperature_, RequestType requestType_) {
+	public HubwayRequestParameters(Day day_, TimeOfDay timeOfDay_, Station startStation_, Weather weather_, RequestType requestType_) {
 		_day = day_;
 		_timeOfDay = timeOfDay_;
 		_startStation = startStation_;
-		_temperature = temperature_;
+		_weather = weather_;
 		_requestType = requestType_;				
 	}
 	
@@ -61,13 +61,13 @@ public class HubwayRequestParameters {
 		this._startStation = startStation_;
 	}
 
-	public Temperature getTemperature() {
-		return _temperature;
+	public Weather getWeather() {
+		return _weather;
 	}
 
 
-	public void setTemperature(Temperature temperature_) {
-		this._temperature = temperature_;
+	public void setWeather(Weather weather_) {
+		this._weather = weather_;
 	}
 
 	@Override
@@ -85,8 +85,8 @@ public class HubwayRequestParameters {
 		sb.append("StartStation: ");
 		sb.append(_startStation);
 		sb.append(" | ");
-		sb.append("Temperature: ");
-		sb.append(_temperature);
+		sb.append("Weather: ");
+		sb.append(_weather);
 		
 		
 		return sb.toString();

@@ -12,6 +12,7 @@ import com.gala.core.Day;
 import com.gala.core.Station;
 import com.gala.core.Temperature;
 import com.gala.core.TimeOfDay;
+import com.gala.core.Weather;
 import com.gala.logicEngine.IHubwayResults;
 
 import dme.forecastiolib.FIODaily;
@@ -117,11 +118,11 @@ public class CommandLineUI implements IHubwayUI {
 				
 				// Get the forecast and temperature for the day and time chosen by the user.
 				_forecastIO.getForecast(chosenStation.getLatitude().toString(), chosenStation.getLongitude().toString());
-				Temperature forecastTemp = getTemperature(chosenCal, chosenTimeOfDay);
-				if (forecastTemp == null)
+				Weather forecast = getWeather(chosenCal, chosenTimeOfDay);
+				if (forecast == null)
 					return null;
-				_logger.info("Forecasted temperature for inputs is " + forecastTemp);
-				userParams.setTemperature(forecastTemp);
+				_logger.info("Forecasted weather for inputs is " + forecast);
+				userParams.setWeather(forecast);
 				
 				break;
 			case TRIP:
@@ -200,8 +201,8 @@ public class CommandLineUI implements IHubwayUI {
 	 * @param results_ The HubwayResults object wrapping the results of the query
 	 */
 	public void displayResults(IHubwayResults results_) {
-		// TODO Auto-generated method stub
-
+		_logger.info("Results received: " + results_);
+		System.out.println(results_.printResults());
 	}
 
 	/**
@@ -347,7 +348,7 @@ public class CommandLineUI implements IHubwayUI {
 	 * @param timeOfDay_ TimeOfDay that the user plans to depart
 	 * @return Temperature forecasted for the day & time provided.  
 	 */
-	protected Temperature getTemperature(Calendar cal_, TimeOfDay timeOfDay_) {
+	protected Weather getWeather(Calendar cal_, TimeOfDay timeOfDay_) {
 		
 		int dayOffset = cal_.get(Calendar.DAY_OF_WEEK) - Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
 		int hourOffset = 0;
@@ -387,7 +388,7 @@ public class CommandLineUI implements IHubwayUI {
 				return null;
 			} else {
 				_logger.info("Hourly forecast - Time: " + hourly.getHour(totalHourOffset).time() + " Temp: " + hourly.getHour(totalHourOffset).temperature());
-				return Temperature.getTemperature(hourly.getHour(totalHourOffset).temperature().intValue());
+				return new Weather(Temperature.getTemperature(hourly.getHour(totalHourOffset).temperature().intValue()), false);
 			}
 		} else {
 			// Insufficient hourly data.  Use the high for the day in question.
@@ -399,7 +400,7 @@ public class CommandLineUI implements IHubwayUI {
 				return null;
 			} else {
 				_logger.info("Daily forecast - Time: " + daily.getDay(dayOffset).time() + " Temp: " + daily.getDay(dayOffset).temperatureMax());
-				return Temperature.getTemperature(daily.getDay(dayOffset).temperatureMax().intValue());
+				return new Weather(Temperature.getTemperature(daily.getDay(dayOffset).temperatureMax().intValue()), false);
 			}
 		}
 	}
