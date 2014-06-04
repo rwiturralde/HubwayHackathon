@@ -336,7 +336,7 @@
 		<constructor-arg index="9" ref="mongoDateFormat" /> 
 	</bean>
 	
-	<bean id="stationDataRetriever" class="com.gala.logicEngine.MongoDbDataRetrieverStationStatus" init-method="init">
+	<bean id="stationDataRetriever" class="com.gala.logicEngine.MongoDbDataRetrieverStation" init-method="init">
 		<constructor-arg index="0" ref="mongoClientTrip" />
 		<constructor-arg index="1" value="hubwayhackathon" />
 		<constructor-arg index="2" ref="allTripCollections" />
@@ -358,12 +358,15 @@
 		<constructor-arg index="5" value="count" />
 	</bean>
 	
+	<bean id="tripRequestProcessor" class="com.gala.logicEngine.HubwayTripRequestProcessor">
+		<constructor-arg index="0" ref="tripsDataRetriever" />
+		<constructor-arg index="1" ref="stationDataRetriever" />
+		<constructor-arg index="2" value="3" /> 
+	</bean>
+	
 	<bean id="weatherRequestProcessor" class="com.gala.logicEngine.HubwayWeatherRequestProcessor">
 		<constructor-arg index="0" ref="weatherDataRetriever" />
 		<constructor-arg index="1" ref="stationStatusDataRetriever" /> 
-	</bean>
-	
-	<bean id="tripRequestProcessor" class="com.gala.logicEngine.HubwayTripRequestProcessor">
 	</bean>
 	
 	<bean id="MongoDbQueryBuilder" class="com.gala.logicEngine.MongoDbQueryBuilder"/>

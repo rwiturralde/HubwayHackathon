@@ -8,21 +8,19 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.gala.core.Station;
-import com.gala.core.StationStatus;
 import com.gala.ui.HubwayRequestParameters;
 
 public class HubwayTripRequestProcessor implements IRequestProcessor {
 
 	static final Logger 						_logger = Logger.getLogger(HubwayTripRequestProcessor.class);
 	
-	protected IDataRetriever<SimpleEntry<String, Integer>> _endStationDataRetriever;
-	protected IDataRetriever<SimpleEntry<String, Station>> _stationInfoRetriever;
+	protected IDataRetriever<SimpleEntry<String, Integer>> _tripsDataRetriever;
+	protected IDataRetriever<Station> 					   _stationInfoRetriever;
 	protected int										   _numResultsToReturn;
 	
-	public HubwayTripRequestProcessor(final IDataRetriever<SimpleEntry<String, Integer>> endStationDataRetriever_,
-			final IDataRetriever<SimpleEntry<String, Station>> stationInfoRetriever_,
-			final int numResults_) {
-		_endStationDataRetriever = endStationDataRetriever_;
+	public HubwayTripRequestProcessor(final IDataRetriever<SimpleEntry<String, Integer>> tripsDataRetriever_,
+			final IDataRetriever<Station> stationInfoRetriever_, final int numResults_) {
+		_tripsDataRetriever = tripsDataRetriever_;
 		_stationInfoRetriever = stationInfoRetriever_;
 		_numResultsToReturn = numResults_;
 	}
@@ -30,8 +28,8 @@ public class HubwayTripRequestProcessor implements IRequestProcessor {
 	public HubwayResults processRequest(HubwayRequestParameters parameters_) {
 		// Get dates with weather matching temp
 		MongoDbQueryParameters params = new MongoDbQueryParameters(parameters_.getStartStation().getId(), 
-				parameters_.getTimeOfDay(), parameters_.getTemperature(), null, QueryType.WEATHER_DATES);
-		List<SimpleEntry<String,Integer>> endStationCounts = _endStationDataRetriever.retrieveData(params);
+				parameters_.getTimeOfDay(), parameters_.getTemperature(), null, QueryType.TRIP_END_STATION);
+		List<SimpleEntry<String,Integer>> endStationCounts = _tripsDataRetriever.retrieveData(params);
 		
 		HashMap<String, Double> probMap = calculateProbabilites(endStationCounts);
 		
@@ -44,25 +42,28 @@ public class HubwayTripRequestProcessor implements IRequestProcessor {
 			topStations.add(endStationCounts.get(i).getKey());
 		}
 		
-		// Get station status for those dates in time range
+		// Get station info for the top stations
 		params.setStationList(topStations);
 		params.setQueryType(QueryType.STATION_NAMES_FOR_LIST);
-		List<SimpleEntry<String, Station>> stationInfoList = _stationInfoRetriever.retrieveData(params);
+		List<Station> stationInfoList = _stationInfoRetriever.retrieveData(params);
 		
 		return convertResponseToResult(probMap, stationInfoList);
 	}
 	
 	protected HashMap<String, Double> calculateProbabilites(final List<SimpleEntry<String,Integer>> endStationCounts_){
 		
-		int totalTrips = 0;
+		double totalTrips = 0;
 		for (SimpleEntry<String,Integer> entry : endStationCounts_){
 			totalTrips += entry.getValue();
 		}
 		
 		HashMap<String, Double> endStationProbabilities = new HashMap<String, Double>();
-		for (SimpleEntry<String,Integer> entry : endStationCounts_){
-			double val = entry.getValue()/totalTrips;
-			endStationProbabilities.put(entry.getKey(), val);
+		
+		if (totalTrips != 0){
+			for (SimpleEntry<String,Integer> entry : endStationCounts_){
+				double val = entry.getValue()/totalTrips;
+				endStationProbabilities.put(entry.getKey(), val);
+			}
 		}
 		
 		return endStationProbabilities;		
@@ -76,12 +77,12 @@ public class HubwayTripRequestProcessor implements IRequestProcessor {
 	 * @return
 	 */
 	protected HubwayResults convertResponseToResult(final HashMap<String, Double> probMap, 
-			final List<SimpleEntry<String, Station>> stationInfoList) {
+			final List<Station> stationInfoList) {
 		
 		HashMap<String, Double> resultMap = new HashMap<String,Double>();
-		for(SimpleEntry<String, Station> entry : stationInfoList) {
-			String stationName = entry.getValue().getName();
-			resultMap.put(stationName, probMap.get(entry.getKey()));
+		for(Station entry : stationInfoList) {
+			String stationName = entry.getName();
+			resultMap.put(stationName, probMap.get(Integer.toString(entry.getId())));
 		}
 		
 		return new HubwayTripResults(resultMap);

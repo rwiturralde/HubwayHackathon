@@ -97,10 +97,8 @@ public class MongoDbQueryBuilder implements IQueryBuilder{
 	
 	protected MongoDbQueryObject buildStationNamesForListQuery(final MongoDbQueryParameters params_){
 		BasicDBObject queryObj = new BasicDBObject();
-		queryObj.append("id", new BasicDBObject("$in", params_.getStationList()));
-		BasicDBObject fieldsObj = new BasicDBObject();
-		fieldsObj.append("name", true);
-		return new MongoDbQueryObject(queryObj, fieldsObj, "stations");
+		queryObj.append("_id", new BasicDBObject("$in", params_.getStationList()));
+		return new MongoDbQueryObject(queryObj, new BasicDBObject(), "stations");
 	}
 	
 }
