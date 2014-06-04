@@ -39,7 +39,7 @@ public class HubwayWeatherRequestProcessor implements IRequestProcessor{
 	}
 
 	protected HubwayResults convertResponseToResult(List<StationStatus> stationStatusList_, Station station_){
-		HubwayResults results = new HubwayResults();
+		HubwayResults results = new HubwayWeatherResults();
 		
 		if (stationStatusList_ != null && stationStatusList_.size() > 0){
 			_logger.info(String.format("Station Status list size: %d", stationStatusList_.size()));
@@ -52,7 +52,7 @@ public class HubwayWeatherRequestProcessor implements IRequestProcessor{
 			int expectedNumBikes = (int)Math.floor(avg);
 			_logger.info(String.format("Average number of bikes available %f", avg));
 			_logger.info(String.format("Expected number of bikes available %d", expectedNumBikes));
-			results = new HubwayResults(avg, expectedNumBikes);
+			results = new HubwayWeatherResults(avg, expectedNumBikes);
 		} else {
 			_logger.info(String.format("Station Status list empty for station Id %s", station_.getId()));
 		}
