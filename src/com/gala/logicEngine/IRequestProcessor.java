@@ -9,5 +9,5 @@ import com.gala.ui.HubwayRequestParameters;
  */
 public interface IRequestProcessor {
 	
-	HubwayResults processRequest(HubwayRequestParameters parameters_);
+	IHubwayResults processRequest(HubwayRequestParameters parameters_);
 }

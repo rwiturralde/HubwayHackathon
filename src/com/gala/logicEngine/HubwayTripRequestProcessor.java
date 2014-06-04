@@ -27,18 +27,30 @@ public class HubwayTripRequestProcessor implements IRequestProcessor {
 		_resultThreshold = resultThreshold_;
 	}
 
-	public HubwayResults processRequest(HubwayRequestParameters parameters_) {
+	public IHubwayResults processRequest(final HubwayRequestParameters parameters_) {
 		// Get dates with weather matching temp
 		MongoDbQueryParameters params = new MongoDbQueryParameters(parameters_.getStartStation().getId(), 
 				parameters_.getTimeOfDay(), parameters_.getDay(), parameters_.getTemperature(), QueryType.TRIP_END_STATION);
+		
+		long queryStartTime, queryEndTime;
+		queryStartTime = System.currentTimeMillis();
 		List<SimpleEntry<String,Integer>> endStationCounts = _tripsDataRetriever.retrieveData(params);
+		queryEndTime = System.currentTimeMillis();
 		
 		int totalTrips = calculateTotalTrips(endStationCounts);
+		_logger.info(String.format("Trips query returned %d results in %d ms.", 
+				totalTrips, (queryEndTime - queryStartTime)));
+		
 		if (totalTrips < _resultThreshold) {
-			_logger.warn(String.format("Trips query returned %d results which is under threshold of %d. Excluding day parameter and querying again.", totalTrips, _resultThreshold));
+			_logger.warn(String.format("Trips results set size is under threshold of %d. Excluding day parameter and querying again.", _resultThreshold));
 			params.setExcludeDayParam(true);
+			queryStartTime = System.currentTimeMillis();
 			endStationCounts = _tripsDataRetriever.retrieveData(params);
+			queryEndTime = System.currentTimeMillis();
+			
 			totalTrips = calculateTotalTrips(endStationCounts);
+			_logger.info(String.format("Trips query returned %d results in %d ms.", 
+					totalTrips, (queryEndTime - queryStartTime)));
 		}
 		
 		HashMap<String, Double> probMap = calculateProbabilites(endStationCounts, totalTrips);
@@ -55,7 +67,11 @@ public class HubwayTripRequestProcessor implements IRequestProcessor {
 		// Get station info for the top stations
 		params.setStationList(topStations);
 		params.setQueryType(QueryType.STATION_NAMES_FOR_LIST);
+		queryStartTime = System.currentTimeMillis();
 		List<Station> stationInfoList = _stationInfoRetriever.retrieveData(params);
+		queryEndTime = System.currentTimeMillis();
+		_logger.info(String.format("Station data query returned %d results in %d ms.", 
+				stationInfoList.size(), (queryEndTime - queryStartTime)));		
 		
 		return convertResponseToResult(probMap, stationInfoList);
 	}
@@ -89,7 +105,7 @@ public class HubwayTripRequestProcessor implements IRequestProcessor {
 	 * @param stationInfoList
 	 * @return
 	 */
-	protected HubwayResults convertResponseToResult(final HashMap<String, Double> probMap, 
+	protected IHubwayResults convertResponseToResult(final HashMap<String, Double> probMap, 
 			final List<Station> stationInfoList) {
 		
 		HashMap<String, Double> resultMap = new HashMap<String,Double>();

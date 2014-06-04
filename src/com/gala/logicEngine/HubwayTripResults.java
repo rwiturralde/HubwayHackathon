@@ -2,7 +2,7 @@ package com.gala.logicEngine;
 
 import java.util.HashMap;
 
-public class HubwayTripResults extends HubwayResults {
+public class HubwayTripResults implements IHubwayResults {
 
 	protected HashMap<String, Double> _possibleDestinations;
 	
