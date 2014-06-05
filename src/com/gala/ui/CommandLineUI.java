@@ -492,6 +492,60 @@ public class CommandLineUI implements IHubwayUI {
 		station4.setCapacity(11);
 		stations.add(station4);
 		
+		Station station5 = new Station();
+		station5.setId(5);
+		station5.setName("Northeastern U / North Parking Lot");
+		station5.setLatitude(42.341814);
+		station5.setLongitude(-71.090179);
+		station5.setMunicipality("Boston");
+		station5.setCapacity(15);
+		stations.add(station5);
+		
+		Station station6 = new Station();
+		station6.setId(8);
+		station6.setName("Union Square - Brighton Ave. at Cambridge St.");
+		station6.setLatitude(42.353334);
+		station6.setLongitude(-71.137313);
+		station6.setMunicipality("Boston");
+		station6.setCapacity(15);
+		stations.add(station6);
+		
+		Station station7 = new Station();
+		station7.setId(32);
+		station7.setName("Landmark Centre");
+		station7.setLatitude(42.343912);
+		station7.setLongitude(-71.102221);
+		station7.setMunicipality("Boston");
+		station7.setCapacity(11);
+		stations.add(station7);
+		
+		Station station8 = new Station();
+		station8.setId(36);
+		station8.setName("Boston Public Library - 700 Boylston St.");
+		station8.setLatitude(42.349673);
+		station8.setLongitude(-71.077303);
+		station8.setMunicipality("Boston");
+		station8.setCapacity(25);
+		stations.add(station8);
+		
+		Station station9 = new Station();
+		station9.setId(67);
+		station9.setName("MIT at Mass Ave / Amherst St");
+		station9.setLatitude(42.3581);
+		station9.setLongitude(-71.093198);
+		station9.setMunicipality("Cambridge");
+		station9.setCapacity(27);
+		stations.add(station9);
+		
+		Station station10 = new Station();
+		station10.setId(74);
+		station10.setName("Harvard Square at Mass Ave/ Dunster");
+		station10.setLatitude(42.373268);
+		station10.setLongitude(-71.118579);
+		station10.setMunicipality("Cambridge");
+		station10.setCapacity(19);
+		stations.add(station10);
+		
 		return stations;
 	}
 	
