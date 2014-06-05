@@ -73,7 +73,7 @@ public class HubwayTripRequestProcessor implements IRequestProcessor {
 		_logger.info(String.format("Station data query returned %d results in %d ms.", 
 				stationInfoList.size(), (queryEndTime - queryStartTime)));		
 		
-		return convertResponseToResult(params, probMap, stationInfoList);
+		return convertResponseToResult(params, probMap, stationInfoList, totalTrips);
 	}
 	
 	protected int calculateTotalTrips(final List<SimpleEntry<String,Integer>> endStationCounts_) {
@@ -107,7 +107,8 @@ public class HubwayTripRequestProcessor implements IRequestProcessor {
 	 */
 	protected IHubwayResults convertResponseToResult(final MongoDbQueryParameters parameters_,
 			final HashMap<String, Double> probMap, 
-			final List<Station> stationInfoList) {
+			final List<Station> stationInfoList,
+			final int totalTrips) {
 		
 		HashMap<String, Double> resultMap = new HashMap<String,Double>();
 		for(Station entry : stationInfoList) {
@@ -116,7 +117,7 @@ public class HubwayTripRequestProcessor implements IRequestProcessor {
 		}
 		
 		return new HubwayTripResults(parameters_.getDay(), parameters_.getTimeOfDay(), 
-				parameters_.getStartStation(),parameters_.getExcludeDayParam(), resultMap);
+				parameters_.getStartStation(),parameters_.getExcludeDayParam(), totalTrips, resultMap);
 	}
 	
 	

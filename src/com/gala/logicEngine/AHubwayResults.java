@@ -6,17 +6,20 @@ import com.gala.core.TimeOfDay;
 
 public abstract class AHubwayResults implements IHubwayResults {
 
-	protected Day _dayOfWeek;
+	protected Day 		_dayOfWeek;
 	protected TimeOfDay _timeOfDay;
-	protected Station _startStation;
-	protected boolean _excludeDayParam;
+	protected Station 	_startStation;
+	protected boolean 	_excludeDayParam;
+	protected int 		_sampleSetSize;
 	
 	protected AHubwayResults(final Day day_, final TimeOfDay tod_, 
-			final Station startStation_, final boolean excludeDayParam_) {
+			final Station startStation_, final boolean excludeDayParam_, 
+			final int sampleSetSize_) {
 		_dayOfWeek = day_;
 		_timeOfDay = tod_;
 		_startStation = startStation_;
 		_excludeDayParam = excludeDayParam_;
+		_sampleSetSize = sampleSetSize_;
 	}
 	
 	public Day getDayOfWeek(){
@@ -35,6 +38,10 @@ public abstract class AHubwayResults implements IHubwayResults {
 		return _excludeDayParam;
 	}
 	
+	public int getSampleSetSize() {
+		return _sampleSetSize;
+	}
+	
 	public void setDayOfWeek(final Day day_){
 		_dayOfWeek = day_;
 	}
@@ -51,14 +58,20 @@ public abstract class AHubwayResults implements IHubwayResults {
 		_excludeDayParam = excludeDayParam_;
 	}
 	
+	public void setSampleSetSize(final int sampleSetSize_){
+		_sampleSetSize = sampleSetSize_;
+	}
+	
 	public String printResults(){
 		StringBuilder builder = new StringBuilder();
-		builder.append("Day of week= ");
+		builder.append("Sample set size= ");
+		builder.append(_sampleSetSize);
+		builder.append("\nDay of week= ");
 		builder.append(_dayOfWeek);
 		builder.append("\nTime of day= ");
 		builder.append(_timeOfDay);
 		builder.append("\nStarting station= ");
-		builder.append(_startStation);
+		builder.append(_startStation.printSummary());
 		builder.append("\nExcluded day of week= ");
 		builder.append(_excludeDayParam);
 		return builder.toString();

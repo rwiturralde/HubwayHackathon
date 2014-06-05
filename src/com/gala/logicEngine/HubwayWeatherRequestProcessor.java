@@ -84,8 +84,8 @@ public class HubwayWeatherRequestProcessor implements IRequestProcessor{
 		}
 			
 		return new HubwayWeatherResults(parameters_.getDay(), parameters_.getTimeOfDay(), 
-				parameters_.getStartStation(), parameters_.getExcludeDayParam(), 
-				parameters_.getWeather(), avg, expectedNumBikes);
+				parameters_.getStartStation(), parameters_.getExcludeDayParam(), stationStatusList_.size(), 
+				parameters_.getWeather(), expectedNumBikes);
 	}
 	
 }

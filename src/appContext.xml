@@ -375,7 +375,7 @@
 	<bean id="weatherRequestProcessor" class="com.gala.logicEngine.HubwayWeatherRequestProcessor">
 		<constructor-arg index="0" ref="weatherDataRetriever" />
 		<constructor-arg index="1" ref="stationStatusDataRetriever" />
-		<constructor-arg index="2" value="1000" /> 
+		<constructor-arg index="2" value="200" /> 
 	</bean>
 	
 	<bean id="MongoDbQueryBuilder" class="com.gala.logicEngine.MongoDbQueryBuilder"/>

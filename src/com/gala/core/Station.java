@@ -119,8 +119,10 @@ public class Station {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Name=");
 		builder.append(_name);
-		builder.append("Id=");
+		builder.append(", Id=");
 		builder.append(_id);
+		builder.append(", Capacity=");
+		builder.append(_capacity);
 		return builder.toString();
 	}
 	

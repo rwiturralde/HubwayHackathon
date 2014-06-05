@@ -10,14 +10,15 @@ public class HubwayTripResults extends AHubwayResults{
 
 	protected HashMap<String, Double> _possibleDestinations;	
 	
-	public HubwayTripResults(final Day day_, final TimeOfDay tod_, final Station startStation_, final boolean excludeDayParam_){
-		super(day_, tod_, startStation_, excludeDayParam_);
+	public HubwayTripResults(final Day day_, final TimeOfDay tod_, final Station startStation_, final boolean excludeDayParam_,
+			final int sampleSetSize_){
+		super(day_, tod_, startStation_, excludeDayParam_, sampleSetSize_);
 		_possibleDestinations = new HashMap<String, Double>();
 	}
 	
 	public HubwayTripResults(final Day day_, final TimeOfDay tod_, final Station startStation_, final boolean excludeDayParam_, 
-			final HashMap<String, Double> possibleDestinations_) {
-		super(day_, tod_, startStation_, excludeDayParam_);
+			final int sampleSetSize_, final HashMap<String, Double> possibleDestinations_) {
+		super(day_, tod_, startStation_, excludeDayParam_, sampleSetSize_);
 		_possibleDestinations = possibleDestinations_;
 	}
 	

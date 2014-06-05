@@ -42,7 +42,7 @@ public class Weather {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Temperature=");
 		builder.append(_temperature);
-		builder.append("Precipitation=");
+		builder.append(", Precipitation=");
 		builder.append(_gonRain);
 		return builder.toString();
 	}
