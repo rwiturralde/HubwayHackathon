@@ -115,4 +115,13 @@ public class Station {
 		return builder.toString();
 	}	
 	
+	public String printSummary() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Name=");
+		builder.append(_name);
+		builder.append("Id=");
+		builder.append(_id);
+		return builder.toString();
+	}
+	
 }

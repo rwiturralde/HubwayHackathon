@@ -37,6 +37,15 @@ public class Weather {
 		builder.append("]");
 		return builder.toString();
 	}
+	
+	public String printSummary() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Temperature=");
+		builder.append(_temperature);
+		builder.append("Precipitation=");
+		builder.append(_gonRain);
+		return builder.toString();
+	}
 
 	@Override
 	public int hashCode() {
